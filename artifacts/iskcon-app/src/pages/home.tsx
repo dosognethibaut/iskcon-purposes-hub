@@ -273,18 +273,6 @@ export default function Home() {
                   width: 80,
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "'Lora', Georgia, serif",
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    color: "black",
-                    lineHeight: 1,
-                    marginBottom: "0.2rem",
-                  }}
-                >
-                  {i + 1}
-                </span>
                 <img
                   src={p.logo}
                   alt={p.title}
