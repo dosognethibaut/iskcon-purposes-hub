@@ -146,12 +146,12 @@ export default function Home() {
           }}
         />
 
-        {/* Radhadesh logo */}
+        {/* Radhadesh logo — top left */}
         <a
           href="https://www.radhadesh.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute top-3 right-3 z-20 rounded-lg overflow-hidden"
+          className="absolute top-3 left-3 z-20 rounded-lg overflow-hidden"
           style={{ boxShadow: "0 1px 8px hsl(14 35% 6% / 0.5)" }}
         >
           <img
@@ -164,8 +164,8 @@ export default function Home() {
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
 
-          {/* Title */}
-          <div className="px-6 pt-10">
+          {/* Title — right-aligned */}
+          <div className="px-6 pt-10 flex flex-col items-end text-right">
             <img
               src={sevenPLogo}
               alt="7 Purposes"
