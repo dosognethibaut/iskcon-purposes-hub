@@ -96,6 +96,20 @@ router.patch("/purposes/:purposeId/activities/:id/approve", async (req, res) => 
   }
 });
 
+router.patch("/purposes/:purposeId/activities/:id/disapprove", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const [updated] = await db.update(activitiesTable).set({ approved: false }).where(eq(activitiesTable.id, id)).returning();
+    res.json(updated);
+  } catch (err) {
+    req.log.error({ err }, "Failed to disapprove activity");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.delete("/purposes/:purposeId/activities/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -183,6 +197,20 @@ router.patch("/purposes/:purposeId/messages/:id/approve", async (req, res) => {
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "Failed to approve message");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.patch("/purposes/:purposeId/messages/:id/disapprove", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const [updated] = await db.update(messagesTable).set({ approved: false }).where(eq(messagesTable.id, id)).returning();
+    res.json(updated);
+  } catch (err) {
+    req.log.error({ err }, "Failed to disapprove message");
     res.status(500).json({ error: "Internal server error" });
   }
 });

@@ -18,6 +18,10 @@ export const activitiesTable = pgTable("activities", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   authorName: text("author_name").notNull(),
+  scheduledAt: timestamp("scheduled_at"),
+  place: text("place"),
+  minParticipants: integer("min_participants"),
+  maxParticipants: integer("max_participants"),
   approved: boolean("approved").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

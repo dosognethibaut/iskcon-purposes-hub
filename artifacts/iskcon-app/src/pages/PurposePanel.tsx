@@ -11,6 +11,7 @@ import {
 import {
   CalendarDays, MessageCircle, Loader2, Lock,
   ChevronDown, ChevronUp, CheckCircle2, Clock, MessageSquare, Send,
+  MapPin, Users, XCircle,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/context/AuthContext";
@@ -28,6 +29,10 @@ const activitySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
   authorName: z.string().min(1, "Your name is required"),
+  scheduledAt: z.string().min(1, "Please set a date and time"),
+  place: z.string().min(1, "Place is required"),
+  minParticipants: z.coerce.number().min(3, "Minimum is 3"),
+  maxParticipants: z.preprocess(v => v === "" || v === undefined ? undefined : Number(v), z.number().min(3, "Must be at least 3").optional()),
 });
 
 const messageSchema = z.object({
@@ -35,14 +40,24 @@ const messageSchema = z.object({
   authorName: z.string().min(1, "Your name is required"),
 });
 
-const accentByTitle: Record<string, string> = {
-  "Accessing":     "hsl(14 52% 38%)",
-  "Learning":      "hsl(17 44% 35%)",
-  "Community":     "hsl(220 60% 44%)",
-  "Applying":      "hsl(14 18% 33%)",
-  "Holy Place":    "hsl(14 8% 22%)",
-  "Simple Living": "hsl(168 42% 33%)",
-  "Sharing":       "hsl(14 40% 30%)",
+const accentById: Record<number, string> = {
+  1: "hsl(150 42% 36%)",
+  2: "hsl(213 55% 42%)",
+  3: "hsl(265 38% 44%)",
+  4: "hsl(26 68% 42%)",
+  5: "hsl(40 62% 38%)",
+  6: "hsl(178 48% 34%)",
+  7: "hsl(358 52% 42%)",
+};
+
+const cardBgById: Record<number, string> = {
+  1: "hsl(150 38% 95%)",
+  2: "hsl(213 50% 95%)",
+  3: "hsl(265 35% 96%)",
+  4: "hsl(26 60% 96%)",
+  5: "hsl(40 55% 95%)",
+  6: "hsl(178 45% 95%)",
+  7: "hsl(358 45% 96%)",
 };
 
 interface AnyComment {
@@ -209,7 +224,8 @@ function CommentSection({
 export default function PurposePanel({ purposeId, title, officialText, description }: PurposePanelProps) {
   const queryClient = useQueryClient();
   const { currentUser, token } = useAuth();
-  const accent = accentByTitle[title] ?? "hsl(26 68% 42%)";
+  const accent = accentById[purposeId] ?? "hsl(26 68% 42%)";
+  const cardBg = cardBgById[purposeId] ?? "hsl(40 50% 95%)";
 
   const [openActivities, setOpenActivities] = useState<Set<number>>(new Set());
   const [expandedActivityComments, setExpandedActivityComments] = useState<Set<number>>(new Set());
@@ -218,6 +234,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const [messageCommentCounts, setMessageCommentCounts] = useState<Record<number, number>>({});
   const [approvingActivityId, setApprovingActivityId] = useState<number | null>(null);
   const [approvingMessageId, setApprovingMessageId] = useState<number | null>(null);
+  const [disapprovingActivityId, setDisapprovingActivityId] = useState<number | null>(null);
+  const [disapprovingMessageId, setDisapprovingMessageId] = useState<number | null>(null);
 
   const { data: activities, isLoading: isLoadingActivities } = useGetActivities(purposeId, {
     query: { queryKey: getGetActivitiesQueryKey(purposeId) },
@@ -232,7 +250,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
   const activityForm = useForm<z.infer<typeof activitySchema>>({
     resolver: zodResolver(activitySchema),
-    defaultValues: { title: "", description: "", authorName: currentUser?.fullName ?? "" },
+    defaultValues: { title: "", description: "", authorName: currentUser?.fullName ?? "", scheduledAt: "", place: "", minParticipants: 3, maxParticipants: undefined },
   });
 
   const messageForm = useForm<z.infer<typeof messageSchema>>({
@@ -281,6 +299,24 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     }
   };
 
+  const disapproveActivity = async (id: number) => {
+    if (!token) return;
+    setDisapprovingActivityId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/disapprove`, {
+        method: "PATCH",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
+      toast.success("Activity moved back to pending");
+    } catch {
+      toast.error("Failed to disapprove activity");
+    } finally {
+      setDisapprovingActivityId(null);
+    }
+  };
+
   const approveMessage = async (id: number) => {
     if (!token) return;
     setApprovingMessageId(id);
@@ -299,11 +335,33 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     }
   };
 
+  const disapproveMessage = async (id: number) => {
+    if (!token) return;
+    setDisapprovingMessageId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/messages/${id}/disapprove`, {
+        method: "PATCH",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: getGetMessagesQueryKey(purposeId) });
+      toast.success("Message moved back to pending");
+    } catch {
+      toast.error("Failed to disapprove message");
+    } finally {
+      setDisapprovingMessageId(null);
+    }
+  };
+
   const onActivitySubmit = (data: z.infer<typeof activitySchema>) => {
-    createActivity.mutate({ purposeId, data }, {
+    const payload = {
+      ...data,
+      scheduledAt: new Date(data.scheduledAt).toISOString(),
+    };
+    createActivity.mutate({ purposeId, data: payload as any }, {
       onSuccess: () => {
         toast.success("Activity proposed! It will appear once validated.", { duration: 5000 });
-        activityForm.reset({ title: "", description: "", authorName: currentUser?.fullName ?? "" });
+        activityForm.reset({ title: "", description: "", authorName: currentUser?.fullName ?? "", scheduledAt: "", place: "", minParticipants: 3, maxParticipants: undefined });
         queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       },
       onError: () => toast.error("Failed to propose activity"),
@@ -367,24 +425,37 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 <PendingBanner count={pendingActivities.length} label="Activities" />
                 {pendingActivities.map((activity: any) => (
                   <div key={activity.id} className="rounded-2xl overflow-hidden shadow-sm"
-                    style={{ background: "hsl(42 60% 94%)", border: "1px solid hsl(35 60% 65% / 0.5)" }}>
-                    <div style={{ height: 3, background: "hsl(35 75% 50%)" }} />
+                    style={{ background: cardBg, border: `1px solid ${accent}40` }}>
+                    <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
                       <p className="font-serif font-bold leading-snug mb-1" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>{activity.title}</p>
-                      <p className="font-sans text-sm leading-relaxed mb-3" style={{ color: "hsl(14 50% 30%)" }}>{activity.description}</p>
+                      <p className="font-sans text-sm leading-relaxed mb-2" style={{ color: "hsl(14 50% 30%)" }}>{activity.description}</p>
+                      {(activity.scheduledAt || activity.place) && (
+                        <div className="flex flex-wrap gap-3 mb-3 text-xs font-sans" style={{ color: "hsl(14 40% 45%)" }}>
+                          {activity.scheduledAt && <span className="flex items-center gap-1"><CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM yyyy, HH:mm")}</span>}
+                          {activity.place && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{activity.place}</span>}
+                          {activity.minParticipants && <span className="flex items-center gap-1"><Users className="w-3 h-3" />{activity.minParticipants}{activity.maxParticipants ? `–${activity.maxParticipants}` : "+"} participants</span>}
+                        </div>
+                      )}
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(35 60% 38%)" }}>By {activity.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: accent }}>By {activity.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                         </div>
-                        <button onClick={() => approveActivity(activity.id)} disabled={approvingActivityId === activity.id}
-                          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold text-xs transition-opacity"
-                          style={{ background: accent, color: "hsl(40 80% 96%)", opacity: approvingActivityId === activity.id ? 0.6 : 1 }}>
-                          {approvingActivityId === activity.id
-                            ? <Loader2 className="w-3 h-3 animate-spin" />
-                            : <CheckCircle2 className="w-3 h-3" />}
-                          {approvingActivityId === activity.id ? "Approving…" : "Approve"}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
+                            style={{ borderColor: `${accent}50`, color: accent, background: "transparent", opacity: disapprovingActivityId === activity.id ? 0.5 : 1 }}>
+                            {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                            Reject
+                          </button>
+                          <button onClick={() => approveActivity(activity.id)} disabled={approvingActivityId === activity.id}
+                            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold text-xs transition-opacity"
+                            style={{ background: accent, color: "hsl(40 80% 96%)", opacity: approvingActivityId === activity.id ? 0.6 : 1 }}>
+                            {approvingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                            {approvingActivityId === activity.id ? "Approving…" : "Approve"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -409,16 +480,24 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                   const commentsOpen = expandedActivityComments.has(activity.id);
                   return (
                     <div key={activity.id} className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
+                      style={{ background: cardBg, border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
                       <div style={{ height: 3, background: accent }} />
 
                       {/* Title row — always visible */}
                       <button type="button" onClick={() => toggleActivity(activity.id)}
                         className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
                         <CalendarDays className="w-4 h-4 shrink-0" style={{ color: accent }} />
-                        <span className="flex-1 font-serif font-bold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
-                          {activity.title}
-                        </span>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
+                            {activity.title}
+                          </span>
+                          {activity.scheduledAt && (
+                            <span className="font-sans text-xs flex items-center gap-1 mt-0.5" style={{ color: accent }}>
+                              <CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM, HH:mm")}
+                              {activity.place && <><MapPin className="w-3 h-3 ml-1" />{activity.place}</>}
+                            </span>
+                          )}
+                        </div>
                         {currentUser
                           ? isOpen ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: accent }} />
                                    : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: accent }} />
@@ -428,20 +507,36 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       {/* Expanded content */}
                       {isOpen && currentUser && (
                         <div className="px-4 pb-2" style={{ borderTop: `1px solid ${accent}25` }}>
-                          <p className="font-sans text-sm leading-relaxed mt-3 mb-3" style={{ color: "hsl(14 50% 28%)" }}>
+                          <p className="font-sans text-sm leading-relaxed mt-3 mb-2" style={{ color: "hsl(14 50% 28%)" }}>
                             {activity.description}
                           </p>
+                          {activity.minParticipants && (
+                            <div className="flex items-center gap-1 mb-3 font-sans text-xs" style={{ color: "hsl(14 40% 45%)" }}>
+                              <Users className="w-3 h-3" />
+                              {activity.minParticipants} – {activity.maxParticipants ?? "?"} participants
+                            </div>
+                          )}
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 35% 48%)" }}>
                               <span className="font-semibold" style={{ color: accent }}>By {activity.authorName}</span>
                               <span>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                             </div>
-                            <button onClick={() => toggleComments(activity.id, "activity")}
-                              className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-                              style={{ background: commentsOpen ? `${accent}18` : "transparent", color: accent, border: `1px solid ${accent}30` }}>
-                              <MessageSquare className="w-3 h-3" />
-                              {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                            </button>
+                            <div className="flex items-center gap-2">
+                              {currentUser.isAdmin && (
+                                <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
+                                  className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                  style={{ borderColor: `${accent}40`, color: accent, background: "transparent" }}>
+                                  {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                                  Unpublish
+                                </button>
+                              )}
+                              <button onClick={() => toggleComments(activity.id, "activity")}
+                                className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+                                style={{ background: commentsOpen ? `${accent}18` : "transparent", color: accent, border: `1px solid ${accent}30` }}>
+                                <MessageSquare className="w-3 h-3" />
+                                {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -467,7 +562,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             {/* Propose an Activity — all signed-in users */}
             {currentUser ? (
               <div className="rounded-2xl p-5 shadow relative overflow-hidden"
-                style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}40` }}>
+                style={{ background: cardBg, border: `1px solid ${accent}40` }}>
                 <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
                 <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
                 <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your proposal will appear once validated</p>
@@ -497,6 +592,62 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         <FormMessage />
                       </FormItem>
                     )} />
+                    <FormField control={activityForm.control} name="scheduledAt" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(14 55% 30%)" }}>
+                          <CalendarDays className="w-3.5 h-3.5" /> Date &amp; Time
+                        </FormLabel>
+                        <FormControl>
+                          <input type="datetime-local"
+                            className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
+                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                            {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={activityForm.control} name="place" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(14 55% 30%)" }}>
+                          <MapPin className="w-3.5 h-3.5" /> Place
+                        </FormLabel>
+                        <FormControl>
+                          <input placeholder="E.g., Temple room, Radhadesh"
+                            className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
+                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                            {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField control={activityForm.control} name="minParticipants" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(14 55% 30%)" }}>
+                            <Users className="w-3.5 h-3.5" /> Min participants
+                          </FormLabel>
+                          <FormControl>
+                            <input type="number" min={3} placeholder="3"
+                              className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
+                              style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                              {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={activityForm.control} name="maxParticipants" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Max participants</FormLabel>
+                          <FormControl>
+                            <input type="number" min={3} placeholder="Optional"
+                              className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
+                              style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                              {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                    </div>
                     <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
@@ -523,25 +674,31 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 <PendingBanner count={pendingMessages.length} label="Messages" />
                 {pendingMessages.map((message: any) => (
                   <div key={message.id} className="rounded-2xl overflow-hidden shadow-sm"
-                    style={{ background: "hsl(42 60% 94%)", border: "1px solid hsl(35 60% 65% / 0.5)" }}>
-                    <div style={{ height: 3, background: "hsl(35 75% 50%)" }} />
+                    style={{ background: cardBg, border: `1px solid ${accent}40` }}>
+                    <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
                       <p className="font-serif italic leading-relaxed mb-3" style={{ fontSize: "0.92rem", color: "hsl(14 65% 22%)" }}>
                         "{message.content}"
                       </p>
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(35 60% 38%)" }}>— {message.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: accent }}>— {message.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                         </div>
-                        <button onClick={() => approveMessage(message.id)} disabled={approvingMessageId === message.id}
-                          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold text-xs transition-opacity"
-                          style={{ background: accent, color: "hsl(40 80% 96%)", opacity: approvingMessageId === message.id ? 0.6 : 1 }}>
-                          {approvingMessageId === message.id
-                            ? <Loader2 className="w-3 h-3 animate-spin" />
-                            : <CheckCircle2 className="w-3 h-3" />}
-                          {approvingMessageId === message.id ? "Approving…" : "Approve"}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
+                            style={{ borderColor: `${accent}50`, color: accent, background: "transparent", opacity: disapprovingMessageId === message.id ? 0.5 : 1 }}>
+                            {disapprovingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                            Reject
+                          </button>
+                          <button onClick={() => approveMessage(message.id)} disabled={approvingMessageId === message.id}
+                            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold text-xs transition-opacity"
+                            style={{ background: accent, color: "hsl(40 80% 96%)", opacity: approvingMessageId === message.id ? 0.6 : 1 }}>
+                            {approvingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                            {approvingMessageId === message.id ? "Approving…" : "Approve"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -565,23 +722,33 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                   const commentsOpen = expandedMessageComments.has(message.id);
                   return (
                     <div key={message.id} className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
+                      style={{ background: cardBg, border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
                       <div style={{ height: 3, background: accent }} />
                       <div className="p-5 pb-3">
                         <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: "hsl(14 65% 22%)" }}>
                           "{message.content}"
                         </p>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2 flex-wrap">
                           <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 40% 50%)" }}>
                             <span className="font-bold" style={{ color: accent }}>— {message.authorName}</span>
                             <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                           </div>
-                          <button onClick={() => toggleComments(message.id, "message")}
-                            className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-                            style={{ background: commentsOpen ? `${accent}18` : "transparent", color: accent, border: `1px solid ${accent}30` }}>
-                            <MessageSquare className="w-3 h-3" />
-                            {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                          </button>
+                          <div className="flex items-center gap-2">
+                            {currentUser?.isAdmin && (
+                              <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
+                                className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                style={{ borderColor: `${accent}40`, color: accent, background: "transparent" }}>
+                                {disapprovingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                                Unpublish
+                              </button>
+                            )}
+                            <button onClick={() => toggleComments(message.id, "message")}
+                              className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+                              style={{ background: commentsOpen ? `${accent}18` : "transparent", color: accent, border: `1px solid ${accent}30` }}>
+                              <MessageSquare className="w-3 h-3" />
+                              {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -604,7 +771,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             {/* Share a message */}
             <div className="rounded-2xl p-5 shadow relative overflow-hidden"
-              style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}35` }}>
+              style={{ background: cardBg, border: `1px solid ${accent}35` }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
               <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
               <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your message will appear once validated</p>
