@@ -4,7 +4,7 @@ import {
   commentsTable, activityCommentsTable, activityParticipantsTable,
   insertActivitySchema, insertMessageSchema, usersTable,
 } from "@workspace/db";
-import { eq, and, sql, isNotNull } from "drizzle-orm";
+import { eq, and, sql, isNotNull, inArray } from "drizzle-orm";
 import { z } from "zod";
 import jwt from "jsonwebtoken";
 import { emailNewActivity, emailNewMessage } from "../utils/email";
@@ -61,7 +61,7 @@ async function enrichActivities(rawActivities: any[], userId?: number) {
       count: sql<number>`cast(count(*) as int)`,
     })
     .from(activityParticipantsTable)
-    .where(sql`${activityParticipantsTable.activityId} = ANY(${ids})`)
+    .where(inArray(activityParticipantsTable.activityId, ids))
     .groupBy(activityParticipantsTable.activityId);
 
   const joined = userId
@@ -69,7 +69,7 @@ async function enrichActivities(rawActivities: any[], userId?: number) {
         .select({ activityId: activityParticipantsTable.activityId })
         .from(activityParticipantsTable)
         .where(and(
-          sql`${activityParticipantsTable.activityId} = ANY(${ids})`,
+          inArray(activityParticipantsTable.activityId, ids),
           eq(activityParticipantsTable.userId, userId),
         ))
     : [];
