@@ -136,13 +136,13 @@ export default function Home() {
 
           {/* Title */}
           <div className="px-6 pt-10">
-            <h1 className="font-serif font-bold" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)", lineHeight: 1 }}>
-              The{" "}
-              <img
-                src={sevenPLogo}
-                alt="7"
-                style={{ height: "1.5em", width: "auto", display: "inline-block", verticalAlign: "middle", mixBlendMode: "screen", marginBottom: "0.12em" }}
-              />{" "}Purposes<br />of ISKCON
+            <img
+              src={sevenPLogo}
+              alt="7 Purposes"
+              style={{ height: 72, width: "auto", mixBlendMode: "screen", marginBottom: "0.5rem" }}
+            />
+            <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
+              The 7 Purposes<br />of ISKCON
             </h1>
             <div
               className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
