@@ -150,38 +150,51 @@ export default function Home() {
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
 
-          {/* Title — right-aligned */}
-          <div className="px-6 pt-10 flex flex-col items-end text-right">
-            <img
-              src={sevenPLogo}
-              alt="7 Purposes"
-              style={{ height: 72, width: "auto", mixBlendMode: "screen", marginBottom: "0.5rem" }}
-            />
-            <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
-              The 7 Purposes<br />of ISKCON
-            </h1>
-            <div
-              className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-              style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)" }}
+          {/* Top bar — welcome left, title right */}
+          <div className="px-6 pt-10 flex items-start justify-between gap-4">
+
+            {/* Left: welcome / profile link */}
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 focus:outline-none shrink-0 mt-1"
             >
-              &amp; Community Building
-            </div>
-            <div className="mt-3">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none"
-                style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}
+              {currentUser ? (
+                <>
+                  {currentUser.photoDataUrl
+                    ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover shrink-0" style={{ width: 32, height: 32, border: "2px solid hsl(40 70% 90% / 0.5)" }} />
+                    : <div className="rounded-full flex items-center justify-center font-serif font-bold shrink-0" style={{ width: 32, height: 32, background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "0.75rem", border: "2px solid hsl(40 70% 90% / 0.4)" }}>{currentUser.fullName[0]}</div>
+                  }
+                  <span className="font-serif font-semibold leading-tight" style={{ color: "hsl(40 80% 96%)", fontSize: "clamp(0.85rem, 2.5vw, 1rem)", textShadow: "0 1px 4px hsl(14 40% 8% / 0.5)" }}>
+                    Welcome,<br />
+                    <span style={{ color: "hsl(40 90% 88%)" }}>{currentUser.fullName.split(" ")[0]}</span>
+                  </span>
+                </>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold border"
+                  style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+                  <UserCircle className="w-4 h-4" /> You
+                </div>
+              )}
+            </Link>
+
+            {/* Right: 7P logo + title */}
+            <div className="flex flex-col items-end text-right">
+              <img
+                src={sevenPLogo}
+                alt="7 Purposes"
+                style={{ height: 72, width: "auto", mixBlendMode: "screen", marginBottom: "0.5rem" }}
+              />
+              <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
+                The 7 Purposes<br />of ISKCON
+              </h1>
+              <div
+                className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
+                style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)" }}
               >
-                {currentUser ? (
-                  currentUser.photoDataUrl
-                    ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 22, height: 22 }} />
-                    : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 22, height: 22, background: "hsl(26 68% 52%)", color: "hsl(40 80% 96%)", fontSize: "0.65rem" }}>{currentUser.fullName[0]}</div>
-                ) : (
-                  <UserCircle className="w-4 h-4" />
-                )}
-                {currentUser ? `Welcome, ${currentUser.fullName.split(" ")[0]}` : "You"}
-              </Link>
+                &amp; Community Building
+              </div>
             </div>
+
           </div>
 
           <div className="flex-1" />
