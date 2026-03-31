@@ -22,7 +22,7 @@ const EVENTS_BY_MONTH: Record<number, CalEvent[]> = {
     { day: 6,  label: "Community — Sunday feast",           color: "hsl(220 55% 45%)" },
     { day: 8,  label: "Learning — Gītā class",              color: "hsl(14 55% 38%)" },
     { day: 13, label: "Holy Place — Temple service",        color: "hsl(14 55% 38%)" },
-    { day: 13, label: "Applying — Cooking workshop",        color: "hsl(12 44% 40%)" },
+    { day: 13, label: "Applying — Cooking workshop",        color: "hsl(26 68% 42%)" },
     { day: 20, label: "Community — Sunday feast",           color: "hsl(220 55% 45%)" },
     { day: 23, label: "Simple Living — Farm day",           color: "hsl(145 45% 35%)" },
     { day: 27, label: "Community — Sunday feast",           color: "hsl(220 55% 45%)" },
@@ -139,7 +139,7 @@ export default function When() {
                     <span
                       className="font-sans text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full"
                       style={{
-                        background: isToday(day) ? "hsl(12 44% 40%)" : "transparent",
+                        background: isToday(day) ? "hsl(26 68% 42%)" : "transparent",
                         color: isToday(day) ? "white" : "hsl(14 55% 25%)",
                       }}
                     >

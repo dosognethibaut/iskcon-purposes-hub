@@ -40,7 +40,7 @@ export default function Purposes() {
         </h1>
         <div
           className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-          style={{ background: "hsl(12 44% 40%)", color: "hsl(40 80% 96%)", fontSize: "0.9rem" }}
+          style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "0.9rem" }}
         >
           &amp; Community Building
         </div>
@@ -71,7 +71,7 @@ export default function Purposes() {
                 </div>
                 <ChevronRight
                   className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-0.5"
-                  style={{ color: "hsl(12 44% 40% / 0.6)" }}
+                  style={{ color: "hsl(26 68% 42% / 0.6)" }}
                 />
               </Link>
             </li>

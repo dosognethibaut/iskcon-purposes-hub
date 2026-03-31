@@ -40,10 +40,10 @@ export default function Register() {
   if (submitted) {
     return (
       <div className="min-h-[100dvh] bg-background flex flex-col items-center justify-center px-6 gap-4">
-        <CheckCircle2 className="w-16 h-16" style={{ color: "hsl(12 44% 40%)" }} />
+        <CheckCircle2 className="w-16 h-16" style={{ color: "hsl(26 68% 42%)" }} />
         <h2 className="font-serif font-bold text-2xl text-foreground text-center">Welcome, {form.fullName.split(" ")[0]}!</h2>
         <p className="font-sans text-muted-foreground text-center text-sm">Your profile has been created. You are now part of the Radhadesh community.</p>
-        <Link href="/" className="mt-4 px-6 py-3 rounded-full font-sans font-semibold text-sm" style={{ background: "hsl(12 44% 40%)", color: "hsl(40 80% 96%)" }}>
+        <Link href="/" className="mt-4 px-6 py-3 rounded-full font-sans font-semibold text-sm" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
           Back to home
         </Link>
       </div>
@@ -69,7 +69,7 @@ export default function Register() {
               onClick={() => setTab(t)}
               className="px-5 py-1.5 rounded-full font-sans font-semibold text-sm transition-all"
               style={{
-                background: tab === t ? "hsl(12 44% 40%)" : "transparent",
+                background: tab === t ? "hsl(26 68% 42%)" : "transparent",
                 color: tab === t ? "hsl(40 80% 96%)" : "hsl(14 55% 28%)",
               }}
             >
@@ -92,7 +92,7 @@ export default function Register() {
               <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>Password</label>
               <input type="password" required placeholder="••••••••" className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }} />
             </div>
-            <button type="submit" className="w-full py-3 rounded-full font-sans font-semibold text-sm mt-2" style={{ background: "hsl(12 44% 40%)", color: "hsl(40 80% 96%)" }}>
+            <button type="submit" className="w-full py-3 rounded-full font-sans font-semibold text-sm mt-2" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
               Sign in
             </button>
           </form>
@@ -102,7 +102,7 @@ export default function Register() {
 
             {/* Profile photo */}
             <div className="flex flex-col items-center gap-3 pb-2">
-              <button type="button" onClick={() => fileRef.current?.click()} className="relative rounded-full overflow-hidden border-2 flex items-center justify-center" style={{ width: 88, height: 88, borderColor: "hsl(12 44% 40% / 0.4)", background: "hsl(40 40% 88%)" }}>
+              <button type="button" onClick={() => fileRef.current?.click()} className="relative rounded-full overflow-hidden border-2 flex items-center justify-center" style={{ width: 88, height: 88, borderColor: "hsl(26 68% 42% / 0.4)", background: "hsl(40 40% 88%)" }}>
                 {photo
                   ? <img src={photo} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   : <Camera className="w-8 h-8" style={{ color: "hsl(14 40% 55%)" }} />
@@ -160,7 +160,7 @@ export default function Register() {
                 <Link
                   href="/survey"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl font-sans font-semibold text-sm border transition-colors"
-                  style={{ borderColor: "hsl(12 44% 40% / 0.5)", color: "hsl(12 44% 32%)", background: "hsl(12 44% 40% / 0.06)" }}
+                  style={{ borderColor: "hsl(26 68% 42% / 0.5)", color: "hsl(26 68% 32%)", background: "hsl(26 68% 42% / 0.06)" }}
                 >
                   <ClipboardList className="w-5 h-5" />
                   Take the survey
@@ -175,7 +175,7 @@ export default function Register() {
               disabled={!canSubmit}
               className="w-full py-3.5 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity"
               style={{
-                background: canSubmit ? "hsl(12 44% 40%)" : "hsl(14 20% 70%)",
+                background: canSubmit ? "hsl(26 68% 42%)" : "hsl(14 20% 70%)",
                 color: canSubmit ? "hsl(40 80% 96%)" : "hsl(14 20% 50%)",
                 cursor: canSubmit ? "pointer" : "not-allowed",
               }}
