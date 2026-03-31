@@ -3,52 +3,45 @@ import { ArrowLeft } from "lucide-react";
 
 const pillars = [
   {
-    icon: "🪷",
+    svgPath: "M12 2C8 2 5 5.5 5 9c0 4 4 8 7 10 3-2 7-6 7-10 0-3.5-3-7-7-7zm0 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z",
+    viewBox: "0 0 24 24",
     title: "Legacy",
     subtitle: "Srila Prabhupada",
     attributes: ["Vision", "Master plan", "Decision making process"],
-    color: "hsl(220 55% 42%)",
-    bg: "hsl(220 55% 42% / 0.08)",
-    border: "hsl(220 55% 42% / 0.25)",
+    isLast: false,
   },
   {
-    icon: "🤝",
+    svgPath: "M17 20h5v-2a4 4 0 0 0-4-4h-1M9 20H4v-2a4 4 0 0 1 4-4h1m4-4a4 4 0 1 0-8 0 4 4 0 0 0 8 0zm6-4a3 3 0 1 0-6 0 3 3 0 0 0 6 0z",
+    viewBox: "0 0 24 24",
     title: "Unity",
     subtitle: "Common goal",
     attributes: ["Teamwork", "Harmony", "Mutual Respect", "Unity"],
-    color: "hsl(220 55% 42%)",
-    bg: "hsl(220 55% 42% / 0.08)",
-    border: "hsl(220 55% 42% / 0.25)",
+    isLast: false,
   },
   {
-    icon: "🌍",
+    svgPath: "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm-2 14.5v-9l6 4.5-6 4.5z",
+    viewBox: "0 0 24 24",
     title: "Impact",
     subtitle: "Reaching out",
     attributes: ["Accessibility", "Adaptability", "Relevance"],
-    color: "hsl(220 55% 42%)",
-    bg: "hsl(220 55% 42% / 0.08)",
-    border: "hsl(220 55% 42% / 0.25)",
+    isLast: false,
   },
   {
-    icon: "🛡️",
+    svgPath: "M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6l-8-4zm0 4l6 3v5c0 3.5-2.5 6.75-6 8-3.5-1.25-6-4.5-6-8V9l6-3zm-1 4v4h2v-4h-2zm0 5v2h2v-2h-2z",
+    viewBox: "0 0 24 24",
     title: "Integrity",
     subtitle: "Safety & Success",
     attributes: ["Trust", "Confidence", "Patience", "Tolerance"],
-    color: "hsl(220 55% 42%)",
-    bg: "hsl(220 55% 42% / 0.08)",
-    border: "hsl(220 55% 42% / 0.25)",
+    isLast: true,
   },
 ];
 
 export default function Why() {
   return (
-    <div className="min-h-[100dvh] bg-background pb-16">
+    <div className="min-h-[100dvh] pb-16" style={{ background: "hsl(40 52% 87%)" }}>
 
-      {/* Header */}
-      <div
-        className="px-5 pt-10 pb-8"
-        style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}
-      >
+      {/* Header — slide-style title */}
+      <div className="px-5 pt-10 pb-6" style={{ borderBottom: "1px solid hsl(14 30% 70% / 0.3)" }}>
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-6 opacity-60 hover:opacity-100 transition-opacity"
@@ -57,49 +50,66 @@ export default function Why() {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2.5rem", color: "hsl(14 72% 18%)" }}>
+        <h1
+          className="font-serif font-bold"
+          style={{ fontSize: "3rem", color: "hsl(14 72% 18%)", lineHeight: 1 }}
+        >
           Why?
         </h1>
-        <p className="font-sans mt-1" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>
+        <p className="font-sans mt-2" style={{ color: "hsl(14 50% 35%)", fontSize: "0.85rem" }}>
           The four pillars behind ISKCON's 7 Purposes
         </p>
       </div>
 
-      {/* Pillars */}
-      <div className="max-w-lg mx-auto px-5 py-6 space-y-4">
-        {pillars.map((pillar, i) => (
-          <div
-            key={pillar.title}
-            className="rounded-2xl overflow-hidden"
-            style={{ border: `1px solid ${pillar.border}`, background: pillar.bg }}
-          >
-            <div className="flex items-stretch">
-              {/* Left — icon + title */}
-              <div className="flex flex-col justify-center px-4 py-4 gap-1" style={{ minWidth: 120 }}>
-                <span style={{ fontSize: "1.8rem", lineHeight: 1 }}>{pillar.icon}</span>
-                <h2 className="font-serif font-bold mt-2 leading-tight" style={{ fontSize: "1.25rem", color: "hsl(14 72% 18%)" }}>
-                  {pillar.title}
-                </h2>
-                <p className="font-sans" style={{ fontSize: "0.72rem", color: "hsl(14 45% 40%)" }}>
-                  {pillar.subtitle}
-                </p>
+      {/* Pillars — slide rows */}
+      <div className="px-5 pt-6 pb-4 space-y-0 max-w-lg mx-auto">
+        {pillars.map((pillar) => (
+          <div key={pillar.title}>
+            {/* Row */}
+            <div className="flex items-center gap-3 py-4">
+
+              {/* Icon column */}
+              <div className="shrink-0 flex flex-col items-center" style={{ width: 40 }}>
+                <div
+                  className="rounded-full flex items-center justify-center"
+                  style={{ width: 40, height: 40, background: "hsl(220 52% 42%)" }}
+                >
+                  <svg viewBox={pillar.viewBox} width="20" height="20" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d={pillar.svgPath} />
+                  </svg>
+                </div>
               </div>
 
-              {/* Arrow */}
-              <div className="flex items-center px-1" style={{ color: "hsl(14 55% 38%)" }}>
-                <svg width="28" height="16" viewBox="0 0 28 16" fill="none">
-                  <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" strokeWidth="1.5"/>
-                  <polyline points="16,2 22,8 16,14" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* Title + subtitle */}
+              <div className="shrink-0" style={{ width: 110 }}>
+                <div className="font-serif font-bold leading-tight" style={{ fontSize: "1.25rem", color: "hsl(14 72% 16%)" }}>
+                  {pillar.title}
+                </div>
+                <div className="font-sans" style={{ fontSize: "0.7rem", color: "hsl(14 40% 45%)", marginTop: 2 }}>
+                  {pillar.subtitle}
+                </div>
+              </div>
+
+              {/* Arrow — long horizontal */}
+              <div className="flex items-center flex-1 relative" style={{ minWidth: 24 }}>
+                <div className="w-full h-px" style={{ background: "hsl(14 55% 30%)" }} />
+                <svg
+                  viewBox="0 0 12 10"
+                  width="12" height="10"
+                  className="absolute right-0 shrink-0"
+                  style={{ fill: "hsl(14 55% 30%)" }}
+                >
+                  <path d="M0 5 L10 5 L6 1 M10 5 L6 9" stroke="hsl(14 55% 30%)" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
 
-              {/* Right — attributes */}
-              <div className="flex flex-col justify-center flex-1 px-3 py-4 gap-1">
+              {/* Attributes */}
+              <div className="shrink-0 flex flex-col items-start gap-0.5" style={{ width: 120 }}>
                 {pillar.attributes.map((attr) => (
                   <span
                     key={attr}
-                    className="font-serif italic"
-                    style={{ fontSize: "0.9rem", color: "hsl(14 55% 30%)" }}
+                    className="font-serif italic leading-snug"
+                    style={{ fontSize: "0.88rem", color: "hsl(14 55% 28%)" }}
                   >
                     {attr}
                   </span>
@@ -107,18 +117,20 @@ export default function Why() {
               </div>
             </div>
 
-            {/* Bottom divider number */}
-            <div className="px-4 pb-2">
-              <div className="w-full h-px" style={{ background: `${pillar.border}` }} />
-            </div>
+            {/* Divider between rows (not after last) */}
+            {!pillar.isLast && (
+              <div className="flex items-center pl-5">
+                {/* Chevron connecting icon columns */}
+                <div className="flex flex-col items-center" style={{ width: 40 }}>
+                  <svg viewBox="0 0 16 10" width="16" height="10" fill="none">
+                    <polyline points="4,2 8,8 12,2" stroke="hsl(220 52% 55%)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div className="flex-1 h-px ml-3" style={{ background: "hsl(14 30% 70% / 0.3)" }} />
+              </div>
+            )}
           </div>
         ))}
-      </div>
-
-      <div className="max-w-lg mx-auto px-5 pb-4">
-        <p className="font-sans text-muted-foreground text-sm leading-relaxed text-center italic">
-          These four pillars guide how ISKCON's 7 Purposes are understood, applied, and shared within any community.
-        </p>
       </div>
     </div>
   );

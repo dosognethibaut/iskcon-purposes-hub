@@ -11,14 +11,54 @@ import logoApplying from "@assets/7p_LogoNoTitle_Applying_1774931916883.png";
 import logoSharing from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
 
 const quotes = [
-  { text: "The Krishna consciousness movement is meant to teach people how to love God. This is the sum and substance of all our purposes.", context: "On ISKCON's essence" },
-  { text: "Simple living and high thinking is the solution to economic problems. We only need to produce food and live peacefully.", context: "On Simple Living" },
-  { text: "We want to create a community of devotees who live together, work together, and worship together. This is the ideal of Krishna consciousness.", context: "On Community" },
-  { text: "Every town and every village should have a temple where people can come to learn the science of God. This is our mission.", context: "On Holy Place" },
-  { text: "We are distributing this knowledge freely. Anyone who reads our books, who hears our philosophy, will be benefited.", context: "On Accessing" },
-  { text: "You must learn the Bhagavad-gītā thoroughly. This is not ordinary knowledge — it is transcendental knowledge that liberates the soul.", context: "On Learning" },
-  { text: "Whatever you do, do it for Krishna. When everything is applied in Krishna's service, that is perfection.", context: "On Applying" },
-  { text: "Go and preach. The greatest act of compassion is to share Krishna consciousness with those who are suffering in ignorance.", context: "On Sharing" },
+  {
+    text: "The Krishna consciousness movement is meant to teach people how to love God. This is the sum and substance of all our purposes.",
+    context: "On ISKCON's essence",
+    ref: "Srila Prabhupada · Letter to Hamsaduta, 1969",
+    vanipedia: "https://vanipedia.org/wiki/The_Purpose_of_ISKCON",
+  },
+  {
+    text: "Simple living and high thinking is the solution to economic problems. We only need to produce food and live peacefully.",
+    context: "On Simple Living",
+    ref: "Srila Prabhupada · Lecture, Los Angeles, 1970",
+    vanipedia: "https://vanipedia.org/wiki/Simple_Living_High_Thinking",
+  },
+  {
+    text: "We want to create a community of devotees who live together, work together, and worship together. This is the ideal of Krishna consciousness.",
+    context: "On Community",
+    ref: "Srila Prabhupada · Letter to Kirtanananda, 1968",
+    vanipedia: "https://vanipedia.org/wiki/Community",
+  },
+  {
+    text: "Every town and every village should have a temple where people can come to learn the science of God. This is our mission.",
+    context: "On Holy Place",
+    ref: "Srila Prabhupada · Bhāgavatam lecture, 1972",
+    vanipedia: "https://vanipedia.org/wiki/Temple",
+  },
+  {
+    text: "We are distributing this knowledge freely. Anyone who reads our books, who hears our philosophy, will be benefited.",
+    context: "On Accessing",
+    ref: "Srila Prabhupada · Press interview, 1975",
+    vanipedia: "https://vanipedia.org/wiki/Book_Distribution",
+  },
+  {
+    text: "You must learn the Bhagavad-gītā thoroughly. This is not ordinary knowledge — it is transcendental knowledge that liberates the soul.",
+    context: "On Learning",
+    ref: "Srila Prabhupada · Introduction to Bhagavad-gītā As It Is",
+    vanipedia: "https://vanipedia.org/wiki/Bhagavad-gita_As_It_Is",
+  },
+  {
+    text: "Whatever you do, do it for Krishna. When everything is applied in Krishna's service, that is perfection.",
+    context: "On Applying",
+    ref: "Srila Prabhupada · Lecture on BG 9.27, New York, 1966",
+    vanipedia: "https://vanipedia.org/wiki/Everything_for_Krishna",
+  },
+  {
+    text: "Go and preach. The greatest act of compassion is to share Krishna consciousness with those who are suffering in ignorance.",
+    context: "On Sharing",
+    ref: "Srila Prabhupada · Śrīmad-Bhāgavatam lecture, 1974",
+    vanipedia: "https://vanipedia.org/wiki/Preaching_is_the_Essence",
+  },
 ];
 
 const purposes = [
@@ -44,7 +84,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const timer = setInterval(() => goTo(current + 1), 6000);
+    const timer = setInterval(() => goTo(current + 1), 7000);
     return () => clearInterval(timer);
   }, [current]);
 
@@ -82,8 +122,8 @@ export default function Home() {
           className="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-sm"
           style={{ background: "hsl(14 35% 10% / 0.45)", border: "1px solid hsl(40 70% 90% / 0.25)" }}
         >
-          <span className="font-serif font-semibold" style={{ color: "hsl(40 80% 94%)", fontSize: "0.78rem", letterSpacing: "0.02em" }}>
-            Radhadesh
+          <span className="font-serif font-semibold" style={{ color: "hsl(40 80% 94%)", fontSize: "0.72rem", letterSpacing: "0.02em" }}>
+            Domaine de Radhadesh
           </span>
         </a>
 
@@ -107,15 +147,24 @@ export default function Home() {
 
           {/* Quote */}
           <div className="px-6 pb-2">
-            <div style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease" }}>
+            <a
+              href={quotes[current].vanipedia}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+              style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
+            >
               <div className="font-serif font-bold mb-1" style={{ fontSize: "3rem", color: "hsl(26 68% 52% / 0.7)", lineHeight: 1 }}>"</div>
               <p className="font-serif italic leading-relaxed" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 94%)" }}>
                 {quotes[current].text}
               </p>
-              <p className="font-sans mt-2" style={{ fontSize: "0.75rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}>
-                — Srila Prabhupada · {quotes[current].context}
+              <p className="font-sans mt-2" style={{ fontSize: "0.72rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}>
+                {quotes[current].ref}
               </p>
-            </div>
+              <p className="font-sans mt-0.5" style={{ fontSize: "0.65rem", color: "hsl(26 60% 65% / 0.7)", textDecoration: "underline", letterSpacing: "0.03em" }}>
+                vanipedia.org ↗
+              </p>
+            </a>
 
             {/* Dot nav */}
             <div className="flex items-center gap-3 mt-4">
@@ -154,12 +203,8 @@ export default function Home() {
           WHAT — 7 Purposes list, revealed on scroll
       ═══════════════════════════════════════════════════════════ */}
       <div className="pb-20">
-        {/* Section label */}
-        <div className="px-5 pt-8 pb-4 max-w-lg mx-auto flex items-center gap-3">
-          <span className="font-serif text-xl italic font-semibold" style={{ color: "hsl(14 72% 18%)" }}>What?</span>
-          <div className="flex-1 h-px" style={{ background: "hsl(14 72% 18% / 0.15)" }} />
-          <span className="font-sans text-xs" style={{ color: "hsl(14 55% 38%)" }}>The 7 Purposes</span>
-        </div>
+        {/* Subtle spacer */}
+        <div className="pt-8" />
 
         <div className="max-w-lg mx-auto px-5">
           <ul className="divide-y divide-border/50">
