@@ -141,7 +141,7 @@ export default function Home() {
               <img
                 src={sevenPLogo}
                 alt="7"
-                style={{ height: "1.15em", width: "auto", display: "inline-block", verticalAlign: "middle", mixBlendMode: "screen", marginBottom: "0.1em" }}
+                style={{ height: "1.9em", width: "auto", display: "inline-block", verticalAlign: "middle", mixBlendMode: "screen", marginBottom: "0.15em" }}
               />{" "}Purposes<br />of ISKCON
             </h1>
             <div
