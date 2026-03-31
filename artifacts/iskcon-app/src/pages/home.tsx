@@ -136,7 +136,7 @@ export default function Home() {
 
           {/* Title */}
           <div className="px-6 pt-10">
-            <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
+            <h1 className="font-serif font-bold" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)", lineHeight: 1.05 }}>
               The{" "}
               <img
                 src={sevenPLogo}
