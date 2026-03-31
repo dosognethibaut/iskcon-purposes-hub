@@ -38,9 +38,19 @@ const logoByTitle: Record<string, string> = {
   "Sharing":       logoSharing,
 };
 
+const numberByTitle: Record<string, number> = {
+  "Accessing":     1,
+  "Learning":      2,
+  "Community":     3,
+  "Applying":      4,
+  "Holy Place":    5,
+  "Simple Living": 6,
+  "Sharing":       7,
+};
+
 const accentByTitle: Record<string, string> = {
   "Accessing":     "hsl(200 65% 38%)",
-  "Learning":      "hsl(35 70% 40%)",
+  "Learning":      "hsl(35 65% 38%)",
   "Community":     "hsl(220 52% 42%)",
   "Applying":      "hsl(26 68% 42%)",
   "Holy Place":    "hsl(160 45% 35%)",
@@ -166,10 +176,10 @@ export default function PurposeDetail() {
           <div className="flex-1 min-w-0">
             {/* Purpose number badge */}
             <div
-              className="inline-block px-3 py-0.5 rounded-full font-sans text-xs font-bold tracking-widest uppercase mb-2"
+              className="inline-block px-3 py-1 rounded-lg font-sans text-xs font-bold tracking-widest uppercase mb-2"
               style={{ background: accent, color: "hsl(40 80% 96%)" }}
             >
-              Purpose {purpose.number}
+              Purpose {numberByTitle[purpose.title] ?? purpose.number}
             </div>
             <h1
               className="font-serif font-bold leading-tight"

@@ -35,7 +35,7 @@ function PurposeGrid({
   onToggle: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-7 gap-1.5 w-full">
       {purposes.map(p => {
         const rank = order.indexOf(p.id);
         const active = rank !== -1;
@@ -44,23 +44,22 @@ function PurposeGrid({
             key={p.id}
             type="button"
             onClick={() => onToggle(p.id)}
-            className="relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all"
+            className="relative flex flex-col items-center gap-1.5 py-2 rounded-xl transition-all"
             style={{
-              background: "transparent",
+              background: active ? "hsl(26 68% 42% / 0.08)" : "transparent",
               border: "none",
               outline: active ? "2px solid hsl(26 68% 42%)" : "2px solid transparent",
               outlineOffset: 1,
-              opacity: active ? 1 : 0.4,
-              transform: active ? "scale(1.08)" : "scale(1)",
+              opacity: active ? 1 : 0.38,
+              transform: active ? "scale(1.06)" : "scale(1)",
             }}
           >
-            {/* Order badge */}
             {active && (
               <span
-                className="absolute -top-1 -right-1 flex items-center justify-center rounded-full font-sans font-bold"
+                className="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full font-sans font-bold"
                 style={{
-                  width: 16, height: 16,
-                  fontSize: "0.5rem",
+                  width: 17, height: 17,
+                  fontSize: "0.52rem",
                   background: "hsl(26 68% 42%)",
                   color: "hsl(40 90% 96%)",
                   lineHeight: 1,
@@ -73,15 +72,14 @@ function PurposeGrid({
             <img
               src={p.logo}
               alt={p.label}
-              style={{ width: 34, height: 34, objectFit: "contain", filter: active ? "none" : "grayscale(70%)" }}
+              style={{ width: 40, height: 40, objectFit: "contain", filter: active ? "none" : "grayscale(70%)" }}
             />
             <span
-              className="font-sans text-center leading-tight"
+              className="font-sans text-center leading-tight px-0.5"
               style={{
-                fontSize: "0.55rem",
+                fontSize: "0.5rem",
                 color: active ? "hsl(26 55% 28%)" : "hsl(14 30% 50%)",
                 fontWeight: active ? 700 : 400,
-                maxWidth: 48,
               }}
             >
               {p.label}
@@ -172,30 +170,27 @@ export default function Survey() {
             className="rounded-2xl p-4"
             style={{ background: "hsl(40 40% 93%)", border: `1px solid ${answers[qi].length > 0 ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}
           >
-            <div className="flex gap-4 items-start">
-              {/* Question */}
-              <div className="flex-1 min-w-0 pr-2">
-                <span className="font-sans font-bold text-xs" style={{ color: "hsl(26 68% 42%)" }}>
-                  {String(qi + 1).padStart(2, "0")}
-                </span>
-                <p className="font-serif font-semibold mt-0.5 leading-snug" style={{ fontSize: "0.9rem", color: "hsl(14 72% 18%)" }}>
-                  {q}
-                </p>
-                {answers[qi].length > 0 && (
-                  <p className="font-sans text-xs mt-1.5" style={{ color: "hsl(26 55% 38%)" }}>
-                    {answers[qi].length} selected
-                  </p>
-                )}
-              </div>
-
-              {/* Logos grid */}
-              <div className="shrink-0" style={{ width: 160 }}>
-                <PurposeGrid
-                  order={answers[qi]}
-                  onToggle={id => toggle(qi, id)}
-                />
-              </div>
+            {/* Question */}
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(26 68% 42%)" }}>
+                {String(qi + 1).padStart(2, "0")}
+              </span>
+              <p className="font-serif font-semibold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
+                {q}
+              </p>
             </div>
+
+            {/* Logos grid — full width */}
+            <PurposeGrid
+              order={answers[qi]}
+              onToggle={id => toggle(qi, id)}
+            />
+
+            {answers[qi].length > 0 && (
+              <p className="font-sans text-xs mt-2" style={{ color: "hsl(26 55% 38%)" }}>
+                {answers[qi].length} selected
+              </p>
+            )}
           </div>
         ))}
 
