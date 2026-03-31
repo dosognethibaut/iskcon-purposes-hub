@@ -4,7 +4,6 @@ import PurposePanel from "./PurposePanel";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
-import radhadeshLogo from "@assets/image_1774938925316.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
 import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774940060432.png";
 import logoCommunity    from "@assets/7p_Community3.png_1774940060432.png";
@@ -147,21 +146,6 @@ export default function Home() {
             ].join(", "),
           }}
         />
-
-        {/* Radhadesh logo — top left */}
-        <a
-          href="https://www.radhadesh.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="absolute top-3 left-3 z-20 rounded-lg overflow-hidden"
-          style={{ boxShadow: "0 1px 8px hsl(14 35% 6% / 0.5)" }}
-        >
-          <img
-            src={radhadeshLogo}
-            alt="Domaine de Radhadesh"
-            style={{ height: 38, width: "auto", display: "block" }}
-          />
-        </a>
 
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
