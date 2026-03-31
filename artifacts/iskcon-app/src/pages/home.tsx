@@ -142,7 +142,7 @@ export default function Home() {
   useEffect(() => {
     let lastData: Record<number, { activityIds: number[]; messageIds: number[] }> | null = null;
     const fetchBadges = () => {
-      const tok = localStorage.getItem("iskcon_jwt");
+      const tok = localStorage.getItem("auth_token");
       const headers: Record<string, string> = {};
       if (tok) headers["Authorization"] = `Bearer ${tok}`;
       fetch(`${HOME_API}/api/badges`, { headers })

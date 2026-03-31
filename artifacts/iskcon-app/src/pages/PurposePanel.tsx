@@ -305,11 +305,33 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     });
   };
 
-  const toggleComments = (id: number, type: "activity" | "message") => {
+  // ── Comment-badge helpers ────────────────────────────────────────────────────
+  // Store the last-seen comment count in localStorage so we can show a badge
+  // when new comments appear on an activity or message.
+  const cmtSeenKey = (type: "activity" | "message", id: number) =>
+    type === "activity" ? `iskcon_seen_cmts_act_${id}` : `iskcon_seen_cmts_msg_${id}`;
+
+  const hasNewComments = (type: "activity" | "message", id: number, currentCount: number): boolean => {
+    if (currentCount === 0) return false;
+    const seen = parseInt(localStorage.getItem(cmtSeenKey(type, id)) ?? "0", 10);
+    return currentCount > seen;
+  };
+
+  const markCommentsSeen = (type: "activity" | "message", id: number, currentCount: number) => {
+    localStorage.setItem(cmtSeenKey(type, id), String(currentCount));
+  };
+
+  const toggleComments = (id: number, type: "activity" | "message", commentCount = 0) => {
     const setter = type === "activity" ? setExpandedActivityComments : setExpandedMessageComments;
     setter(prev => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      // Always mark seen on toggle — clears badge whether opening or closing
+      markCommentsSeen(type, id, commentCount);
       return next;
     });
   };
@@ -887,14 +909,20 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                                   </button>
                                 </>
                               )}
-                              <button onClick={() => toggleComments(activity.id, "activity")}
-                                className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+                              <button onClick={() => toggleComments(activity.id, "activity", activity.commentCount ?? 0)}
+                                className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors relative"
                                 style={{
                                   background: isDone ? (commentsOpen ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)") : (commentsOpen ? "hsl(14 18% 88%)" : "transparent"),
                                   color: isDone ? "rgba(255,255,255,0.9)" : "hsl(14 42% 42%)",
                                   border: isDone ? "1px solid rgba(255,255,255,0.3)" : "1px solid hsl(14 25% 68% / 0.45)",
                                 }}>
                                 <MessageSquare className="w-3 h-3" />
+                                {(activity.commentCount ?? 0) > 0 && (
+                                  <span className="font-sans text-xs">{activity.commentCount}</span>
+                                )}
+                                {!commentsOpen && hasNewComments("activity", activity.id, activity.commentCount ?? 0) && (
+                                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full" style={{ background: "hsl(358 72% 52%)" }} />
+                                )}
                                 {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                               </button>
                             </div>
@@ -1116,10 +1144,16 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                                 </button>
                               </>
                             )}
-                            <button onClick={() => toggleComments(message.id, "message")}
-                              className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+                            <button onClick={() => toggleComments(message.id, "message", message.commentCount ?? 0)}
+                              className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors relative"
                               style={{ background: commentsOpen ? "hsl(14 18% 88%)" : "transparent", color: "hsl(14 42% 42%)", border: "1px solid hsl(14 25% 68% / 0.45)" }}>
                               <MessageSquare className="w-3 h-3" />
+                              {(message.commentCount ?? 0) > 0 && (
+                                <span className="font-sans text-xs">{message.commentCount}</span>
+                              )}
+                              {!commentsOpen && hasNewComments("message", message.id, message.commentCount ?? 0) && (
+                                <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full" style={{ background: "hsl(358 72% 52%)" }} />
+                              )}
                               {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                             </button>
                           </div>

@@ -79,34 +79,62 @@ router.get("/purposes/:id", async (req, res) => {
 async function enrichActivities(rawActivities: any[], userId?: number) {
   if (!rawActivities.length) return [];
   const ids = rawActivities.map((a: any) => a.id);
-  const counts = await db
-    .select({
-      activityId: activityParticipantsTable.activityId,
-      count: sql<number>`cast(count(*) as int)`,
-    })
-    .from(activityParticipantsTable)
-    .where(inArray(activityParticipantsTable.activityId, ids))
-    .groupBy(activityParticipantsTable.activityId);
 
-  const joined = userId
-    ? await db
-        .select({ activityId: activityParticipantsTable.activityId })
-        .from(activityParticipantsTable)
-        .where(and(
-          inArray(activityParticipantsTable.activityId, ids),
-          eq(activityParticipantsTable.userId, userId),
-        ))
-    : [];
+  const [counts, commentCounts, joined] = await Promise.all([
+    db.select({
+        activityId: activityParticipantsTable.activityId,
+        count: sql<number>`cast(count(*) as int)`,
+      })
+      .from(activityParticipantsTable)
+      .where(inArray(activityParticipantsTable.activityId, ids))
+      .groupBy(activityParticipantsTable.activityId),
+
+    db.select({
+        activityId: activityCommentsTable.activityId,
+        count: sql<number>`cast(count(*) as int)`,
+      })
+      .from(activityCommentsTable)
+      .where(inArray(activityCommentsTable.activityId, ids))
+      .groupBy(activityCommentsTable.activityId),
+
+    userId
+      ? db.select({ activityId: activityParticipantsTable.activityId })
+          .from(activityParticipantsTable)
+          .where(and(
+            inArray(activityParticipantsTable.activityId, ids),
+            eq(activityParticipantsTable.userId, userId),
+          ))
+      : Promise.resolve([]),
+  ]);
 
   const countMap: Record<number, number> = {};
   counts.forEach((c: any) => { countMap[c.activityId] = c.count; });
+  const commentCountMap: Record<number, number> = {};
+  commentCounts.forEach((c: any) => { commentCountMap[c.activityId] = c.count; });
   const joinedSet = new Set(joined.map((j: any) => j.activityId));
 
   return rawActivities.map((a: any) => ({
     ...a,
     participantCount: countMap[a.id] ?? 0,
+    commentCount: commentCountMap[a.id] ?? 0,
     isJoined: joinedSet.has(a.id),
   }));
+}
+
+async function enrichMessages(rawMessages: any[]) {
+  if (!rawMessages.length) return rawMessages;
+  const ids = rawMessages.map((m: any) => m.id);
+  const commentCounts = await db
+    .select({
+      messageId: commentsTable.messageId,
+      count: sql<number>`cast(count(*) as int)`,
+    })
+    .from(commentsTable)
+    .where(inArray(commentsTable.messageId, ids))
+    .groupBy(commentsTable.messageId);
+  const commentCountMap: Record<number, number> = {};
+  commentCounts.forEach((c: any) => { commentCountMap[c.messageId] = c.count; });
+  return rawMessages.map((m: any) => ({ ...m, commentCount: commentCountMap[m.id] ?? 0 }));
 }
 
 router.get("/purposes/:purposeId/activities", async (req, res) => {
@@ -143,7 +171,13 @@ router.post("/purposes/:purposeId/activities", async (req, res) => {
     if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
-    const body = insertActivitySchema.parse({ ...req.body, purposeId });
+    // drizzle-zod generates z.date() for timestamp columns; convert ISO string → Date
+    const rawBody = req.body;
+    const body = insertActivitySchema.parse({
+      ...rawBody,
+      purposeId,
+      scheduledAt: rawBody.scheduledAt ? new Date(rawBody.scheduledAt) : undefined,
+    });
     const [activity] = await db.insert(activitiesTable).values({ ...body, userId: user.id, approved: false }).returning();
     emailNewActivity({ title: activity.title, description: activity.description, authorName: activity.authorName, purposeId }).catch(() => {});
     notifyAdmins("activity_pending", `📅 New activity proposed by ${activity.authorName}: "${activity.title}" — awaiting your validation`);
@@ -331,10 +365,10 @@ router.get("/purposes/:purposeId/messages", async (req, res) => {
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
     const user = await getRequestUser(req.headers.authorization);
-    const messages = user?.isAdmin
+    const raw = user?.isAdmin
       ? await db.select().from(messagesTable).where(eq(messagesTable.purposeId, purposeId)).orderBy(messagesTable.createdAt)
       : await db.select().from(messagesTable).where(and(eq(messagesTable.purposeId, purposeId), eq(messagesTable.approved, true))).orderBy(messagesTable.createdAt);
-    res.json(messages);
+    res.json(await enrichMessages(raw));
   } catch (err) {
     req.log.error({ err }, "Failed to fetch messages");
     res.status(500).json({ error: "Internal server error" });
