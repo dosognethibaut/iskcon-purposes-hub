@@ -184,9 +184,8 @@ export default function Home() {
               className="block"
               style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
             >
-              <div className="font-serif font-bold mb-1 text-center" style={{ fontSize: "3rem", color: "hsl(26 68% 52% / 0.7)", lineHeight: 1 }}>"</div>
               <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 94%)" }}>
-                {quotes[current].text}
+                <span style={{ color: "hsl(26 68% 62%)" }}>"</span>{quotes[current].text}<span style={{ color: "hsl(26 68% 62%)" }}>"</span>
               </p>
               <p className="font-sans mt-2 text-center" style={{ fontSize: "0.72rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}>
                 {quotes[current].ref}
