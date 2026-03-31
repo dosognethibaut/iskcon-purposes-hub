@@ -49,13 +49,13 @@ const numberByTitle: Record<string, number> = {
 };
 
 const accentByTitle: Record<string, string> = {
-  "Accessing":     "hsl(200 65% 38%)",
-  "Learning":      "hsl(35 65% 38%)",
-  "Community":     "hsl(220 52% 42%)",
-  "Applying":      "hsl(26 68% 42%)",
-  "Holy Place":    "hsl(160 45% 35%)",
-  "Simple Living": "hsl(90 42% 36%)",
-  "Sharing":       "hsl(14 65% 38%)",
+  "Accessing":     "hsl(14 52% 38%)",
+  "Learning":      "hsl(17 44% 35%)",
+  "Community":     "hsl(220 60% 44%)",
+  "Applying":      "hsl(14 18% 33%)",
+  "Holy Place":    "hsl(14 8% 22%)",
+  "Simple Living": "hsl(75 52% 38%)",
+  "Sharing":       "hsl(14 40% 30%)",
 };
 
 const activitySchema = z.object({
