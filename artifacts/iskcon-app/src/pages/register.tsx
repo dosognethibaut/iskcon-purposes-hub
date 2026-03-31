@@ -80,7 +80,9 @@ const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function Register() {
   const [, navigate] = useLocation();
-  const { currentUser, token, login, logout, setUserFromRegistration } = useAuth();
+  const { currentUser, token, login, logout, setUserFromRegistration, updateCurrentUser } = useAuth();
+  const profilePhotoRef = useRef<HTMLInputElement>(null);
+  const [photoUpdating, setPhotoUpdating] = useState(false);
 
   const [tab, setTab] = useState<"register" | "signin">("register");
   const [registrationStep, setRegistrationStep] = useState<1 | 2>(1);
@@ -214,6 +216,31 @@ export default function Register() {
   const inputCls = "w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40";
   const inputStyle = { borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" };
 
+  const handleProfilePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !token) return;
+    setPhotoUpdating(true);
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string;
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/photo`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+          body: JSON.stringify({ photoDataUrl: dataUrl }),
+        });
+        if (!res.ok) throw new Error("Upload failed");
+        updateCurrentUser({ photoDataUrl: dataUrl });
+        toast.success("Profile photo updated");
+      } catch {
+        toast.error("Failed to update photo");
+      } finally {
+        setPhotoUpdating(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   if (currentUser && registrationStep === 1) {
     const formattedDob = (() => {
       try { return format(parseISO(currentUser.dob), "d MMMM yyyy"); }
@@ -227,17 +254,23 @@ export default function Register() {
             <ArrowLeft className="w-4 h-4" /> Home
           </Link>
           <div className="flex flex-col items-center gap-3">
-            {currentUser.photoDataUrl
-              ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover shadow-lg" style={{ width: 100, height: 100, border: "3px solid hsl(26 68% 42% / 0.4)" }} />
-              : <div className="rounded-full flex items-center justify-center font-serif font-bold shadow-lg" style={{ width: 100, height: 100, fontSize: "2.2rem", background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", border: "3px solid hsl(40 80% 96% / 0.5)" }}>{currentUser.fullName[0]}</div>
-            }
+            <button type="button" onClick={() => profilePhotoRef.current?.click()} className="relative rounded-full overflow-hidden group" style={{ width: 100, height: 100, flexShrink: 0 }} title="Change photo">
+              {currentUser.photoDataUrl
+                ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover w-full h-full" style={{ border: "3px solid hsl(26 68% 42% / 0.4)" }} />
+                : <div className="w-full h-full rounded-full flex items-center justify-center font-serif font-bold shadow-lg" style={{ fontSize: "2.2rem", background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", border: "3px solid hsl(40 80% 96% / 0.5)" }}>{currentUser.fullName[0]}</div>
+              }
+              <div className="absolute inset-0 rounded-full flex flex-col items-center justify-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "hsl(14 35% 8% / 0.55)" }}>
+                <Camera className="w-5 h-5 text-white" />
+                <span className="font-sans text-white" style={{ fontSize: "0.55rem", fontWeight: 600 }}>{photoUpdating ? "…" : "Change"}</span>
+              </div>
+            </button>
+            <input ref={profilePhotoRef} type="file" accept="image/*" className="hidden" onChange={handleProfilePhotoChange} />
             <div className="text-center">
               <h1 className="font-serif font-bold" style={{ fontSize: "1.7rem", color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</h1>
-              {currentUser.isAdmin && (
-                <span className="inline-flex items-center gap-1 mt-1 px-3 py-0.5 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
-                  <ShieldCheck className="w-3 h-3" /> Admin
-                </span>
-              )}
+              <span className="inline-flex items-center gap-1 mt-1 px-3 py-0.5 rounded-full font-sans text-xs font-semibold"
+                style={{ background: currentUser.isAdmin ? "hsl(26 68% 42%)" : "hsl(14 30% 70% / 0.3)", color: currentUser.isAdmin ? "hsl(40 80% 96%)" : "hsl(14 45% 38%)" }}>
+                {currentUser.isAdmin ? <><ShieldCheck className="w-3 h-3" /> Admin</> : "Member"}
+              </span>
             </div>
           </div>
         </div>
@@ -272,17 +305,6 @@ export default function Register() {
     return (
       <div className="min-h-[100dvh] pb-16" style={{ background: "hsl(40 30% 96%)" }}>
         <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)", borderBottom: "1px solid hsl(14 20% 78%)" }}>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center font-sans font-bold text-xs" style={{ background: "hsl(26 68% 42% / 0.2)", color: "hsl(26 55% 28%)" }}>✓</div>
-              <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 40% 45%)" }}>Profile</span>
-            </div>
-            <div className="flex-1 h-px" style={{ background: "hsl(14 25% 70%)" }} />
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center font-sans font-bold text-xs" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>2</div>
-              <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>Survey</span>
-            </div>
-          </div>
           <h1 className="font-serif font-bold" style={{ fontSize: "1.8rem", color: "hsl(14 72% 18%)" }}>Community Survey</h1>
           <p className="font-sans mt-1 mb-3" style={{ color: "hsl(14 45% 38%)", fontSize: "0.88rem" }}>
             {surveyAnswered} / {totalQuestions} answered
@@ -404,20 +426,7 @@ export default function Register() {
           </form>
         ) : (
           <>
-            {/* Step indicator */}
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center font-sans font-bold text-xs" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>1</div>
-                <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>Profile</span>
-              </div>
-              <div className="flex-1 h-px" style={{ background: "hsl(14 25% 70% / 0.5)" }} />
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center font-sans font-bold text-xs" style={{ background: "hsl(14 30% 75%)", color: "hsl(14 20% 48%)" }}>2</div>
-                <span className="font-sans text-sm" style={{ color: "hsl(14 40% 52%)" }}>Survey</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleStep1} className="space-y-5">
+              <form onSubmit={handleStep1} className="space-y-5">
               <div className="flex flex-col items-center gap-3 pb-2">
                 <button type="button" onClick={() => fileRef.current?.click()} className="relative rounded-full overflow-hidden border-2 flex items-center justify-center" style={{ width: 88, height: 88, borderColor: "hsl(26 68% 42% / 0.4)", background: "hsl(40 40% 88%)" }}>
                   {photo

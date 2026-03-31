@@ -19,6 +19,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   setUserFromRegistration: (user: CurrentUser, token: string) => void;
+  updateCurrentUser: (partial: Partial<CurrentUser>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -83,8 +84,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     storeAuth(user, tok);
   }, [storeAuth]);
 
+  const updateCurrentUser = useCallback((partial: Partial<CurrentUser>) => {
+    setCurrentUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...partial };
+      localStorage.setItem("auth_user", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ currentUser, token, isLoading, login, logout, setUserFromRegistration }}>
+    <AuthContext.Provider value={{ currentUser, token, isLoading, login, logout, setUserFromRegistration, updateCurrentUser }}>
       {children}
     </AuthContext.Provider>
   );

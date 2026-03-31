@@ -44,6 +44,7 @@ router.post("/auth/register", async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(body.password, 12);
+    const ADMIN_EMAILS = ["dosognethibaut@gmail.com"];
 
     const [user] = await db.insert(usersTable).values({
       fullName: body.fullName,
@@ -53,6 +54,7 @@ router.post("/auth/register", async (req, res) => {
       community: body.community,
       deptRoles: JSON.stringify(body.deptRoles),
       photoDataUrl: body.photoDataUrl ?? null,
+      isAdmin: ADMIN_EMAILS.includes(body.email.toLowerCase()),
     }).returning();
 
     if (body.surveyAnswers.length > 0) {
@@ -168,6 +170,23 @@ router.get("/auth/me", async (req, res) => {
     });
   } catch {
     res.status(401).json({ error: "Invalid or expired token" });
+  }
+});
+
+router.patch("/auth/photo", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) { res.status(401).json({ error: "Not authenticated" }); return; }
+    const token = authHeader.slice(7);
+    const payload = jwt.verify(token, JWT_SECRET) as { sub: number };
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, Number(payload.sub)));
+    if (!user) { res.status(401).json({ error: "User not found" }); return; }
+    const { photoDataUrl } = z.object({ photoDataUrl: z.string().nullable() }).parse(req.body);
+    const [updated] = await db.update(usersTable).set({ photoDataUrl }).where(eq(usersTable.id, user.id)).returning();
+    res.json({ photoDataUrl: updated.photoDataUrl });
+  } catch (err) {
+    req.log.error({ err }, "Photo update failed");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
