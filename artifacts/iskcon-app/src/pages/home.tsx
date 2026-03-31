@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
+import PurposePanel from "./PurposePanel";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import radhadeshLogo from "@assets/image_1774938925316.png";
@@ -249,8 +250,8 @@ export default function Home() {
       <div className="pb-20">
         <div className="pt-8" />
 
-        {/* Logo strip — centered, evenly distributed */}
-        <div className="flex items-end justify-center px-2">
+        {/* Logo grid — wrapped, big, centered */}
+        <div className="flex flex-wrap justify-center gap-4 px-4">
           {purposes.map((p, i) => {
             const active = activePurpose === i;
             return (
@@ -258,24 +259,21 @@ export default function Home() {
                 key={p.id}
                 type="button"
                 onClick={() => setActivePurpose(active ? null : i)}
-                className="flex-1 flex flex-col items-center gap-1 focus:outline-none"
-                style={{ opacity: activePurpose !== null && !active ? 0.35 : 1, transition: "opacity 0.2s" }}
+                className="flex flex-col items-center gap-1 focus:outline-none"
+                style={{
+                  opacity: activePurpose !== null && !active ? 0.3 : 1,
+                  transition: "opacity 0.2s, transform 0.2s",
+                  transform: active ? "scale(1.1)" : "scale(1)",
+                  width: 80,
+                }}
               >
                 <img
                   src={p.logo}
                   alt={p.title}
-                  style={{
-                    width: "100%",
-                    maxWidth: 64,
-                    height: "auto",
-                    aspectRatio: "1",
-                    objectFit: "contain",
-                    transform: active ? "scale(1.12)" : "scale(1)",
-                    transition: "transform 0.2s",
-                  }}
+                  style={{ width: 80, height: 80, objectFit: "contain" }}
                 />
                 <div
-                  className="rounded-full transition-all"
+                  className="rounded-full"
                   style={{ width: active ? 20 : 0, height: 2, background: "hsl(26 68% 42%)", transition: "width 0.2s" }}
                 />
               </button>
@@ -283,44 +281,14 @@ export default function Home() {
           })}
         </div>
 
-        {/* Inline panel — no background, just text */}
+        {/* Purpose panel — quote + description + activities + messages */}
         {activePurpose !== null && (
-          <div className="mt-2 relative px-6 py-6">
-            {/* Opening quote */}
-            <span
-              className="absolute font-serif font-bold select-none"
-              style={{ top: 6, left: 14, fontSize: "3.5rem", lineHeight: 1, color: "hsl(14 30% 45% / 0.35)" }}
-            >
-              "
-            </span>
-            {/* Closing quote */}
-            <span
-              className="absolute font-serif font-bold select-none"
-              style={{ bottom: 2, right: 14, fontSize: "3.5rem", lineHeight: 1, color: "hsl(14 30% 45% / 0.35)" }}
-            >
-              "
-            </span>
-
-            <div className="text-center">
-              <p
-                className="font-serif font-bold leading-relaxed"
-                style={{ fontSize: "0.95rem", color: "hsl(14 52% 18%)" }}
-              >
-                {purposes[activePurpose].officialText}
-              </p>
-            </div>
-
-            {/* Divider */}
-            <div className="my-5 mx-auto w-12 h-px" style={{ background: "hsl(14 25% 68%)" }} />
-
-            {/* Description */}
-            <p
-              className="font-sans leading-relaxed text-center"
-              style={{ fontSize: "0.88rem", color: "hsl(14 40% 38%)" }}
-            >
-              {purposes[activePurpose].description}
-            </p>
-          </div>
+          <PurposePanel
+            purposeId={purposes[activePurpose].id}
+            title={purposes[activePurpose].title}
+            officialText={purposes[activePurpose].officialText}
+            description={purposes[activePurpose].description}
+          />
         )}
 
         <div className="mt-8 px-6 max-w-lg mx-auto text-center">
