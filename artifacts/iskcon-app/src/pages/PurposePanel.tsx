@@ -385,9 +385,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   return (
     <div className="mt-2">
       {/* Quote block */}
-      <div className="relative px-6 py-6">
-        <span className="absolute font-serif font-bold select-none" style={{ top: 6, left: 14, fontSize: "3.5rem", lineHeight: 1, color: "hsl(14 30% 45% / 0.35)" }}>"</span>
-        <span className="absolute font-serif font-bold select-none" style={{ bottom: 2, right: 14, fontSize: "3.5rem", lineHeight: 1, color: "hsl(14 30% 45% / 0.35)" }}>"</span>
+      <div className="px-6 py-6">
         <div className="text-center">
           <p className="font-serif font-bold leading-relaxed" style={{ fontSize: "0.95rem", color: "hsl(14 52% 18%)" }}>{officialText}</p>
         </div>
