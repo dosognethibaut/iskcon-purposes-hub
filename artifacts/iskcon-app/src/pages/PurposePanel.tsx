@@ -51,15 +51,6 @@ const accentById: Record<number, string> = {
   7: "hsl(358 52% 42%)",
 };
 
-const cardBgById: Record<number, string> = {
-  1: "hsl(150 38% 95%)",
-  2: "hsl(213 50% 95%)",
-  3: "hsl(265 35% 96%)",
-  4: "hsl(26 60% 96%)",
-  5: "hsl(40 55% 95%)",
-  6: "hsl(178 45% 95%)",
-  7: "hsl(358 45% 96%)",
-};
 
 interface AnyComment {
   id: number;
@@ -102,14 +93,12 @@ function CommentSection({
   itemId,
   itemType,
   purposeId,
-  accent,
   token,
   currentUser,
 }: {
   itemId: number;
   itemType: "activity" | "message";
   purposeId: number;
-  accent: string;
   token: string | null;
   currentUser: { fullName: string } | null;
 }) {
@@ -162,9 +151,9 @@ function CommentSection({
   useState(() => { load(); });
 
   return (
-    <div className="px-4 pb-4 pt-2" style={{ borderTop: `1px solid ${accent}20` }}>
+    <div className="px-4 pb-4 pt-2" style={{ borderTop: "1px solid hsl(14 25% 72% / 0.2)" }}>
       {!loaded ? (
-        <div className="flex justify-center py-3"><Loader2 className="w-4 h-4 animate-spin" style={{ color: accent }} /></div>
+        <div className="flex justify-center py-3"><Loader2 className="w-4 h-4 animate-spin" style={{ color: "hsl(14 40% 52%)" }} /></div>
       ) : comments.length === 0 ? (
         <p className="font-sans text-xs text-center py-3" style={{ color: "hsl(14 30% 58%)" }}>No comments yet. Be the first!</p>
       ) : (
@@ -172,7 +161,7 @@ function CommentSection({
           {comments.map(c => (
             <div key={c.id} className="flex gap-2.5 items-start">
               <div className="rounded-full shrink-0 flex items-center justify-center font-serif font-bold"
-                style={{ width: 28, height: 28, fontSize: "0.75rem", background: `${accent}18`, color: accent }}>
+                style={{ width: 28, height: 28, fontSize: "0.75rem", background: "hsl(14 18% 88%)", color: "hsl(14 55% 32%)" }}>
                 {c.authorName[0]}
               </div>
               <div className="flex-1 min-w-0">
@@ -190,11 +179,11 @@ function CommentSection({
       {currentUser ? (
         <div className="flex gap-2 items-end mt-2">
           <div className="rounded-full shrink-0 flex items-center justify-center font-serif font-bold"
-            style={{ width: 28, height: 28, fontSize: "0.75rem", background: `${accent}18`, color: accent }}>
+            style={{ width: 28, height: 28, fontSize: "0.75rem", background: "hsl(14 18% 88%)", color: "hsl(14 55% 32%)" }}>
             {currentUser.fullName[0]}
           </div>
           <div className="flex-1 flex items-end gap-2 rounded-2xl px-3 py-2"
-            style={{ background: "hsl(40 40% 88%)", border: `1px solid ${accent}20` }}>
+            style={{ background: "hsl(40 40% 88%)", border: "1px solid hsl(14 25% 68% / 0.3)" }}>
             <textarea
               rows={1}
               placeholder="Write a comment…"
@@ -206,7 +195,7 @@ function CommentSection({
             />
             <button onClick={submit} disabled={!input.trim() || submitting}
               className="shrink-0 rounded-full flex items-center justify-center transition-opacity"
-              style={{ width: 28, height: 28, background: accent, opacity: !input.trim() ? 0.35 : 1 }}>
+              style={{ width: 28, height: 28, background: "hsl(14 45% 38%)", opacity: !input.trim() ? 0.35 : 1 }}>
               {submitting
                 ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
                 : <Send className="w-3.5 h-3.5 text-white" />}
@@ -215,7 +204,7 @@ function CommentSection({
         </div>
       ) : (
         <p className="font-sans text-xs text-center pt-2" style={{ color: "hsl(14 35% 52%)" }}>
-          <Link href="/register" className="font-semibold underline" style={{ color: accent }}>Sign in</Link> to leave a comment
+          <Link href="/register" className="font-semibold underline" style={{ color: "hsl(14 55% 32%)" }}>Sign in</Link> to leave a comment
         </p>
       )}
     </div>
@@ -226,7 +215,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const queryClient = useQueryClient();
   const { currentUser, token } = useAuth();
   const accent = accentById[purposeId] ?? "hsl(26 68% 42%)";
-  const cardBg = cardBgById[purposeId] ?? "hsl(40 50% 95%)";
+  const cardBg = "hsl(40 28% 97%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {
@@ -425,7 +414,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
           {stats ? (
             <div className="flex flex-col font-sans leading-tight" style={{ color: "hsl(14 40% 48%)" }}>
               <div className="flex items-baseline gap-1">
-                <span className="text-lg font-bold" style={{ color: accent }}>{stats.connected}</span>
+                <span className="text-lg font-bold" style={{ color: "hsl(14 55% 30%)" }}>{stats.connected}</span>
                 <span className="text-xs">connected</span>
               </div>
               <div className="flex items-baseline gap-1">
@@ -465,7 +454,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 <PendingBanner count={pendingActivities.length} label="Activities" />
                 {pendingActivities.map((activity: any) => (
                   <div key={activity.id} className="rounded-2xl overflow-hidden shadow-sm"
-                    style={{ background: cardBg, border: `1px solid ${accent}40` }}>
+                    style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
                     <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
                       <p className="font-serif font-bold leading-snug mb-1" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>{activity.title}</p>
@@ -479,19 +468,19 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       )}
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: accent }}>By {activity.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(14 45% 38%)" }}>By {activity.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
-                            style={{ borderColor: `${accent}50`, color: accent, background: "transparent", opacity: disapprovingActivityId === activity.id ? 0.5 : 1 }}>
+                            style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent", opacity: disapprovingActivityId === activity.id ? 0.5 : 1 }}>
                             {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
                             Reject
                           </button>
                           <button onClick={() => approveActivity(activity.id)} disabled={approvingActivityId === activity.id}
                             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold text-xs transition-opacity"
-                            style={{ background: accent, color: "hsl(40 80% 96%)", opacity: approvingActivityId === activity.id ? 0.6 : 1 }}>
+                            style={{ background: "hsl(150 42% 36%)", color: "hsl(150 40% 96%)", opacity: approvingActivityId === activity.id ? 0.6 : 1 }}>
                             {approvingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
                             {approvingActivityId === activity.id ? "Approving…" : "Approve"}
                           </button>
@@ -506,7 +495,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             {/* Approved activities */}
             {isLoadingActivities ? (
-              <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} /></div>
+              <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin" style={{ color: "hsl(14 40% 52%)" }} /></div>
             ) : approvedActivities.length === 0 ? (
               <div className="rounded-2xl p-8 text-center border border-dashed"
                 style={{ background: "hsl(40 40% 90% / 0.5)", borderColor: "hsl(14 30% 60% / 0.3)" }}>
@@ -520,33 +509,33 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                   const commentsOpen = expandedActivityComments.has(activity.id);
                   return (
                     <div key={activity.id} className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: cardBg, border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
+                      style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
                       <div style={{ height: 3, background: accent }} />
 
                       {/* Title row — always visible */}
                       <button type="button" onClick={() => toggleActivity(activity.id)}
                         className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
-                        <CalendarDays className="w-4 h-4 shrink-0" style={{ color: accent }} />
+                        <CalendarDays className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
                         <div className="flex-1 min-w-0">
                           <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
                             {activity.title}
                           </span>
                           {activity.scheduledAt && (
-                            <span className="font-sans text-xs flex items-center gap-1 mt-0.5" style={{ color: accent }}>
+                            <span className="font-sans text-xs flex items-center gap-1 mt-0.5" style={{ color: "hsl(14 40% 48%)" }}>
                               <CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM, HH:mm")}
                               {activity.place && <><MapPin className="w-3 h-3 ml-1" />{activity.place}</>}
                             </span>
                           )}
                         </div>
                         {currentUser
-                          ? isOpen ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: accent }} />
-                                   : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: accent }} />
-                          : <Lock className="w-3.5 h-3.5 shrink-0" style={{ color: accent, opacity: 0.55 }} />}
+                          ? isOpen ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
+                                   : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
+                          : <Lock className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(14 40% 55%)", opacity: 0.55 }} />}
                       </button>
 
                       {/* Expanded content */}
                       {isOpen && currentUser && (
-                        <div className="px-4 pb-2" style={{ borderTop: `1px solid ${accent}25` }}>
+                        <div className="px-4 pb-2" style={{ borderTop: "1px solid hsl(14 25% 72% / 0.25)" }}>
                           <p className="font-sans text-sm leading-relaxed mt-3 mb-2" style={{ color: "hsl(14 50% 28%)" }}>
                             {activity.description}
                           </p>
@@ -558,21 +547,21 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           )}
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 35% 48%)" }}>
-                              <span className="font-semibold" style={{ color: accent }}>By {activity.authorName}</span>
+                              <span className="font-semibold" style={{ color: "hsl(14 45% 38%)" }}>By {activity.authorName}</span>
                               <span>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               {currentUser.isAdmin && (
                                 <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
                                   className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
-                                  style={{ borderColor: `${accent}40`, color: accent, background: "transparent" }}>
+                                  style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent" }}>
                                   {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
                                   Unpublish
                                 </button>
                               )}
                               <button onClick={() => toggleComments(activity.id, "activity")}
                                 className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-                                style={{ background: commentsOpen ? `${accent}18` : "transparent", color: accent, border: `1px solid ${accent}30` }}>
+                                style={{ background: commentsOpen ? "hsl(14 18% 88%)" : "transparent", color: "hsl(14 42% 42%)", border: "1px solid hsl(14 25% 68% / 0.45)" }}>
                                 <MessageSquare className="w-3 h-3" />
                                 {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                               </button>
@@ -588,7 +577,6 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           itemId={activity.id}
                           itemType="activity"
                           purposeId={purposeId}
-                          accent={accent}
                           token={token}
                           currentUser={currentUser}
                         />
@@ -602,7 +590,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             {/* Propose an Activity — all signed-in users */}
             {currentUser ? (
               <div className="rounded-2xl p-5 shadow relative overflow-hidden"
-                style={{ background: cardBg, border: `1px solid ${accent}40` }}>
+                style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
                 <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
                 <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
                 <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your proposal will appear once validated</p>
@@ -714,7 +702,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 <PendingBanner count={pendingMessages.length} label="Messages" />
                 {pendingMessages.map((message: any) => (
                   <div key={message.id} className="rounded-2xl overflow-hidden shadow-sm"
-                    style={{ background: cardBg, border: `1px solid ${accent}40` }}>
+                    style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
                     <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
                       <p className="font-serif italic leading-relaxed mb-3" style={{ fontSize: "0.92rem", color: "hsl(14 65% 22%)" }}>
@@ -722,19 +710,19 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       </p>
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: accent }}>— {message.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(14 45% 38%)" }}>— {message.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
-                            style={{ borderColor: `${accent}50`, color: accent, background: "transparent", opacity: disapprovingMessageId === message.id ? 0.5 : 1 }}>
+                            style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent", opacity: disapprovingMessageId === message.id ? 0.5 : 1 }}>
                             {disapprovingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
                             Reject
                           </button>
                           <button onClick={() => approveMessage(message.id)} disabled={approvingMessageId === message.id}
                             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold text-xs transition-opacity"
-                            style={{ background: accent, color: "hsl(40 80% 96%)", opacity: approvingMessageId === message.id ? 0.6 : 1 }}>
+                            style={{ background: "hsl(150 42% 36%)", color: "hsl(150 40% 96%)", opacity: approvingMessageId === message.id ? 0.6 : 1 }}>
                             {approvingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
                             {approvingMessageId === message.id ? "Approving…" : "Approve"}
                           </button>
@@ -749,7 +737,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             {/* Approved messages */}
             {isLoadingMessages ? (
-              <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} /></div>
+              <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin" style={{ color: "hsl(14 40% 52%)" }} /></div>
             ) : approvedMessages.length === 0 ? (
               <div className="rounded-2xl p-8 text-center border border-dashed"
                 style={{ background: "hsl(40 40% 90% / 0.5)", borderColor: "hsl(14 30% 60% / 0.3)" }}>
@@ -762,7 +750,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                   const commentsOpen = expandedMessageComments.has(message.id);
                   return (
                     <div key={message.id} className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: cardBg, border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
+                      style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
                       <div style={{ height: 3, background: accent }} />
                       <div className="p-5 pb-3">
                         <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: "hsl(14 65% 22%)" }}>
@@ -770,21 +758,21 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         </p>
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 40% 50%)" }}>
-                            <span className="font-bold" style={{ color: accent }}>— {message.authorName}</span>
+                            <span className="font-bold" style={{ color: "hsl(14 45% 38%)" }}>— {message.authorName}</span>
                             <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             {currentUser?.isAdmin && (
                               <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
                                 className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
-                                style={{ borderColor: `${accent}40`, color: accent, background: "transparent" }}>
+                                style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent" }}>
                                 {disapprovingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
                                 Unpublish
                               </button>
                             )}
                             <button onClick={() => toggleComments(message.id, "message")}
                               className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-                              style={{ background: commentsOpen ? `${accent}18` : "transparent", color: accent, border: `1px solid ${accent}30` }}>
+                              style={{ background: commentsOpen ? "hsl(14 18% 88%)" : "transparent", color: "hsl(14 42% 42%)", border: "1px solid hsl(14 25% 68% / 0.45)" }}>
                               <MessageSquare className="w-3 h-3" />
                               {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                             </button>
@@ -798,7 +786,6 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           itemId={message.id}
                           itemType="message"
                           purposeId={purposeId}
-                          accent={accent}
                           token={token}
                           currentUser={currentUser}
                         />
@@ -811,7 +798,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             {/* Share a message */}
             <div className="rounded-2xl p-5 shadow relative overflow-hidden"
-              style={{ background: cardBg, border: `1px solid ${accent}35` }}>
+              style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
               <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
               <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your message will appear once validated</p>
@@ -836,8 +823,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
                     </div>
-                    <Button type="submit" variant="outline" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide"
-                      disabled={createMessage.isPending} style={{ borderColor: `${accent}60`, color: accent }}>
+                    <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
+                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
                       {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
