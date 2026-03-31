@@ -241,11 +241,11 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   const { data: activities, isLoading: isLoadingActivities } = useGetActivities(purposeId, {
-    query: { queryKey: getGetActivitiesQueryKey(purposeId) },
+    query: { queryKey: getGetActivitiesQueryKey(purposeId), refetchInterval: 4000 },
   });
 
   const { data: messages, isLoading: isLoadingMessages } = useGetMessages(purposeId, {
-    query: { queryKey: getGetMessagesQueryKey(purposeId) },
+    query: { queryKey: getGetMessagesQueryKey(purposeId), refetchInterval: 4000 },
   });
 
   const createActivity = useCreateActivity();
