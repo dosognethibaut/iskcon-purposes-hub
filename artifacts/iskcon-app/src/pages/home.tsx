@@ -1,62 +1,62 @@
 import { Link } from "wouter";
-import { Leaf, Users, Building2, Globe, BookOpen, Lightbulb, Share2, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import slideHeader from "@assets/Slide1_1774929889490.png";
+import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774930486395.png";
+import logoCommunity from "@assets/7p_Community3.png_1774930486395.png";
+import logoHolyPlace from "@assets/7p_HolyPlace3_1774930486395.png";
+import logoAccessing from "@assets/7p_Accessing3_1774930527997.png";
+import logoLearning from "@assets/7p_Learning3_1774930527997.png";
+import logoApplying from "@assets/7p_Applying3_1774930527997.png";
+import logoSharing from "@assets/7p_Sharing3_1774930527996.png";
 
 const purposes = [
   {
     id: 1,
     title: "Simple Living",
     shortDescription: "Embrace a simpler, more natural way of life rooted in spiritual values.",
-    icon: Leaf,
-    iconBg: "bg-emerald-600",
+    logo: logoSimpleLiving,
     category: "Roots",
   },
   {
     id: 2,
     title: "Community",
     shortDescription: "Build a loving spiritual family that supports each other on the path.",
-    icon: Users,
-    iconBg: "bg-blue-700",
+    logo: logoCommunity,
     category: "Roots",
   },
   {
     id: 3,
     title: "Holy Place",
     shortDescription: "Create and maintain sacred spaces for transcendental experience.",
-    icon: Building2,
-    iconBg: "bg-stone-600",
+    logo: logoHolyPlace,
     category: "Roots",
   },
   {
     id: 4,
     title: "Accessing",
     shortDescription: "Open the doors to spiritual knowledge for everyone, everywhere.",
-    icon: Globe,
-    iconBg: "bg-amber-700",
+    logo: logoAccessing,
     category: "Fruits",
   },
   {
     id: 5,
     title: "Learning",
     shortDescription: "Deepen understanding through study, inquiry, and devotional hearing.",
-    icon: BookOpen,
-    iconBg: "bg-amber-800",
+    logo: logoLearning,
     category: "Fruits",
   },
   {
     id: 6,
     title: "Applying",
     shortDescription: "Put spiritual principles into practice in every aspect of daily life.",
-    icon: Lightbulb,
-    iconBg: "bg-orange-700",
+    logo: logoApplying,
     category: "Fruits",
   },
   {
     id: 7,
     title: "Sharing",
     shortDescription: "Spread the nectar of Krishna consciousness with open hands and an open heart.",
-    icon: Share2,
-    iconBg: "bg-red-800",
+    logo: logoSharing,
     category: "Fruits",
   },
 ];
@@ -71,7 +71,7 @@ export default function Home() {
           src={slideHeader}
           alt="The 7 Purposes of ISKCON & Community Building"
           className="w-full h-auto block"
-          style={{ maxWidth: "100%", imageRendering: "auto" }}
+          style={{ maxWidth: "100%" }}
         />
       </div>
 
@@ -114,30 +114,29 @@ export default function Home() {
       </div>
 
       <div className="px-5 max-w-lg mx-auto space-y-3 mt-2">
-        {purposes.slice(0, 3).map((purpose, i) => {
-          const Icon = purpose.icon;
-          return (
-            <Link
-              key={purpose.id}
-              href={`/purpose/${purpose.id}`}
-              data-testid={`purpose-card-${purpose.id}`}
-              className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-sm border border-border/60 hover-elevate active:scale-[0.98] transition-transform animate-in fade-in slide-in-from-bottom-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
-              style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
-            >
-              <div className={`${purpose.iconBg} w-14 h-14 rounded-full flex items-center justify-center text-white shrink-0 shadow ring-2 ring-white/20`}>
-                <Icon className="w-7 h-7" />
+        {purposes.slice(0, 3).map((purpose, i) => (
+          <Link
+            key={purpose.id}
+            href={`/purpose/${purpose.id}`}
+            data-testid={`purpose-card-${purpose.id}`}
+            className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-sm border border-border/60 hover-elevate active:scale-[0.98] transition-transform animate-in fade-in slide-in-from-bottom-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
+            style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
+          >
+            <img
+              src={purpose.logo}
+              alt={purpose.title}
+              className="w-14 h-14 rounded-full shrink-0 object-cover"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="text-primary font-bold text-sm font-sans">{purpose.id}.</span>
+                <h2 className="font-serif text-xl font-bold text-foreground leading-tight">{purpose.title}</h2>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-primary font-bold text-sm font-sans">{purpose.id}.</span>
-                  <h2 className="font-serif text-xl font-bold text-foreground leading-tight">{purpose.title}</h2>
-                </div>
-                <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2 font-sans">{purpose.shortDescription}</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-primary/50 shrink-0" />
-            </Link>
-          );
-        })}
+              <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2 font-sans">{purpose.shortDescription}</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-primary/50 shrink-0" />
+          </Link>
+        ))}
       </div>
 
       {/* FRUITS section */}
@@ -150,30 +149,29 @@ export default function Home() {
       </div>
 
       <div className="px-5 max-w-lg mx-auto space-y-3 mt-2">
-        {purposes.slice(3).map((purpose, i) => {
-          const Icon = purpose.icon;
-          return (
-            <Link
-              key={purpose.id}
-              href={`/purpose/${purpose.id}`}
-              data-testid={`purpose-card-${purpose.id}`}
-              className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-sm border border-border/60 hover-elevate active:scale-[0.98] transition-transform animate-in fade-in slide-in-from-bottom-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
-              style={{ animationDelay: `${(i + 3) * 80}ms`, animationFillMode: "both" }}
-            >
-              <div className={`${purpose.iconBg} w-14 h-14 rounded-full flex items-center justify-center text-white shrink-0 shadow ring-2 ring-white/20`}>
-                <Icon className="w-7 h-7" />
+        {purposes.slice(3).map((purpose, i) => (
+          <Link
+            key={purpose.id}
+            href={`/purpose/${purpose.id}`}
+            data-testid={`purpose-card-${purpose.id}`}
+            className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-sm border border-border/60 hover-elevate active:scale-[0.98] transition-transform animate-in fade-in slide-in-from-bottom-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
+            style={{ animationDelay: `${(i + 3) * 80}ms`, animationFillMode: "both" }}
+          >
+            <img
+              src={purpose.logo}
+              alt={purpose.title}
+              className="w-14 h-14 rounded-full shrink-0 object-cover"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="text-primary font-bold text-sm font-sans">{purpose.id}.</span>
+                <h2 className="font-serif text-xl font-bold text-foreground leading-tight">{purpose.title}</h2>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-primary font-bold text-sm font-sans">{purpose.id}.</span>
-                  <h2 className="font-serif text-xl font-bold text-foreground leading-tight">{purpose.title}</h2>
-                </div>
-                <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2 font-sans">{purpose.shortDescription}</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-primary/50 shrink-0" />
-            </Link>
-          );
-        })}
+              <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2 font-sans">{purpose.shortDescription}</p>
+            </div>
+            <ChevronRight className="w-5 h-5 text-primary/50 shrink-0" />
+          </Link>
+        ))}
       </div>
 
       {/* Footer quote */}
