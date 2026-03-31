@@ -144,7 +144,7 @@ export default function PurposeDetail() {
   }
 
   const logo = logoByTitle[purpose.title];
-  const accent = accentByTitle[purpose.title] ?? "hsl(26 68% 42%)";
+  const accent = accentByTitle[purpose.title] ?? "hsl(12 44% 40%)";
 
   return (
     <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(38 52% 86%)" }}>

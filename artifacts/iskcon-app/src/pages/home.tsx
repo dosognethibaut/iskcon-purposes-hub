@@ -141,12 +141,12 @@ export default function Home() {
               <img
                 src={sevenPLogo}
                 alt="7"
-                style={{ height: "1.9em", width: "auto", display: "inline-block", verticalAlign: "middle", mixBlendMode: "screen", marginBottom: "0.15em" }}
+                style={{ height: "1.5em", width: "auto", display: "inline-block", verticalAlign: "middle", mixBlendMode: "screen", marginBottom: "0.12em" }}
               />{" "}Purposes<br />of ISKCON
             </h1>
             <div
               className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-              style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)" }}
+              style={{ background: "hsl(12 44% 40%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)" }}
             >
               &amp; Community Building
             </div>
@@ -172,7 +172,7 @@ export default function Home() {
               className="block"
               style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
             >
-              <div className="font-serif font-bold mb-1" style={{ fontSize: "3rem", color: "hsl(26 68% 52% / 0.7)", lineHeight: 1 }}>"</div>
+              <div className="font-serif font-bold mb-1" style={{ fontSize: "3rem", color: "hsl(12 44% 50% / 0.7)", lineHeight: 1 }}>"</div>
               <p className="font-serif italic leading-relaxed" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 94%)" }}>
                 {quotes[current].text}
               </p>
@@ -188,7 +188,7 @@ export default function Home() {
               </button>
               <div className="flex gap-1.5 flex-1 justify-center">
                 {quotes.map((_, i) => (
-                  <button key={i} onClick={() => goTo(i)} className="rounded-full transition-all" style={{ width: i === current ? 20 : 7, height: 7, background: i === current ? "hsl(26 68% 52%)" : "hsl(40 70% 94% / 0.35)" }} aria-label={`Quote ${i + 1}`} />
+                  <button key={i} onClick={() => goTo(i)} className="rounded-full transition-all" style={{ width: i === current ? 20 : 7, height: 7, background: i === current ? "hsl(12 44% 50%)" : "hsl(40 70% 94% / 0.35)" }} aria-label={`Quote ${i + 1}`} />
                 ))}
               </div>
               <button onClick={() => goTo(current + 1)} className="rounded-full p-1.5" style={{ background: "hsl(40 70% 94% / 0.12)" }} aria-label="Next">
@@ -231,7 +231,7 @@ export default function Home() {
                     <h2 className="font-serif text-xl font-semibold text-foreground leading-tight">{purpose.title}</h2>
                     <p className="text-muted-foreground text-sm leading-snug mt-0.5 font-sans line-clamp-1">{purpose.shortDescription}</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "hsl(26 68% 42% / 0.6)" }} />
+                  <ChevronRight className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "hsl(12 44% 40% / 0.6)" }} />
                 </Link>
               </li>
             ))}
