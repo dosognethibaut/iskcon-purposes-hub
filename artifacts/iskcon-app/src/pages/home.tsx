@@ -193,18 +193,13 @@ export default function Home() {
               href={quotes[current].vanipedia}
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-4 py-4"
-              style={{
-                opacity: fading ? 0 : 1,
-                transform: fading ? "translateY(6px)" : "translateY(0)",
-                transition: "opacity 0.3s ease, transform 0.3s ease",
-                textDecoration: "none",
-              }}
+              className="block"
+              style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
             >
-              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 96%)", textShadow: "0 0 18px rgba(200,140,60,0.9), 0 0 6px rgba(200,140,60,0.7), 0 0 2px rgba(0,0,0,0.8)" }}>
-                <span style={{ color: "hsl(26 68% 72%)" }}>"</span>{quotes[current].text}<span style={{ color: "hsl(26 68% 72%)" }}>"</span>
+              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 94%)" }}>
+                <span style={{ color: "hsl(26 68% 62%)" }}>"</span>{quotes[current].text}<span style={{ color: "hsl(26 68% 62%)" }}>"</span>
               </p>
-              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.72rem", color: "hsl(26 60% 80%)", letterSpacing: "0.04em", textShadow: "0 0 14px rgba(180,110,40,0.85), 0 0 4px rgba(180,110,40,0.6), 0 0 2px rgba(0,0,0,0.7)" }}>
+              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.72rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}>
                 {quotes[current].ref}
               </p>
             </a>
