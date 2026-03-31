@@ -4,6 +4,31 @@ import { ArrowLeft, Camera, CheckCircle2, ClipboardList } from "lucide-react";
 
 const ROLES = ["Member", "Devotee", "Volunteer", "Sevaka", "Coordinator", "Pujari", "Teacher", "Other"];
 const COMMUNITIES = ["Domaine de Radhadesh"];
+const DEPARTMENTS = [
+  "HR & Legal Affairs",
+  "Accounting",
+  "Sankirtana",
+  "Boutique",
+  "Govinda's Restaurant",
+  "Communications",
+  "Outreach (Rose)",
+  "Goshala",
+  "Deity Worship",
+  "Vaishnava Festivals",
+  "Landscaping",
+  "Forest",
+  "Retreat Centre",
+  "Community Kitchen",
+  "Maintenance & Construction",
+  "Service Coordinator (ex Temple Commander)",
+  "Permaculture",
+  "Tourism",
+  "Devotee Care",
+  "Education",
+  "Ashram",
+  "Radhadesh Mellows",
+  "Other",
+];
 
 export default function Register() {
   const [, navigate] = useLocation();
@@ -14,7 +39,7 @@ export default function Register() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
-    fullName: "", email: "", dob: "", community: "", role: "",
+    fullName: "", email: "", dob: "", community: "", role: "", department: "", departmentOther: "",
   });
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -143,6 +168,24 @@ export default function Register() {
                 <option value="" disabled>Select your role</option>
                 {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
               </select>
+            </Field>
+
+            {/* Department */}
+            <Field label="Department">
+              <select value={form.department} onChange={set("department")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: form.department ? "hsl(14 72% 18%)" : "hsl(14 30% 55%)" }}>
+                <option value="">Select your department (optional)</option>
+                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+              {form.department === "Other" && (
+                <input
+                  type="text"
+                  placeholder="Please specify your department"
+                  value={form.departmentOther}
+                  onChange={set("departmentOther")}
+                  className="mt-2 w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }}
+                />
+              )}
             </Field>
 
             {/* Survey — mandatory */}
