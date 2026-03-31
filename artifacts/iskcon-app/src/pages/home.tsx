@@ -150,34 +150,10 @@ export default function Home() {
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
 
-          {/* Top bar — welcome left, title right */}
-          <div className="px-6 pt-10 flex items-start justify-between gap-4">
+          {/* Top bar — title right */}
+          <div className="px-6 pt-10 flex items-start justify-end gap-4">
 
-            {/* Left: welcome / profile link */}
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 focus:outline-none shrink-0 mt-1"
-            >
-              {currentUser ? (
-                <>
-                  {currentUser.photoDataUrl
-                    ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover shrink-0" style={{ width: 32, height: 32, border: "2px solid hsl(40 70% 90% / 0.5)" }} />
-                    : <div className="rounded-full flex items-center justify-center font-serif font-bold shrink-0" style={{ width: 32, height: 32, background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "0.75rem", border: "2px solid hsl(40 70% 90% / 0.4)" }}>{currentUser.fullName[0]}</div>
-                  }
-                  <span className="font-serif font-semibold leading-tight" style={{ color: "hsl(40 80% 96%)", fontSize: "clamp(0.85rem, 2.5vw, 1rem)", textShadow: "0 1px 4px hsl(14 40% 8% / 0.5)" }}>
-                    Welcome,<br />
-                    <span style={{ color: "hsl(40 90% 88%)" }}>{currentUser.fullName.split(" ")[0]}</span>
-                  </span>
-                </>
-              ) : (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold border"
-                  style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
-                  <UserCircle className="w-4 h-4" /> You
-                </div>
-              )}
-            </Link>
-
-            {/* Right: 7P logo + title */}
+            {/* 7P logo + title */}
             <div className="flex flex-col items-end text-right">
               <img
                 src={sevenPLogo}
@@ -235,6 +211,16 @@ export default function Home() {
 
           {/* Buttons */}
           <div className="px-6 pt-4 pb-5 flex gap-2 flex-wrap">
+            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+              {currentUser ? (
+                currentUser.photoDataUrl
+                  ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
+                  : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
+              ) : (
+                <UserCircle className="w-4 h-4" />
+              )}
+              {currentUser ? currentUser.fullName.split(" ")[0] : "You"}
+            </Link>
             <Link href="/why" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <HelpCircle className="w-4 h-4" /> Why?
             </Link>
