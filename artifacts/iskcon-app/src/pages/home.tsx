@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
+import radhadeshLogo from "@assets/image_1774933719680.png";
 import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
 import logoCommunity from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
 import logoHolyPlace from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
@@ -114,17 +115,19 @@ export default function Home() {
           }}
         />
 
-        {/* Radhadesh badge — top right */}
+        {/* Radhadesh logo — crisp, displayed well below natural size */}
         <a
           href="https://www.radhadesh.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute top-4 right-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-sm"
-          style={{ background: "hsl(14 35% 10% / 0.45)", border: "1px solid hsl(40 70% 90% / 0.25)" }}
+          className="absolute top-3 right-3 z-20 rounded-lg overflow-hidden"
+          style={{ boxShadow: "0 1px 8px hsl(14 35% 6% / 0.4)" }}
         >
-          <span className="font-serif font-semibold" style={{ color: "hsl(40 80% 94%)", fontSize: "0.72rem", letterSpacing: "0.02em" }}>
-            Domaine de Radhadesh
-          </span>
+          <img
+            src={radhadeshLogo}
+            alt="Domaine de Radhadesh"
+            style={{ height: 36, width: "auto", display: "block", imageRendering: "auto" }}
+          />
         </a>
 
         {/* Content layer */}
@@ -161,9 +164,6 @@ export default function Home() {
               <p className="font-sans mt-2" style={{ fontSize: "0.72rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}>
                 {quotes[current].ref}
               </p>
-              <p className="font-sans mt-0.5" style={{ fontSize: "0.65rem", color: "hsl(26 60% 65% / 0.7)", textDecoration: "underline", letterSpacing: "0.03em" }}>
-                vanipedia.org ↗
-              </p>
             </a>
 
             {/* Dot nav */}
@@ -183,12 +183,15 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="px-6 pt-4 pb-5 flex gap-2">
+          <div className="px-6 pt-4 pb-5 flex gap-2 flex-wrap">
             <Link href="/why" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <HelpCircle className="w-4 h-4" /> Why?
             </Link>
             <Link href="/when" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Clock className="w-4 h-4" /> When?
+            </Link>
+            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+              <UserCircle className="w-4 h-4" /> You
             </Link>
           </div>
 

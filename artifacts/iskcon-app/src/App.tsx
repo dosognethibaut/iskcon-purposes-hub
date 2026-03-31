@@ -8,6 +8,8 @@ import Purposes from "@/pages/purposes";
 import PurposeDetail from "@/pages/purpose-detail";
 import Why from "@/pages/why";
 import When from "@/pages/when";
+import Register from "@/pages/register";
+import Survey from "@/pages/survey";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +21,8 @@ function Router() {
       <Route path="/purpose/:id" component={PurposeDetail} />
       <Route path="/why" component={Why} />
       <Route path="/when" component={When} />
+      <Route path="/register" component={Register} />
+      <Route path="/survey" component={Survey} />
       <Route component={NotFound} />
     </Switch>
   );
