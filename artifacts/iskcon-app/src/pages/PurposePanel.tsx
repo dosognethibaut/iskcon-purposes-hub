@@ -343,7 +343,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       <div className="px-4">
         <div className="flex items-center gap-3 py-4">
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
-          <span className="font-sans text-xs uppercase tracking-widest" style={{ color: "hsl(14 40% 50%)" }}>Community</span>
+          <span className="font-sans text-xs uppercase tracking-widest" style={{ color: "hsl(14 40% 50%)" }}>Domaine de Radhadesh</span>
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 
