@@ -295,8 +295,8 @@ export default function Home() {
 
       {/* Bottom quote banner */}
       <div
-        className="w-full px-6 py-6 text-center"
-        style={{ background: "hsl(26 68% 42%)", marginBottom: "5rem" }}
+        className="w-full px-6 pt-6 pb-24 text-center"
+        style={{ background: "hsl(26 68% 42%)" }}
       >
         <p className="font-serif italic leading-relaxed" style={{ fontSize: "1rem", color: "hsl(40 80% 96%)" }}>
           "Your love for me will be shown by how much you cooperate with each other after I am gone."
