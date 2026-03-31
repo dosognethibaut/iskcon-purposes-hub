@@ -66,38 +66,38 @@ const quotes = [
 const purposes = [
   {
     id: 4, title: "Accessing", logo: logoAccessing,
-    shortDescription: "Open the doors to spiritual knowledge for everyone.",
     officialText: "To systematically propagate spiritual knowledge to society at large and to educate all peoples in the techniques of spiritual life in order to check the imbalance of values in life and to achieve real unity and peace in the world.",
+    description: "ISKCON is committed to making the eternal wisdom of the Vedas accessible to all people, regardless of background or belief. Through books, digital media, educational programs, and personal outreach, we provide everyone the opportunity to encounter the teachings of the Bhagavad-gita and Srimad-Bhagavatam. Accessing is the first step on the path of spiritual awakening.",
   },
   {
     id: 5, title: "Learning", logo: logoLearning,
-    shortDescription: "Deepen understanding through study and devotional hearing.",
     officialText: "To propagate a consciousness of Krishna as it is revealed in the Bhagavad-gita and Srimad-Bhagavatam.",
+    description: "Study and hearing are at the heart of spiritual progress. ISKCON encourages every devotee to deepen their understanding through regular reading of sacred texts, attending classes, and listening to lectures by qualified teachers. Learning transforms information into wisdom, and wisdom into liberation.",
   },
   {
     id: 2, title: "Community", logo: logoCommunity,
-    shortDescription: "Build a loving spiritual family on the path together.",
     officialText: "To bring the members of the Society together with each other and nearer to Krishna, the prime entity, and thus to develop the idea within the members, and humanity at large, that each soul is part and parcel of the quality of Godhead (Krishna).",
+    description: "Community is at the heart of ISKCON life. We are called to create environments where devotees encourage one another, share the journey, and practice devotional service together. A strong community reflects the joy of unity in diversity, where every member feels welcomed, valued, and nourished.",
   },
   {
     id: 6, title: "Applying", logo: logoApplying,
-    shortDescription: "Put spiritual principles into practice in daily life.",
     officialText: "To teach and encourage the sankirtan movement, congregational chanting of the holy names of God, as revealed in the teachings of Lord Sri Chaitanya Mahaprabhu.",
+    description: "Spiritual knowledge has its full value only when applied. Through sankirtan, service, and daily practice, devotees bring Krishna consciousness into every aspect of life — work, family, and relationships. Applying the teachings is the bridge between hearing and transformation.",
   },
   {
     id: 3, title: "Holy Place", logo: logoHolyPlace,
-    shortDescription: "Create and maintain sacred spaces for transcendence.",
     officialText: "To erect for the members and for society at large, a holy place of transcendental pastimes, dedicated to the personality of Krishna.",
+    description: "ISKCON temples and centers are holy places where the divine presence of Krishna is felt. They are sanctuaries where devotees come to worship, hear and chant the holy names, take prasadam, and be spiritually uplifted. Every home of a devotee can also become a holy place — a small temple filled with love and remembrance of God.",
   },
   {
     id: 1, title: "Simple Living", logo: logoSimpleLiving,
-    shortDescription: "Embrace a natural way of life rooted in spiritual values.",
     officialText: "To bring the members closer together for the purpose of teaching a simpler and more natural way of life.",
+    description: "One of the foundations of ISKCON is the principle of simple living and high thinking. By choosing a lifestyle free from unnecessary complexity and consumption, we create space for spiritual growth. Simple living means caring for our basic needs without exploitation, living in harmony with nature, and dedicating our time to what truly matters: our relationship with Krishna.",
   },
   {
     id: 7, title: "Sharing", logo: logoSharing,
-    shortDescription: "Spread Krishna consciousness with open hands and heart.",
     officialText: "To, with a view towards achieving the aforementioned purposes, publish and distribute periodicals, magazines, books and other writings.",
+    description: "The greatest act of compassion is to share Krishna consciousness with those who are searching. Through books, media, conversations, and outreach, every devotee becomes a messenger of hope. Sharing is not just an activity — it is an expression of love for all living beings.",
   },
 ];
 
@@ -249,100 +249,86 @@ export default function Home() {
       <div className="pb-20">
         <div className="pt-8" />
 
-        {/* Logo strip */}
-        <div className="flex justify-between items-end px-4 gap-1">
-          {purposes.map((p, i) => {
-            const active = activePurpose === i;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setActivePurpose(active ? null : i)}
-                className="flex flex-col items-center gap-1 flex-1 focus:outline-none"
-                style={{ opacity: activePurpose !== null && !active ? 0.4 : 1, transition: "opacity 0.2s" }}
-              >
-                <img
-                  src={p.logo}
-                  alt={p.title}
-                  style={{
-                    width: "100%",
-                    maxWidth: 52,
-                    height: "auto",
-                    aspectRatio: "1",
-                    objectFit: "contain",
-                    transform: active ? "scale(1.15)" : "scale(1)",
-                    transition: "transform 0.2s",
-                  }}
-                />
-                <span
-                  className="font-sans text-center leading-tight"
-                  style={{
-                    fontSize: "0.5rem",
-                    color: active ? "hsl(14 72% 18%)" : "hsl(14 40% 50%)",
-                    fontWeight: active ? 700 : 400,
-                  }}
+        {/* Logo strip — scrollable, big logos */}
+        <div className="overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
+          <div className="flex items-end gap-3 px-4" style={{ width: "max-content", minWidth: "100%" }}>
+            {purposes.map((p, i) => {
+              const active = activePurpose === i;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setActivePurpose(active ? null : i)}
+                  className="flex flex-col items-center gap-1.5 focus:outline-none shrink-0"
+                  style={{ opacity: activePurpose !== null && !active ? 0.35 : 1, transition: "opacity 0.2s", width: 72 }}
                 >
-                  {p.title}
-                </span>
-              </button>
-            );
-          })}
+                  <img
+                    src={p.logo}
+                    alt={p.title}
+                    style={{
+                      width: 72, height: 72,
+                      objectFit: "contain",
+                      transform: active ? "scale(1.1)" : "scale(1)",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+                  <span
+                    className="font-sans text-center leading-tight w-full"
+                    style={{
+                      fontSize: "0.58rem",
+                      color: active ? "hsl(14 72% 18%)" : "hsl(14 40% 50%)",
+                      fontWeight: active ? 700 : 400,
+                    }}
+                  >
+                    {p.title}
+                  </span>
+                  <div
+                    className="rounded-full transition-all"
+                    style={{ width: active ? 24 : 0, height: 2, background: "hsl(26 68% 42%)", transition: "width 0.2s" }}
+                  />
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Active indicator bar */}
-        <div className="flex px-4 gap-1 mt-1">
-          {purposes.map((_, i) => (
-            <div
-              key={i}
-              className="flex-1 rounded-full transition-all"
-              style={{
-                height: 2,
-                background: activePurpose === i ? "hsl(26 68% 42%)" : "transparent",
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Parchment panel */}
+        {/* Inline panel — no background, just text */}
         {activePurpose !== null && (
-          <div
-            className="mx-0 mt-4 relative"
-            style={{
-              background: "hsl(40 35% 88%)",
-              borderTop: "1px solid hsl(14 25% 72%)",
-              borderBottom: "1px solid hsl(14 25% 72%)",
-            }}
-          >
+          <div className="mt-2 relative px-6 py-6">
             {/* Opening quote */}
             <span
               className="absolute font-serif font-bold select-none"
-              style={{ top: 10, left: 16, fontSize: "4rem", lineHeight: 1, color: "hsl(14 30% 58% / 0.45)" }}
+              style={{ top: 6, left: 14, fontSize: "3.5rem", lineHeight: 1, color: "hsl(14 30% 45% / 0.35)" }}
             >
               "
             </span>
             {/* Closing quote */}
             <span
               className="absolute font-serif font-bold select-none"
-              style={{ bottom: -4, right: 16, fontSize: "4rem", lineHeight: 1, color: "hsl(14 30% 58% / 0.45)" }}
+              style={{ bottom: 2, right: 14, fontSize: "3.5rem", lineHeight: 1, color: "hsl(14 30% 45% / 0.35)" }}
             >
               "
             </span>
 
-            <div className="px-10 py-8 text-center">
+            <div className="text-center">
               <p
                 className="font-serif font-bold leading-relaxed"
-                style={{ fontSize: "1rem", color: "hsl(14 52% 18%)" }}
+                style={{ fontSize: "0.95rem", color: "hsl(14 52% 18%)" }}
               >
                 {purposes[activePurpose].officialText}
               </p>
-              <Link
-                href={`/purpose/${purposes[activePurpose].id}`}
-                className="inline-flex items-center gap-1 mt-5 font-sans font-semibold text-xs"
-                style={{ color: "hsl(26 68% 42%)" }}
-              >
-                Explore {purposes[activePurpose].title} <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
             </div>
+
+            {/* Divider */}
+            <div className="my-5 mx-auto w-12 h-px" style={{ background: "hsl(14 25% 68%)" }} />
+
+            {/* Description */}
+            <p
+              className="font-sans leading-relaxed text-center"
+              style={{ fontSize: "0.88rem", color: "hsl(14 40% 38%)" }}
+            >
+              {purposes[activePurpose].description}
+            </p>
           </div>
         )}
 
