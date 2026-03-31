@@ -541,38 +541,48 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const pendingMessages    = (messages  ?? []).filter((m: any) => m.approved === false);
 
   // ── Badge tracking ──────────────────────────────────────────────────────────
-  const seenActsKey = `iskcon_seen_acts_${purposeId}`;
-  const seenMsgsKey = `iskcon_seen_msgs_${purposeId}`;
+  // Admin sees badges for PENDING items (need validation).
+  // Members see badges for APPROVED items (new content to discover).
+  const isAdmin = !!currentUser?.isAdmin;
+  const seenActsKey = isAdmin ? `iskcon_admin_acts_${purposeId}` : `iskcon_seen_acts_${purposeId}`;
+  const seenMsgsKey = isAdmin ? `iskcon_admin_msgs_${purposeId}` : `iskcon_seen_msgs_${purposeId}`;
 
-  const approvedActivityIds = approvedActivities.map((a: any) => a.id);
-  const approvedMessageIds  = approvedMessages.map((m: any) => m.id);
+  // The IDs to track depend on role
+  const trackedActivities = isAdmin ? pendingActivities : approvedActivities;
+  const trackedMessages   = isAdmin ? pendingMessages   : approvedMessages;
+  const trackedActivityIds = trackedActivities.map((a: any) => a.id);
+  const trackedMessageIds  = trackedMessages.map((m: any) => m.id);
+
+  // Keep older variable names for backwards compat with markAllSeen calls below
+  const approvedActivityIds = trackedActivityIds;
+  const approvedMessageIds  = trackedMessageIds;
 
   // When on activities tab and data updates → mark seen immediately
   useEffect(() => {
-    if (activeTab === "activities" && approvedActivityIds.length > 0) {
-      markAllSeen(seenActsKey, approvedActivityIds);
+    if (activeTab === "activities" && trackedActivityIds.length > 0) {
+      markAllSeen(seenActsKey, trackedActivityIds);
       setNewActivitiesCount(0);
     } else if (activeTab !== "activities") {
-      setNewActivitiesCount(countNew(approvedActivityIds, seenActsKey));
+      setNewActivitiesCount(countNew(trackedActivityIds, seenActsKey));
     }
-  }, [JSON.stringify(approvedActivityIds), activeTab]);
+  }, [JSON.stringify(trackedActivityIds), activeTab]);
 
   useEffect(() => {
-    if (activeTab === "messages" && approvedMessageIds.length > 0) {
-      markAllSeen(seenMsgsKey, approvedMessageIds);
+    if (activeTab === "messages" && trackedMessageIds.length > 0) {
+      markAllSeen(seenMsgsKey, trackedMessageIds);
       setNewMessagesCount(0);
     } else if (activeTab !== "messages") {
-      setNewMessagesCount(countNew(approvedMessageIds, seenMsgsKey));
+      setNewMessagesCount(countNew(trackedMessageIds, seenMsgsKey));
     }
-  }, [JSON.stringify(approvedMessageIds), activeTab]);
+  }, [JSON.stringify(trackedMessageIds), activeTab]);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     if (value === "activities") {
-      markAllSeen(seenActsKey, approvedActivityIds);
+      markAllSeen(seenActsKey, trackedActivityIds);
       setNewActivitiesCount(0);
     } else if (value === "messages") {
-      markAllSeen(seenMsgsKey, approvedMessageIds);
+      markAllSeen(seenMsgsKey, trackedMessageIds);
       setNewMessagesCount(0);
     }
   };

@@ -448,18 +448,24 @@ router.post("/purposes/:purposeId/messages/:messageId/comments", async (req, res
   }
 });
 
-// ── Badges — lightweight feed of approved IDs per purpose ────────────────────
+// ── Badges — role-aware feed of IDs per purpose ──────────────────────────────
+// Admin: pending (awaiting validation) IDs  — they need to act on these
+// Members/anon: approved IDs               — new content they haven't seen
 
-router.get("/badges", async (_req, res) => {
+router.get("/badges", async (req, res) => {
   try {
+    const user = await getRequestUser(req.headers.authorization);
+    const isAdmin = !!user?.isAdmin;
+
     const activities = await db
       .select({ id: activitiesTable.id, purposeId: activitiesTable.purposeId })
       .from(activitiesTable)
-      .where(eq(activitiesTable.approved, true));
+      .where(eq(activitiesTable.approved, isAdmin ? false : true));
     const messages = await db
       .select({ id: messagesTable.id, purposeId: messagesTable.purposeId })
       .from(messagesTable)
-      .where(eq(messagesTable.approved, true));
+      .where(eq(messagesTable.approved, isAdmin ? false : true));
+
     const map: Record<number, { activityIds: number[]; messageIds: number[] }> = {};
     for (const a of activities) {
       if (!map[a.purposeId]) map[a.purposeId] = { activityIds: [], messageIds: [] };

@@ -124,32 +124,39 @@ export default function Home() {
   const [showNotifs, setShowNotifs] = useState(false);
   const lastNotifData = useRef<any>(null);
 
-  const computeBadges = useCallback((data: Record<number, { activityIds: number[]; messageIds: number[] }> | null) => {
+  const isAdmin = !!currentUser?.isAdmin;
+
+  const computeBadges = useCallback((data: Record<number, { activityIds: number[]; messageIds: number[] }> | null, admin: boolean) => {
     if (!data) return;
+    const actsPrefix = admin ? "iskcon_admin_acts_" : "iskcon_seen_acts_";
+    const msgsPrefix = admin ? "iskcon_admin_msgs_" : "iskcon_seen_msgs_";
     const counts: Record<number, number> = {};
     for (const [pid, { activityIds, messageIds }] of Object.entries(data)) {
       const n = Number(pid);
-      counts[n] = countNew(activityIds, `iskcon_seen_acts_${n}`) + countNew(messageIds, `iskcon_seen_msgs_${n}`);
+      counts[n] = countNew(activityIds, `${actsPrefix}${n}`) + countNew(messageIds, `${msgsPrefix}${n}`);
     }
     setPurposeBadges(counts);
   }, []);
 
-  // Fetch badge data every 4s
+  // Fetch badge data every 4s — re-run when user changes role (login/logout)
   useEffect(() => {
     let lastData: Record<number, { activityIds: number[]; messageIds: number[] }> | null = null;
     const fetchBadges = () => {
-      fetch(`${HOME_API}/api/badges`)
+      const tok = localStorage.getItem("iskcon_jwt");
+      const headers: Record<string, string> = {};
+      if (tok) headers["Authorization"] = `Bearer ${tok}`;
+      fetch(`${HOME_API}/api/badges`, { headers })
         .then(r => r.ok ? r.json() : null)
-        .then(d => { if (d) { lastData = d; computeBadges(d); } })
+        .then(d => { if (d) { lastData = d; computeBadges(d, isAdmin); } })
         .catch(() => {});
     };
     fetchBadges();
     const interval = setInterval(fetchBadges, 4000);
     // Re-compute when PurposePanel marks items as seen
-    const onStorage = () => { if (lastData) computeBadges(lastData); };
+    const onStorage = () => { if (lastData) computeBadges(lastData, isAdmin); };
     window.addEventListener("storage", onStorage);
     return () => { clearInterval(interval); window.removeEventListener("storage", onStorage); };
-  }, [computeBadges]);
+  }, [computeBadges, currentUser?.id]); // restart when user logs in/out
 
   // Notification polling — only when logged in
   useEffect(() => {
