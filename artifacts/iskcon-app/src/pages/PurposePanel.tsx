@@ -736,22 +736,43 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: isDone ? "rgba(255,255,255,0.97)" : "hsl(14 72% 18%)" }}>
                             {activity.title}
                           </span>
-                          {activity.scheduledAt && (
-                            <span className="font-sans text-xs flex items-center gap-1 mt-0.5" style={{ color: isDone ? "rgba(255,255,255,0.7)" : "hsl(14 40% 48%)" }}>
-                              <CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM, HH:mm")}
-                              {activity.place && <><MapPin className="w-3 h-3 ml-1" />{activity.place}</>}
+                          {/* Always-visible meta: date · place · participants */}
+                          {(activity.scheduledAt || activity.place || activity.minParticipants || activity.participantCount > 0) && (
+                            <span className="font-sans text-xs flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5" style={{ color: isDone ? "rgba(255,255,255,0.7)" : "hsl(14 40% 48%)" }}>
+                              {activity.scheduledAt && (
+                                <span className="flex items-center gap-0.5">
+                                  <CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM, HH:mm")}
+                                </span>
+                              )}
+                              {activity.place && (
+                                <span className="flex items-center gap-0.5">
+                                  <MapPin className="w-3 h-3" />{activity.place}
+                                </span>
+                              )}
+                              {(activity.minParticipants || activity.maxParticipants) && (
+                                <span className="flex items-center gap-0.5">
+                                  <Users className="w-3 h-3" />
+                                  {activity.participantCount}
+                                  {activity.maxParticipants
+                                    ? `/${activity.maxParticipants}`
+                                    : activity.minParticipants
+                                    ? ` (min ${activity.minParticipants})`
+                                    : ""}
+                                  {" "}joined
+                                </span>
+                              )}
                             </span>
                           )}
                         </div>
-                        {/* Right-side: participation + expand */}
+                        {/* Right-side: join button + expand */}
                         <div className="flex items-center gap-2 shrink-0" onClick={e => e.stopPropagation()}>
-                          {/* Participant count badge */}
-                          {activity.maxParticipants && !isDone && (
+                          {/* Full badge — only show when max is set */}
+                          {activity.maxParticipants && !isDone && activity.participantCount >= activity.maxParticipants && (
                             <span className="font-sans text-xs px-1.5 py-0.5 rounded-full" style={{
-                              background: activity.participantCount >= activity.maxParticipants ? "hsl(358 52% 42% / 0.12)" : "hsl(14 20% 85%)",
-                              color: activity.participantCount >= activity.maxParticipants ? "hsl(358 52% 40%)" : "hsl(14 40% 45%)",
+                              background: "hsl(358 52% 42% / 0.12)",
+                              color: "hsl(358 52% 40%)",
                             }}>
-                              {activity.participantCount}/{activity.maxParticipants}
+                              Full
                             </span>
                           )}
                           {/* Join / Leave — signed-in, not done */}

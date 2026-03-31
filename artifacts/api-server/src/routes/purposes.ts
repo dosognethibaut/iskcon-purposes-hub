@@ -31,6 +31,24 @@ async function createNotification(userId: number, type: string, message: string)
   } catch { /* silent — never break main flow */ }
 }
 
+async function notifyAdmins(type: string, message: string) {
+  try {
+    const admins = await db.select({ id: usersTable.id }).from(usersTable).where(eq(usersTable.isAdmin, true));
+    await Promise.all(admins.map(a => createNotification(a.id, type, message)));
+  } catch { }
+}
+
+async function notifyAllMembers(type: string, message: string, excludeUserId?: number) {
+  try {
+    const members = await db.select({ id: usersTable.id }).from(usersTable);
+    await Promise.all(
+      members
+        .filter(m => m.id !== excludeUserId)
+        .map(m => createNotification(m.id, type, message)),
+    );
+  } catch { }
+}
+
 // ── Purposes ────────────────────────────────────────────────────────────────
 
 router.get("/purposes", async (req, res) => {
@@ -128,6 +146,7 @@ router.post("/purposes/:purposeId/activities", async (req, res) => {
     const body = insertActivitySchema.parse({ ...req.body, purposeId });
     const [activity] = await db.insert(activitiesTable).values({ ...body, userId: user.id, approved: false }).returning();
     emailNewActivity({ title: activity.title, description: activity.description, authorName: activity.authorName, purposeId }).catch(() => {});
+    notifyAdmins("activity_pending", `📅 New activity proposed by ${activity.authorName}: "${activity.title}" — awaiting your validation`);
     res.status(201).json(activity);
   } catch (err) {
     req.log.error({ err }, "Failed to create activity");
@@ -188,11 +207,13 @@ router.patch("/purposes/:purposeId/activities/:id/approve", async (req, res) => 
     const id = Number(req.params.id);
     if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
     const [updated] = await db.update(activitiesTable).set({ approved: true }).where(eq(activitiesTable.id, id)).returning();
-    // Notify the submitter
+    // Notify the submitter personally
     if (updated.userId) {
       createNotification(updated.userId, "activity_approved",
-        `Your activity "${updated.title}" has been validated and is now published!`);
+        `✅ Your activity "${updated.title}" has been validated and is now published!`);
     }
+    // Notify all other members that a new activity is available
+    notifyAllMembers("activity_new", `📅 New activity published: "${updated.title}" — check it out and join!`, updated.userId ?? undefined);
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "Failed to approve activity");
@@ -329,6 +350,7 @@ router.post("/purposes/:purposeId/messages", async (req, res) => {
     const body = insertMessageSchema.parse({ ...req.body, purposeId });
     const [message] = await db.insert(messagesTable).values({ ...body, userId: user.id, approved: false }).returning();
     emailNewMessage({ content: message.content, authorName: message.authorName, purposeId }).catch(() => {});
+    notifyAdmins("message_pending", `💬 New message proposed by ${message.authorName} — awaiting your validation`);
     res.status(201).json(message);
   } catch (err) {
     req.log.error({ err }, "Failed to create message");
@@ -343,11 +365,13 @@ router.patch("/purposes/:purposeId/messages/:id/approve", async (req, res) => {
     const id = Number(req.params.id);
     if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
     const [updated] = await db.update(messagesTable).set({ approved: true }).where(eq(messagesTable.id, id)).returning();
-    // Notify the submitter
+    // Notify the submitter personally
     if (updated.userId) {
       createNotification(updated.userId, "message_approved",
-        `Your message has been validated and is now published!`);
+        `✅ Your message has been validated and is now published!`);
     }
+    // Notify all other members that a new message is available
+    notifyAllMembers("message_new", `💬 New message published by ${updated.authorName} — go read it!`, updated.userId ?? undefined);
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "Failed to approve message");
