@@ -3,14 +3,7 @@ import { Link, useLocation } from "wouter";
 import { ArrowLeft, Camera, CheckCircle2, ClipboardList } from "lucide-react";
 
 const COMMUNITIES = ["Domaine de Radhadesh"];
-const DEPT_ROLES = [
-  "Member",
-  "Devotee",
-  "Volunteer",
-  "Sevaka",
-  "Coordinator",
-  "Pujari",
-  "Teacher",
+const RADHADESH_DEPTS = [
   "HR & Legal Affairs",
   "Accounting",
   "Sankirtana",
@@ -172,43 +165,45 @@ export default function Register() {
               </select>
             </Field>
 
-            {/* Department / Role — multi-select chips */}
-            <div>
-              <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>
-                Department / Role
-                <span className="font-normal text-xs ml-2" style={{ color: "hsl(14 40% 50%)" }}>select all that apply</span>
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {DEPT_ROLES.map(item => {
-                  const active = deptRoles.includes(item);
-                  return (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => toggleDeptRole(item)}
-                      className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
-                      style={{
-                        background: active ? "hsl(26 68% 42%)" : "hsl(40 40% 88%)",
-                        color: active ? "hsl(40 80% 96%)" : "hsl(14 45% 38%)",
-                        border: active ? "1.5px solid hsl(26 68% 42%)" : "1.5px solid hsl(14 25% 72%)",
-                      }}
-                    >
-                      {item}
-                    </button>
-                  );
-                })}
+            {/* Department / Role — shown once community is selected */}
+            {form.community && (
+              <div>
+                <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>
+                  Department / Role
+                  <span className="font-normal text-xs ml-2" style={{ color: "hsl(14 40% 50%)" }}>select all that apply</span>
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {RADHADESH_DEPTS.map(item => {
+                    const active = deptRoles.includes(item);
+                    return (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => toggleDeptRole(item)}
+                        className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
+                        style={{
+                          background: active ? "hsl(26 68% 42%)" : "hsl(40 40% 88%)",
+                          color: active ? "hsl(40 80% 96%)" : "hsl(14 45% 38%)",
+                          border: active ? "1.5px solid hsl(26 68% 42%)" : "1.5px solid hsl(14 25% 72%)",
+                        }}
+                      >
+                        {item}
+                      </button>
+                    );
+                  })}
+                </div>
+                {deptRoles.includes("Other") && (
+                  <input
+                    type="text"
+                    placeholder="Please specify…"
+                    value={form.deptRolesOther}
+                    onChange={set("deptRolesOther")}
+                    className="mt-3 w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }}
+                  />
+                )}
               </div>
-              {deptRoles.includes("Other") && (
-                <input
-                  type="text"
-                  placeholder="Please specify…"
-                  value={form.deptRolesOther}
-                  onChange={set("deptRolesOther")}
-                  className="mt-3 w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
-                  style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }}
-                />
-              )}
-            </div>
+            )}
 
             {/* Survey — mandatory */}
             <div>
