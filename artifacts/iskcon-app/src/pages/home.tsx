@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "wouter";
 import PurposePanel from "./PurposePanel";
-import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, Eye } from "lucide-react";
+import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, Eye, Bell } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
@@ -119,6 +119,10 @@ export default function Home() {
   const [fading, setFading] = useState(false);
   const [activePurpose, setActivePurpose] = useState<number | null>(null);
   const [purposeBadges, setPurposeBadges] = useState<Record<number, number>>({});
+  const [notifCount, setNotifCount] = useState(0);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotifs, setShowNotifs] = useState(false);
+  const lastNotifData = useRef<any>(null);
 
   const computeBadges = useCallback((data: Record<number, { activityIds: number[]; messageIds: number[] }> | null) => {
     if (!data) return;
@@ -146,6 +150,41 @@ export default function Home() {
     window.addEventListener("storage", onStorage);
     return () => { clearInterval(interval); window.removeEventListener("storage", onStorage); };
   }, [computeBadges]);
+
+  // Notification polling — only when logged in
+  useEffect(() => {
+    if (!currentUser) { setNotifCount(0); setNotifications([]); return; }
+    const token = localStorage.getItem("iskcon_jwt");
+    if (!token) return;
+    const fetchNotifs = () => {
+      fetch(`${HOME_API}/api/notifications`, { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => {
+          if (d) {
+            lastNotifData.current = d;
+            setNotifCount(d.unreadCount);
+            setNotifications(d.notifications);
+          }
+        })
+        .catch(() => {});
+    };
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 4000);
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
+  const openNotifs = () => {
+    setShowNotifs(true);
+    if (notifCount > 0) {
+      const token = localStorage.getItem("iskcon_jwt");
+      fetch(`${HOME_API}/api/notifications/read-all`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token ?? ""}` },
+      }).catch(() => {});
+      setNotifCount(0);
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    }
+  };
 
   const goTo = (index: number) => {
     setFading(true);
@@ -192,17 +231,38 @@ export default function Home() {
           {/* Top bar — You pill left, title right */}
           <div className="px-6 pt-10 flex items-start justify-between gap-4">
 
-            {/* You pill — top left */}
-            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none shrink-0 mt-1" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
-              {currentUser ? (
-                currentUser.photoDataUrl
-                  ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
-                  : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(14 55% 30%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
-              ) : (
-                <UserCircle className="w-4 h-4" />
+            {/* You pill + bell — top left */}
+            <div className="flex items-center gap-2 shrink-0 mt-1">
+              <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+                {currentUser ? (
+                  currentUser.photoDataUrl
+                    ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
+                    : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(14 55% 30%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
+                ) : (
+                  <UserCircle className="w-4 h-4" />
+                )}
+                {currentUser ? currentUser.fullName.split(" ")[0] : "You"}
+              </Link>
+
+              {currentUser && (
+                <button
+                  onClick={openNotifs}
+                  className="relative inline-flex items-center justify-center rounded-full focus:outline-none"
+                  style={{ width: 36, height: 36, background: "hsl(40 70% 94% / 0.12)", border: "1px solid hsl(40 70% 90% / 0.4)" }}
+                  aria-label="Notifications"
+                >
+                  <Bell className="w-4 h-4" style={{ color: "hsl(40 80% 96%)" }} />
+                  {notifCount > 0 && (
+                    <span
+                      className="absolute -top-1 -right-1 min-w-[17px] h-[17px] flex items-center justify-center font-bold text-white rounded-full px-0.5"
+                      style={{ fontSize: "0.62rem", background: "hsl(0 80% 48%)", lineHeight: 1 }}
+                    >
+                      {notifCount > 9 ? "9+" : notifCount}
+                    </span>
+                  )}
+                </button>
               )}
-              {currentUser ? currentUser.fullName.split(" ")[0] : "You"}
-            </Link>
+            </div>
 
             {/* 7P logo + title */}
             <div className="flex flex-col items-end text-right">
@@ -347,6 +407,58 @@ export default function Home() {
           Śrīla Prabhupāda · Conversation with disciples, Vṛndāvana, October 1977
         </p>
       </div>
+
+      {/* Notification panel overlay */}
+      {showNotifs && (
+        <div
+          className="fixed inset-0 z-50"
+          style={{ background: "hsl(14 35% 10% / 0.45)" }}
+          onClick={() => setShowNotifs(false)}
+        >
+          <div
+            className="mx-4 mt-20 rounded-2xl overflow-hidden shadow-xl"
+            style={{ background: "hsl(40 28% 97%)" }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-5 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid hsl(38 25% 85%)" }}>
+              <h3 className="font-serif font-bold" style={{ color: "hsl(14 72% 16%)", fontSize: "1rem" }}>
+                Notifications
+              </h3>
+              <button onClick={() => setShowNotifs(false)} className="font-sans text-xs" style={{ color: "hsl(14 35% 55%)" }}>
+                Close
+              </button>
+            </div>
+
+            {/* List */}
+            <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+              {notifications.length === 0 ? (
+                <div className="px-5 py-10 text-center font-sans" style={{ color: "hsl(14 35% 55%)", fontSize: "0.85rem" }}>
+                  No notifications yet
+                </div>
+              ) : (
+                notifications.map((n: any) => (
+                  <div
+                    key={n.id}
+                    className="px-5 py-3"
+                    style={{
+                      borderBottom: "1px solid hsl(38 25% 88%)",
+                      background: n.read ? "transparent" : "hsl(38 55% 92%)",
+                    }}
+                  >
+                    <p className="font-sans" style={{ fontSize: "0.85rem", color: "hsl(14 72% 16%)", lineHeight: 1.4 }}>
+                      {n.message}
+                    </p>
+                    <p className="font-sans mt-1" style={{ fontSize: "0.72rem", color: "hsl(14 35% 55%)" }}>
+                      {new Date(n.createdAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

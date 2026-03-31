@@ -15,6 +15,7 @@ export const purposesTable = pgTable("purposes", {
 export const activitiesTable = pgTable("activities", {
   id: serial("id").primaryKey(),
   purposeId: integer("purpose_id").notNull().references(() => purposesTable.id, { onDelete: "cascade" }),
+  userId: integer("user_id").references(() => usersTable.id, { onDelete: "set null" }),
   title: text("title").notNull(),
   description: text("description").notNull(),
   authorName: text("author_name").notNull(),
@@ -31,6 +32,7 @@ export const activitiesTable = pgTable("activities", {
 export const messagesTable = pgTable("messages", {
   id: serial("id").primaryKey(),
   purposeId: integer("purpose_id").notNull().references(() => purposesTable.id, { onDelete: "cascade" }),
+  userId: integer("user_id").references(() => usersTable.id, { onDelete: "set null" }),
   content: text("content").notNull(),
   authorName: text("author_name").notNull(),
   approved: boolean("approved").notNull().default(false),
@@ -62,6 +64,15 @@ export const activityParticipantsTable = pgTable("activity_participants", {
   joinedAt: timestamp("joined_at").notNull().defaultNow(),
 }, (t) => [unique().on(t.activityId, t.userId)]);
 
+export const notificationsTable = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+  type: text("type").notNull(), // 'activity_approved' | 'message_approved' | 'activity_comment' | 'message_comment' | 'activity_joined'
+  message: text("message").notNull(),
+  read: boolean("read").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertActivitySchema = createInsertSchema(activitiesTable).omit({ id: true, createdAt: true, approved: true });
 export const insertMessageSchema = createInsertSchema(messagesTable).omit({ id: true, createdAt: true, approved: true });
 export const insertCommentSchema = createInsertSchema(commentsTable).omit({ id: true, createdAt: true });
@@ -72,6 +83,7 @@ export type Activity = typeof activitiesTable.$inferSelect;
 export type Message = typeof messagesTable.$inferSelect;
 export type Comment = typeof commentsTable.$inferSelect;
 export type ActivityComment = typeof activityCommentsTable.$inferSelect;
+export type Notification = typeof notificationsTable.$inferSelect;
 export type InsertActivity = z.infer<typeof insertActivitySchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type InsertComment = z.infer<typeof insertCommentSchema>;

@@ -2,9 +2,10 @@ import { Router, type IRouter } from "express";
 import {
   db, purposesTable, activitiesTable, messagesTable,
   commentsTable, activityCommentsTable, activityParticipantsTable,
+  notificationsTable,
   insertActivitySchema, insertMessageSchema, usersTable,
 } from "@workspace/db";
-import { eq, and, sql, isNotNull, inArray } from "drizzle-orm";
+import { eq, and, sql, isNotNull, inArray, desc } from "drizzle-orm";
 import { z } from "zod";
 import jwt from "jsonwebtoken";
 import { emailNewActivity, emailNewMessage } from "../utils/email";
@@ -22,6 +23,12 @@ async function getRequestUser(authHeader?: string) {
       .where(eq(usersTable.id, Number(payload.sub)));
     return user ?? null;
   } catch { return null; }
+}
+
+async function createNotification(userId: number, type: string, message: string) {
+  try {
+    await db.insert(notificationsTable).values({ userId, type, message });
+  } catch { /* silent — never break main flow */ }
 }
 
 // ── Purposes ────────────────────────────────────────────────────────────────
@@ -51,7 +58,6 @@ router.get("/purposes/:id", async (req, res) => {
 
 // ── Activities ───────────────────────────────────────────────────────────────
 
-// Helper: enrich activities with participant counts and isJoined
 async function enrichActivities(rawActivities: any[], userId?: number) {
   if (!rawActivities.length) return [];
   const ids = rawActivities.map((a: any) => a.id);
@@ -100,7 +106,6 @@ router.get("/purposes/:purposeId/activities", async (req, res) => {
   }
 });
 
-// Cross-purpose calendar feed — all approved activities with a scheduled date
 router.get("/activities", async (req, res) => {
   try {
     const user = await getRequestUser(req.headers.authorization);
@@ -121,7 +126,7 @@ router.post("/purposes/:purposeId/activities", async (req, res) => {
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
     const body = insertActivitySchema.parse({ ...req.body, purposeId });
-    const [activity] = await db.insert(activitiesTable).values({ ...body, approved: false }).returning();
+    const [activity] = await db.insert(activitiesTable).values({ ...body, userId: user.id, approved: false }).returning();
     emailNewActivity({ title: activity.title, description: activity.description, authorName: activity.authorName, purposeId }).catch(() => {});
     res.status(201).json(activity);
   } catch (err) {
@@ -149,6 +154,11 @@ router.post("/purposes/:purposeId/activities/:id/join", async (req, res) => {
     await db.insert(activityParticipantsTable)
       .values({ activityId: id, userId: user.id })
       .onConflictDoNothing();
+    // Notify activity owner that someone joined (only if different person)
+    if (activity.userId && activity.userId !== user.id) {
+      createNotification(activity.userId, "activity_joined",
+        `${user.fullName} joined your activity "${activity.title}"`);
+    }
     res.json({ joined: true, participantCount: current + 1 });
   } catch (err) {
     req.log.error({ err }, "Failed to join activity");
@@ -178,6 +188,11 @@ router.patch("/purposes/:purposeId/activities/:id/approve", async (req, res) => 
     const id = Number(req.params.id);
     if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
     const [updated] = await db.update(activitiesTable).set({ approved: true }).where(eq(activitiesTable.id, id)).returning();
+    // Notify the submitter
+    if (updated.userId) {
+      createNotification(updated.userId, "activity_approved",
+        `Your activity "${updated.title}" has been validated and is now published!`);
+    }
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "Failed to approve activity");
@@ -275,6 +290,12 @@ router.post("/purposes/:purposeId/activities/:activityId/comments", async (req, 
       authorName: user.fullName,
       content: body.content,
     }).returning();
+    // Notify activity owner
+    const [activity] = await db.select().from(activitiesTable).where(eq(activitiesTable.id, activityId));
+    if (activity?.userId && activity.userId !== user.id) {
+      createNotification(activity.userId, "activity_comment",
+        `${user.fullName} replied to your activity "${activity.title}"`);
+    }
     res.status(201).json(comment);
   } catch (err) {
     req.log.error({ err }, "Failed to create activity comment");
@@ -301,10 +322,12 @@ router.get("/purposes/:purposeId/messages", async (req, res) => {
 
 router.post("/purposes/:purposeId/messages", async (req, res) => {
   try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
     const body = insertMessageSchema.parse({ ...req.body, purposeId });
-    const [message] = await db.insert(messagesTable).values({ ...body, approved: false }).returning();
+    const [message] = await db.insert(messagesTable).values({ ...body, userId: user.id, approved: false }).returning();
     emailNewMessage({ content: message.content, authorName: message.authorName, purposeId }).catch(() => {});
     res.status(201).json(message);
   } catch (err) {
@@ -320,6 +343,11 @@ router.patch("/purposes/:purposeId/messages/:id/approve", async (req, res) => {
     const id = Number(req.params.id);
     if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
     const [updated] = await db.update(messagesTable).set({ approved: true }).where(eq(messagesTable.id, id)).returning();
+    // Notify the submitter
+    if (updated.userId) {
+      createNotification(updated.userId, "message_approved",
+        `Your message has been validated and is now published!`);
+    }
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "Failed to approve message");
@@ -383,6 +411,12 @@ router.post("/purposes/:purposeId/messages/:messageId/comments", async (req, res
       authorName: user.fullName,
       content: body.content,
     }).returning();
+    // Notify message owner
+    const [message] = await db.select().from(messagesTable).where(eq(messagesTable.id, messageId));
+    if (message?.userId && message.userId !== user.id) {
+      createNotification(message.userId, "message_comment",
+        `${user.fullName} replied to your message`);
+    }
     res.status(201).json(comment);
   } catch (err) {
     req.log.error({ err }, "Failed to create comment");
@@ -413,6 +447,41 @@ router.get("/badges", async (_req, res) => {
     }
     res.json(map);
   } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ── Notifications ─────────────────────────────────────────────────────────────
+
+router.get("/notifications", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
+    const rows = await db
+      .select()
+      .from(notificationsTable)
+      .where(eq(notificationsTable.userId, user.id))
+      .orderBy(desc(notificationsTable.createdAt))
+      .limit(30);
+    const unreadCount = rows.filter((n) => !n.read).length;
+    res.json({ unreadCount, notifications: rows });
+  } catch (err) {
+    req.log.error({ err }, "Failed to fetch notifications");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/notifications/read-all", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
+    await db
+      .update(notificationsTable)
+      .set({ read: true })
+      .where(and(eq(notificationsTable.userId, user.id), eq(notificationsTable.read, false)));
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error({ err }, "Failed to mark notifications read");
     res.status(500).json({ error: "Internal server error" });
   }
 });
