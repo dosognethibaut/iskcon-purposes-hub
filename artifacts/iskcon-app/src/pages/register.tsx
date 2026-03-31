@@ -58,7 +58,7 @@ export default function Register() {
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>You</h1>
+        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>Your Profile</h1>
         <p className="font-sans mt-1" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>Your profile in the community</p>
 
         {/* Tab switcher */}
