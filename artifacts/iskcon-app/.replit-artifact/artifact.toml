@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "ISKCON Purposes"
+version = "1.0.0"
+id = "artifacts/iskcon-app"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22433
+
+[services.development]
+run = "pnpm --filter @workspace/iskcon-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/iskcon-app", "run", "build" ]
+publicDir = "artifacts/iskcon-app/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22433"
+BASE_PATH = "/"

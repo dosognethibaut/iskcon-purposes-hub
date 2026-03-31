@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: ISKCON Purposes API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: purposes
+    description: ISKCON purposes
+  - name: activities
+    description: Admin-proposed activities per purpose
+  - name: messages
+    description: Member messages per purpose
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +28,171 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /purposes:
+    get:
+      operationId: getPurposes
+      tags: [purposes]
+      summary: List all 7 ISKCON purposes
+      responses:
+        "200":
+          description: List of purposes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Purpose"
+
+  /purposes/{id}:
+    get:
+      operationId: getPurpose
+      tags: [purposes]
+      summary: Get a single purpose by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: A purpose
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Purpose"
+        "404":
+          description: Not found
+
+  /purposes/{purposeId}/activities:
+    get:
+      operationId: getActivities
+      tags: [activities]
+      summary: List activities for a purpose
+      parameters:
+        - in: path
+          name: purposeId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activity"
+    post:
+      operationId: createActivity
+      tags: [activities]
+      summary: Admin creates an activity for a purpose
+      parameters:
+        - in: path
+          name: purposeId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateActivityInput"
+      responses:
+        "201":
+          description: Activity created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Activity"
+
+  /purposes/{purposeId}/activities/{id}:
+    delete:
+      operationId: deleteActivity
+      tags: [activities]
+      summary: Admin deletes an activity
+      parameters:
+        - in: path
+          name: purposeId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /purposes/{purposeId}/messages:
+    get:
+      operationId: getMessages
+      tags: [messages]
+      summary: List messages for a purpose
+      parameters:
+        - in: path
+          name: purposeId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+    post:
+      operationId: createMessage
+      tags: [messages]
+      summary: Member posts a message for a purpose
+      parameters:
+        - in: path
+          name: purposeId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMessageInput"
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /purposes/{purposeId}/messages/{id}:
+    delete:
+      operationId: deleteMessage
+      tags: [messages]
+      summary: Delete a message
+      parameters:
+        - in: path
+          name: purposeId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +203,95 @@ components:
       required:
         - status
 
+    Purpose:
+      type: object
+      properties:
+        id:
+          type: integer
+        number:
+          type: integer
+        title:
+          type: string
+        shortDescription:
+          type: string
+        fullDescription:
+          type: string
+        icon:
+          type: string
+      required:
+        - id
+        - number
+        - title
+        - shortDescription
+        - fullDescription
+        - icon
+
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+        purposeId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        authorName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - purposeId
+        - title
+        - description
+        - authorName
+        - createdAt
+
+    CreateActivityInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        authorName:
+          type: string
+      required:
+        - title
+        - description
+        - authorName
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        purposeId:
+          type: integer
+        content:
+          type: string
+        authorName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - purposeId
+        - content
+        - authorName
+        - createdAt
+
+    CreateMessageInput:
+      type: object
+      properties:
+        content:
+          type: string
+        authorName:
+          type: string
+      required:
+        - content
+        - authorName
