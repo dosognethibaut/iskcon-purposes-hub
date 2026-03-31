@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import PurposePanel from "./PurposePanel";
-import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
+import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, Eye } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
@@ -211,11 +211,12 @@ export default function Home() {
 
           {/* Buttons */}
           <div className="px-6 pt-4 pb-5 flex gap-2 flex-wrap justify-center">
-            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+            {/* You — warm golden accent to stand out */}
+            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold focus:outline-none" style={{ background: "hsl(40 80% 78%)", color: "hsl(14 72% 18%)", fontSize: "0.85rem" }}>
               {currentUser ? (
                 currentUser.photoDataUrl
                   ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
-                  : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
+                  : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(14 55% 30%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
               ) : (
                 <UserCircle className="w-4 h-4" />
               )}
@@ -226,6 +227,9 @@ export default function Home() {
             </Link>
             <Link href="/when" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Clock className="w-4 h-4" /> When?
+            </Link>
+            <Link href="/vision" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+              <Eye className="w-4 h-4" /> Vision
             </Link>
           </div>
 

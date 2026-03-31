@@ -9,6 +9,7 @@ import Purposes from "@/pages/purposes";
 import PurposeDetail from "@/pages/purpose-detail";
 import Why from "@/pages/why";
 import When from "@/pages/when";
+import Vision from "@/pages/vision";
 import Register from "@/pages/register";
 import Survey from "@/pages/survey";
 
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/purpose/:id" component={PurposeDetail} />
       <Route path="/why" component={Why} />
       <Route path="/when" component={When} />
+      <Route path="/vision" component={Vision} />
       <Route path="/register" component={Register} />
       <Route path="/survey" component={Survey} />
       <Route component={NotFound} />
