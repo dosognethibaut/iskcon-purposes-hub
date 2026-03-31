@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/context/AuthContext";
-import radhadeshRLogo from "@assets/image_1774956193985.png";
+import radhadeshRLogo from "@assets/image_1774956916097.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
