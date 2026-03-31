@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { ArrowLeft, Camera, CheckCircle2, ClipboardList } from "lucide-react";
 
 const ROLES = ["Member", "Devotee", "Volunteer", "Sevaka", "Coordinator", "Pujari", "Teacher", "Other"];
-const COMMUNITIES = ["Radhadesh", "London", "Paris", "Amsterdam", "Zurich", "Berlin", "Brussels", "Other"];
+const COMMUNITIES = ["Domaine de Radhadesh"];
 
 export default function Register() {
   const [, navigate] = useLocation();
