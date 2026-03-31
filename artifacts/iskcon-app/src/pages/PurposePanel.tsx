@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/context/AuthContext";
-import radhadeshLogo from "@assets/image_1774933719680.png";
+import radhadeshRLogo from "@assets/image_1774956193985.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -408,23 +408,40 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
       {/* Community section */}
       <div className="px-4">
-        {/* Radhadesh logo + live stats */}
-        <div className="flex items-center justify-between gap-3 pt-4 pb-3">
-          <img src={radhadeshLogo} alt="Domaine de Radhadesh" style={{ height: 36, width: "auto", objectFit: "contain" }} />
+        {/* R logo circle + stats, centered */}
+        <div className="flex items-center justify-center gap-3 pt-5 pb-4">
+          <img
+            src={radhadeshRLogo}
+            alt="Radhadesh"
+            style={{
+              width: 48, height: 48,
+              borderRadius: "50%",
+              objectFit: "cover",
+              objectPosition: "center",
+              flexShrink: 0,
+              boxShadow: "0 1px 6px hsl(14 40% 20% / 0.25)",
+            }}
+          />
           {stats ? (
-            <div className="flex items-center gap-1.5 font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>
-              <span className="font-bold" style={{ color: accent }}>{stats.connected}</span>
-              <span>connected</span>
-              <span style={{ color: "hsl(14 30% 65%)" }}>/</span>
-              <span className="font-bold" style={{ color: "hsl(14 55% 30%)" }}>{stats.registered}</span>
-              <span>registered</span>
+            <div className="flex flex-col font-sans leading-tight" style={{ color: "hsl(14 40% 48%)" }}>
+              <div className="flex items-baseline gap-1">
+                <span className="text-lg font-bold" style={{ color: accent }}>{stats.connected}</span>
+                <span className="text-xs">connected</span>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-lg font-bold" style={{ color: "hsl(14 55% 30%)" }}>{stats.registered}</span>
+                <span className="text-xs">registered</span>
+              </div>
             </div>
           ) : (
             <div className="font-sans text-xs" style={{ color: "hsl(14 40% 65%)" }}>Loading…</div>
           )}
         </div>
+
+        {/* Domaine de Radhadesh divider */}
         <div className="flex items-center gap-3 pb-4">
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
+          <span className="font-sans text-xs uppercase tracking-widest whitespace-nowrap" style={{ color: "hsl(14 40% 50%)" }}>Domaine de Radhadesh</span>
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 
