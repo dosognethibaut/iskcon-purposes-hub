@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useGetActivities,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/context/AuthContext";
+import radhadeshLogo from "@assets/image_1774933719680.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -227,6 +228,14 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const accent = accentById[purposeId] ?? "hsl(26 68% 42%)";
   const cardBg = cardBgById[purposeId] ?? "hsl(40 50% 95%)";
 
+  const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
+  useEffect(() => {
+    fetch(`${API_BASE}/api/stats`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => d && setStats(d))
+      .catch(() => {});
+  }, []);
+
   const [openActivities, setOpenActivities] = useState<Set<number>>(new Set());
   const [expandedActivityComments, setExpandedActivityComments] = useState<Set<number>>(new Set());
   const [expandedMessageComments, setExpandedMessageComments] = useState<Set<number>>(new Set());
@@ -399,9 +408,23 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
       {/* Community section */}
       <div className="px-4">
-        <div className="flex items-center gap-3 py-4">
+        {/* Radhadesh logo + live stats */}
+        <div className="flex items-center justify-between gap-3 pt-4 pb-3">
+          <img src={radhadeshLogo} alt="Domaine de Radhadesh" style={{ height: 36, width: "auto", objectFit: "contain" }} />
+          {stats ? (
+            <div className="flex items-center gap-1.5 font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>
+              <span className="font-bold" style={{ color: accent }}>{stats.connected}</span>
+              <span>connected</span>
+              <span style={{ color: "hsl(14 30% 65%)" }}>/</span>
+              <span className="font-bold" style={{ color: "hsl(14 55% 30%)" }}>{stats.registered}</span>
+              <span>registered</span>
+            </div>
+          ) : (
+            <div className="font-sans text-xs" style={{ color: "hsl(14 40% 65%)" }}>Loading…</div>
+          )}
+        </div>
+        <div className="flex items-center gap-3 pb-4">
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
-          <span className="font-sans text-xs uppercase tracking-widest" style={{ color: "hsl(14 40% 50%)" }}>Domaine de Radhadesh</span>
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 

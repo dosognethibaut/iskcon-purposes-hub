@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { db, usersTable, surveyAnswersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, gte, count, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
@@ -122,12 +122,15 @@ router.post("/auth/login", async (req, res) => {
 
     const ADMIN_EMAILS = ["iskcon.7purposes@gmail.com"];
     let isAdmin = user.isAdmin;
+    const now = new Date();
     if (!isAdmin && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-      await db.update(usersTable).set({ isAdmin: true }).where(eq(usersTable.id, user.id));
+      await db.update(usersTable).set({ isAdmin: true, lastLoginAt: now }).where(eq(usersTable.id, user.id));
       isAdmin = true;
     } else if (isAdmin && !ADMIN_EMAILS.includes(user.email.toLowerCase())) {
-      await db.update(usersTable).set({ isAdmin: false }).where(eq(usersTable.id, user.id));
+      await db.update(usersTable).set({ isAdmin: false, lastLoginAt: now }).where(eq(usersTable.id, user.id));
       isAdmin = false;
+    } else {
+      await db.update(usersTable).set({ lastLoginAt: now }).where(eq(usersTable.id, user.id));
     }
 
     const token = signToken(user.id);
@@ -280,6 +283,20 @@ router.post("/auth/survey", async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     req.log.error({ err }, "Survey submission failed");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/stats", async (req, res) => {
+  try {
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const [[{ registered }], [{ connected }]] = await Promise.all([
+      db.select({ registered: count() }).from(usersTable),
+      db.select({ connected: count() }).from(usersTable).where(gte(usersTable.lastLoginAt, cutoff)),
+    ]);
+    res.json({ registered, connected });
+  } catch (err) {
+    req.log.error({ err }, "Failed to fetch stats");
     res.status(500).json({ error: "Internal server error" });
   }
 });

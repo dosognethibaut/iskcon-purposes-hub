@@ -13,6 +13,7 @@ export const usersTable = pgTable("users", {
   photoDataUrl: text("photo_data_url"),
   isAdmin: boolean("is_admin").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastLoginAt: timestamp("last_login_at"),
 });
 
 export const surveyAnswersTable = pgTable("survey_answers", {
