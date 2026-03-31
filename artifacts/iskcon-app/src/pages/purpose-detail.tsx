@@ -1,14 +1,14 @@
 import { useParams, Link } from "wouter";
-import { 
-  useGetPurpose, 
-  useGetActivities, 
-  useGetMessages, 
-  useCreateActivity, 
+import {
+  useGetPurpose,
+  useGetActivities,
+  useGetMessages,
+  useCreateActivity,
   useCreateMessage,
   getGetActivitiesQueryKey,
-  getGetMessagesQueryKey
+  getGetMessagesQueryKey,
 } from "@workspace/api-client-react";
-import { ArrowLeft, MessageCircle, CalendarHeart, Loader2 } from "lucide-react";
+import { ArrowLeft, MessageCircle, CalendarDays, Loader2, Leaf, Users, Building2, Globe, BookOpen, Lightbulb, Share2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,6 +20,21 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import type { LucideIcon } from "lucide-react";
+
+const iconMap: Record<string, LucideIcon> = {
+  Leaf, Users, Building2, Globe, BookOpen, Lightbulb, Share2,
+};
+
+const iconBgMap: Record<string, string> = {
+  Leaf: "bg-emerald-600",
+  Users: "bg-blue-700",
+  Building2: "bg-stone-600",
+  Globe: "bg-amber-700",
+  BookOpen: "bg-amber-800",
+  Lightbulb: "bg-orange-700",
+  Share2: "bg-red-800",
+};
 
 const activitySchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -38,15 +53,15 @@ export default function PurposeDetail() {
   const queryClient = useQueryClient();
 
   const { data: purpose, isLoading: isLoadingPurpose } = useGetPurpose(id, {
-    query: { enabled: !!id }
+    query: { enabled: !!id },
   });
 
   const { data: activities, isLoading: isLoadingActivities } = useGetActivities(id, {
-    query: { enabled: !!id }
+    query: { enabled: !!id, queryKey: getGetActivitiesQueryKey(id) },
   });
 
   const { data: messages, isLoading: isLoadingMessages } = useGetMessages(id, {
-    query: { enabled: !!id }
+    query: { enabled: !!id, queryKey: getGetMessagesQueryKey(id) },
   });
 
   const createActivity = useCreateActivity();
@@ -69,27 +84,27 @@ export default function PurposeDetail() {
         activityForm.reset();
         queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(id) });
       },
-      onError: () => toast.error("Failed to propose activity")
+      onError: () => toast.error("Failed to propose activity"),
     });
   };
 
   const onMessageSubmit = (data: z.infer<typeof messageSchema>) => {
     createMessage.mutate({ purposeId: id, data }, {
       onSuccess: () => {
-        toast.success("Message shared successfully");
+        toast.success("Message shared. Hare Krishna!");
         messageForm.reset();
         queryClient.invalidateQueries({ queryKey: getGetMessagesQueryKey(id) });
       },
-      onError: () => toast.error("Failed to share message")
+      onError: () => toast.error("Failed to share message"),
     });
   };
 
   if (isLoadingPurpose) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background relative z-10">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground font-medium animate-pulse">Loading Devotional Content...</p>
+          <p className="text-muted-foreground font-serif italic animate-pulse">Loading...</p>
         </div>
       </div>
     );
@@ -97,7 +112,7 @@ export default function PurposeDetail() {
 
   if (!purpose) {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-6 text-center">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-6 text-center relative z-10">
         <h2 className="font-serif text-2xl mb-4 text-foreground">Purpose not found</h2>
         <Link href="/" className="text-primary font-medium hover:underline flex items-center justify-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Return Home
@@ -106,64 +121,98 @@ export default function PurposeDetail() {
     );
   }
 
+  const IconComp = iconMap[purpose.icon] ?? BookOpen;
+  const iconBg = iconBgMap[purpose.icon] ?? "bg-amber-700";
+
   return (
-    <div className="min-h-[100dvh] bg-background pb-20 overflow-x-hidden">
+    <div className="min-h-[100dvh] bg-background pb-20 overflow-x-hidden relative z-10">
+
       {/* Header */}
-      <div className="bg-primary/10 px-5 pt-12 pb-14 rounded-b-[2.5rem] relative shadow-sm">
-        <Link href="/" className="absolute top-10 left-5 w-10 h-10 flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm text-foreground shadow-sm hover:scale-105 transition-transform">
+      <div className="bg-card/80 border-b border-border/60 px-5 pt-10 pb-8 relative shadow-sm">
+        <Link
+          href="/"
+          data-testid="back-button"
+          className="absolute top-8 left-4 w-10 h-10 flex items-center justify-center rounded-full bg-background/80 border border-border/60 text-foreground shadow-sm hover:scale-105 transition-transform"
+        >
           <ArrowLeft className="w-5 h-5" />
         </Link>
-        <div className="max-w-md mx-auto mt-12 text-center animate-in slide-in-from-bottom-2 fade-in duration-500">
-          <span className="text-primary font-bold tracking-widest text-xs uppercase mb-3 block">
-            Purpose {purpose.number}
-          </span>
-          <h1 className="font-serif text-3xl font-bold text-foreground leading-tight mb-4 px-2">
+
+        <div className="max-w-lg mx-auto mt-8 text-center animate-in slide-in-from-bottom-3 fade-in duration-500">
+          {/* Icon circle */}
+          <div className={`${iconBg} w-20 h-20 rounded-full flex items-center justify-center text-white mx-auto mb-5 shadow-md ring-4 ring-white/30`}>
+            <IconComp className="w-10 h-10" />
+          </div>
+
+          {/* Orange badge / ribbon matching graphic charter */}
+          <div className="inline-block bg-primary px-5 py-1.5 rounded-full mb-3 shadow-sm">
+            <span className="text-primary-foreground font-serif italic text-sm font-semibold tracking-wide">
+              Purpose {purpose.number} &mdash; {purpose.title}
+            </span>
+          </div>
+
+          <h1 className="font-serif text-4xl font-bold text-foreground leading-tight mb-4 px-2">
             {purpose.title}
           </h1>
-          <p className="text-muted-foreground text-[15px] leading-relaxed px-1">
-            {purpose.fullDescription || purpose.shortDescription}
+
+          <p className="text-foreground/70 text-base leading-relaxed px-2 font-sans max-w-sm mx-auto">
+            {purpose.fullDescription}
           </p>
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-5 -mt-6">
+      {/* Divider */}
+      <div className="max-w-lg mx-auto px-5">
+        <div className="flex items-center gap-3 py-5">
+          <div className="flex-1 h-px bg-border/60" />
+          <span className="text-muted-foreground text-xs font-sans uppercase tracking-widest">Community</span>
+          <div className="flex-1 h-px bg-border/60" />
+        </div>
+
         <Tabs defaultValue="activities" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 h-[3.5rem] bg-card/80 backdrop-blur rounded-2xl shadow-sm border p-1.5 mb-8">
-            <TabsTrigger value="activities" className="rounded-xl font-semibold data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all">
-              <CalendarHeart className="w-4 h-4 mr-2" />
+          <TabsList className="w-full grid grid-cols-2 h-14 bg-card/60 border border-border/50 rounded-2xl shadow-sm p-1.5 mb-6">
+            <TabsTrigger
+              value="activities"
+              className="rounded-xl font-semibold font-sans data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all text-sm"
+            >
+              <CalendarDays className="w-4 h-4 mr-2" />
               Activities
             </TabsTrigger>
-            <TabsTrigger value="messages" className="rounded-xl font-semibold data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all">
+            <TabsTrigger
+              value="messages"
+              className="rounded-xl font-semibold font-sans data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all text-sm"
+            >
               <MessageCircle className="w-4 h-4 mr-2" />
               Messages
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="activities" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="space-y-4">
-              <h2 className="font-serif text-xl font-bold text-foreground flex items-center">
-                <span className="w-1.5 h-6 bg-primary rounded-full mr-3"></span>
-                Proposed Activities
-              </h2>
+          {/* ACTIVITIES TAB */}
+          <TabsContent value="activities" className="space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-400">
+
+            <div className="space-y-3">
+              <h2 className="font-serif text-2xl font-bold text-foreground">Proposed Activities</h2>
               {isLoadingActivities ? (
-                <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-primary/50" /></div>
-              ) : activities?.length === 0 ? (
-                <div className="bg-card/50 rounded-2xl p-8 text-center border border-dashed border-border/60 shadow-sm">
-                  <CalendarHeart className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground font-medium text-sm">No activities proposed yet. Be the first to suggest one!</p>
+                <div className="flex justify-center p-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary/60" />
+                </div>
+              ) : !activities?.length ? (
+                <div className="bg-card/60 rounded-2xl p-8 text-center border border-dashed border-border/60">
+                  <CalendarDays className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm font-sans">No activities proposed yet. Be the first!</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {activities?.map((activity, i) => (
-                    <div 
-                      key={activity.id} 
-                      className="bg-card rounded-[1.25rem] p-5 shadow-sm border border-border/80 animate-in fade-in slide-in-from-bottom-2"
+                <div className="space-y-3">
+                  {activities.map((activity, i) => (
+                    <div
+                      key={activity.id}
+                      data-testid={`activity-card-${activity.id}`}
+                      className="bg-card rounded-2xl p-5 shadow-sm border border-border/60 animate-in fade-in slide-in-from-bottom-2"
                       style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
                     >
-                      <h3 className="font-serif font-bold text-lg text-foreground mb-1.5">{activity.title}</h3>
-                      <p className="text-muted-foreground text-[15px] mb-4 leading-relaxed">{activity.description}</p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground/80 font-medium pt-3 border-t border-border/40">
-                        <span className="text-foreground/80 font-semibold">By {activity.authorName}</span>
+                      <h3 className="font-serif text-lg font-bold text-foreground mb-1.5">{activity.title}</h3>
+                      <p className="text-foreground/70 text-sm leading-relaxed font-sans mb-4">{activity.description}</p>
+                      <div className="flex justify-between items-center text-xs text-muted-foreground font-sans pt-3 border-t border-border/40">
+                        <span className="font-semibold text-foreground/80">By {activity.authorName}</span>
                         <span>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                       </div>
                     </div>
@@ -172,22 +221,28 @@ export default function PurposeDetail() {
               )}
             </div>
 
-            <div className="bg-card rounded-[1.25rem] p-6 shadow-md border border-primary/20 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10" />
-              <div className="mb-6 pb-4 border-b border-border/60 flex items-center justify-between">
-                <h3 className="font-serif text-lg font-bold text-foreground">Propose Activity</h3>
-                <span className="bg-primary/10 text-primary text-[10px] font-bold px-2.5 py-1.5 rounded-lg uppercase tracking-widest">Admin</span>
+            {/* Activity form */}
+            <div className="bg-card rounded-2xl p-5 shadow border border-primary/20 relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-1 bg-primary rounded-t-2xl" />
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="font-serif text-lg font-bold text-foreground">Propose an Activity</h3>
+                <span className="bg-primary/15 text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans">Admin</span>
               </div>
               <Form {...activityForm}>
-                <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-5">
+                <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-4">
                   <FormField
                     control={activityForm.control}
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80">Activity Title</FormLabel>
+                        <FormLabel className="text-foreground/80 font-sans text-sm">Activity Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="E.g., Sunday Feast Program" className="bg-background/50 h-12 rounded-xl border-border/80 focus-visible:ring-primary/30" {...field} />
+                          <Input
+                            data-testid="input-activity-title"
+                            placeholder="E.g., Sunday Feast Program"
+                            className="bg-background/60 h-11 rounded-xl border-border/70 font-sans"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -198,9 +253,14 @@ export default function PurposeDetail() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80">Description</FormLabel>
+                        <FormLabel className="text-foreground/80 font-sans text-sm">Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="What will happen during this activity?" className="resize-none bg-background/50 min-h-[100px] rounded-xl border-border/80 focus-visible:ring-primary/30" {...field} />
+                          <Textarea
+                            data-testid="input-activity-description"
+                            placeholder="What will happen during this activity?"
+                            className="resize-none bg-background/60 min-h-[90px] rounded-xl border-border/70 font-sans"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -211,16 +271,26 @@ export default function PurposeDetail() {
                     name="authorName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80">Your Name</FormLabel>
+                        <FormLabel className="text-foreground/80 font-sans text-sm">Your Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your name" className="bg-background/50 h-12 rounded-xl border-border/80 focus-visible:ring-primary/30" {...field} />
+                          <Input
+                            data-testid="input-activity-author"
+                            placeholder="Enter your name"
+                            className="bg-background/60 h-11 rounded-xl border-border/70 font-sans"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full h-12 rounded-xl text-[15px] font-bold tracking-wide shadow-md active:scale-[0.98] transition-transform" disabled={createActivity.isPending}>
-                    {createActivity.isPending ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+                  <Button
+                    type="submit"
+                    data-testid="button-submit-activity"
+                    className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm active:scale-[0.98] transition-transform"
+                    disabled={createActivity.isPending}
+                  >
+                    {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     Propose Activity
                   </Button>
                 </form>
@@ -228,33 +298,34 @@ export default function PurposeDetail() {
             </div>
           </TabsContent>
 
-          <TabsContent value="messages" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="space-y-4">
-              <h2 className="font-serif text-xl font-bold text-foreground flex items-center">
-                <span className="w-1.5 h-6 bg-secondary-foreground/30 rounded-full mr-3"></span>
-                Community Messages
-              </h2>
+          {/* MESSAGES TAB */}
+          <TabsContent value="messages" className="space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-400">
+
+            <div className="space-y-3">
+              <h2 className="font-serif text-2xl font-bold text-foreground">Community Messages</h2>
               {isLoadingMessages ? (
-                <div className="flex justify-center p-8"><Loader2 className="w-6 h-6 animate-spin text-primary/50" /></div>
-              ) : messages?.length === 0 ? (
-                <div className="bg-card/50 rounded-2xl p-8 text-center border border-dashed border-border/60 shadow-sm">
+                <div className="flex justify-center p-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary/60" />
+                </div>
+              ) : !messages?.length ? (
+                <div className="bg-card/60 rounded-2xl p-8 text-center border border-dashed border-border/60">
                   <MessageCircle className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground font-medium text-sm">No messages shared yet. Share your thoughts!</p>
+                  <p className="text-muted-foreground text-sm font-sans">No messages yet. Share your reflections!</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {messages?.map((message, i) => (
-                    <div 
-                      key={message.id} 
-                      className="bg-card rounded-[1.25rem] p-6 shadow-sm border border-border/80 relative animate-in fade-in slide-in-from-bottom-2"
+                <div className="space-y-3">
+                  {messages.map((message, i) => (
+                    <div
+                      key={message.id}
+                      data-testid={`message-card-${message.id}`}
+                      className="bg-card rounded-2xl p-5 shadow-sm border border-border/60 animate-in fade-in slide-in-from-bottom-2"
                       style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
                     >
-                      <div className="absolute top-0 right-6 -translate-y-1/2 bg-background p-1.5 rounded-full">
-                        <MessageCircle className="w-4 h-4 text-primary/30 fill-primary/10" />
-                      </div>
-                      <p className="text-foreground/90 text-[15px] mb-5 leading-relaxed font-serif italic">"{message.content}"</p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground/80 font-medium">
-                        <span className="text-primary font-bold tracking-wide">— {message.authorName}</span>
+                      <p className="text-foreground/90 text-base leading-relaxed font-serif italic mb-4">
+                        "{message.content}"
+                      </p>
+                      <div className="flex justify-between items-center text-xs text-muted-foreground font-sans">
+                        <span className="text-primary font-bold">— {message.authorName}</span>
                         <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                       </div>
                     </div>
@@ -263,22 +334,28 @@ export default function PurposeDetail() {
               )}
             </div>
 
-            <div className="bg-card rounded-[1.25rem] p-6 shadow-md border border-secondary/40 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-bl-full -z-10" />
-              <div className="mb-6 pb-4 border-b border-border/60 flex items-center justify-between">
+            {/* Message form */}
+            <div className="bg-card rounded-2xl p-5 shadow border border-foreground/10 relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-1 bg-foreground/20 rounded-t-2xl" />
+              <div className="flex items-center justify-between mb-5">
                 <h3 className="font-serif text-lg font-bold text-foreground">Share a Message</h3>
-                <span className="bg-secondary text-secondary-foreground text-[10px] font-bold px-2.5 py-1.5 rounded-lg uppercase tracking-widest">Member</span>
+                <span className="bg-foreground/10 text-foreground/70 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans">Member</span>
               </div>
               <Form {...messageForm}>
-                <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-5">
+                <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
                   <FormField
                     control={messageForm.control}
                     name="content"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80">Message</FormLabel>
+                        <FormLabel className="text-foreground/80 font-sans text-sm">Your Message</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Share your realizations or thoughts..." className="resize-none bg-background/50 min-h-[120px] rounded-xl border-border/80 focus-visible:ring-secondary/50" {...field} />
+                          <Textarea
+                            data-testid="input-message-content"
+                            placeholder="Share your realizations or thoughts..."
+                            className="resize-none bg-background/60 min-h-[110px] rounded-xl border-border/70 font-sans"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -289,16 +366,27 @@ export default function PurposeDetail() {
                     name="authorName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80">Your Name</FormLabel>
+                        <FormLabel className="text-foreground/80 font-sans text-sm">Your Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your name" className="bg-background/50 h-12 rounded-xl border-border/80 focus-visible:ring-secondary/50" {...field} />
+                          <Input
+                            data-testid="input-message-author"
+                            placeholder="Enter your name"
+                            className="bg-background/60 h-11 rounded-xl border-border/70 font-sans"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full h-12 rounded-xl text-[15px] font-bold tracking-wide shadow-md active:scale-[0.98] transition-transform bg-secondary text-secondary-foreground hover:bg-secondary/90" disabled={createMessage.isPending}>
-                    {createMessage.isPending ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+                  <Button
+                    type="submit"
+                    data-testid="button-submit-message"
+                    variant="outline"
+                    className="w-full h-11 rounded-xl font-bold font-sans tracking-wide active:scale-[0.98] transition-transform border-foreground/20 text-foreground hover:bg-foreground/5"
+                    disabled={createMessage.isPending}
+                  >
+                    {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     Post Message
                   </Button>
                 </form>
