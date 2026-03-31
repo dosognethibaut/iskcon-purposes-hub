@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { ChevronRight } from "lucide-react";
-import slideHeader from "@assets/Slide1_1774929889490.png";
+import { ChevronRight, HelpCircle } from "lucide-react";
+import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774930486395.png";
 import logoCommunity from "@assets/7p_Community3.png_1774930486395.png";
 import logoHolyPlace from "@assets/7p_HolyPlace3_1774930486395.png";
@@ -10,173 +10,131 @@ import logoApplying from "@assets/7p_Applying3_1774930527997.png";
 import logoSharing from "@assets/7p_Sharing3_1774930527996.png";
 
 const purposes = [
-  {
-    id: 1,
-    title: "Simple Living",
-    shortDescription: "Embrace a simpler, more natural way of life rooted in spiritual values.",
-    logo: logoSimpleLiving,
-    category: "Roots",
-  },
-  {
-    id: 2,
-    title: "Community",
-    shortDescription: "Build a loving spiritual family that supports each other on the path.",
-    logo: logoCommunity,
-    category: "Roots",
-  },
-  {
-    id: 3,
-    title: "Holy Place",
-    shortDescription: "Create and maintain sacred spaces for transcendental experience.",
-    logo: logoHolyPlace,
-    category: "Roots",
-  },
-  {
-    id: 4,
-    title: "Accessing",
-    shortDescription: "Open the doors to spiritual knowledge for everyone, everywhere.",
-    logo: logoAccessing,
-    category: "Fruits",
-  },
-  {
-    id: 5,
-    title: "Learning",
-    shortDescription: "Deepen understanding through study, inquiry, and devotional hearing.",
-    logo: logoLearning,
-    category: "Fruits",
-  },
-  {
-    id: 6,
-    title: "Applying",
-    shortDescription: "Put spiritual principles into practice in every aspect of daily life.",
-    logo: logoApplying,
-    category: "Fruits",
-  },
-  {
-    id: 7,
-    title: "Sharing",
-    shortDescription: "Spread the nectar of Krishna consciousness with open hands and an open heart.",
-    logo: logoSharing,
-    category: "Fruits",
-  },
+  { id: 1, title: "Accessing",    shortDescription: "Open the doors to spiritual knowledge for everyone.",          logo: logoAccessing },
+  { id: 2, title: "Learning",     shortDescription: "Deepen understanding through study and devotional hearing.",   logo: logoLearning },
+  { id: 3, title: "Community",    shortDescription: "Build a loving spiritual family on the path together.",       logo: logoCommunity },
+  { id: 4, title: "Applying",     shortDescription: "Put spiritual principles into practice in daily life.",       logo: logoApplying },
+  { id: 5, title: "Holy Place",   shortDescription: "Create and maintain sacred spaces for transcendence.",       logo: logoHolyPlace },
+  { id: 6, title: "Simple Living",shortDescription: "Embrace a natural way of life rooted in spiritual values.",  logo: logoSimpleLiving },
+  { id: 7, title: "Sharing",      shortDescription: "Spread Krishna consciousness with open hands and heart.",     logo: logoSharing },
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] bg-background pb-16 overflow-x-hidden relative z-10">
+    <div className="min-h-[100dvh] bg-background pb-20">
 
-      {/* MOBILE HERO — slide image at natural scale (sharp, never upscaled) */}
-      <div className="block sm:hidden w-full shadow-md border-b border-border/40">
-        <img
-          src={slideHeader}
-          alt="The 7 Purposes of ISKCON & Community Building"
-          className="w-full h-auto block"
-          style={{ maxWidth: "100%" }}
+      {/* ── HERO ─────────────────────────────────────────────────── */}
+      <div className="relative w-full overflow-hidden" style={{ minHeight: 320 }}>
+
+        {/* Parchment base */}
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(38 50% 79%) 50%, hsl(35 44% 72%) 100%)" }}
         />
-      </div>
 
-      {/* DESKTOP HERO — crisp CSS-rendered header, no image upscaling */}
-      <div
-        className="hidden sm:flex items-center shadow-md border-b border-border/40"
-        style={{
-          background: "linear-gradient(105deg, hsl(40 58% 86%) 0%, hsl(37 50% 80%) 60%, hsl(33 42% 75%) 100%)",
-          minHeight: 200,
-        }}
-      >
-        <div className="px-10 py-10 max-w-xl">
-          <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "2.8rem", color: "hsl(14 72% 18%)" }}>
+        {/* Prabhupada photo — right-aligned, fade to left */}
+        <div className="absolute top-0 right-0 bottom-0" style={{ width: "55%" }}>
+          <img
+            src={prabhupadaPhoto}
+            alt="Srila Prabhupada"
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              height: "115%",
+              width: "auto",
+              objectFit: "cover",
+              objectPosition: "top center",
+            }}
+          />
+          {/* Fade left edge into parchment */}
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to right, hsl(40 58% 84%) 0%, hsl(40 58% 84% / 0.6) 25%, transparent 65%)" }}
+          />
+        </div>
+
+        {/* Text content */}
+        <div className="relative z-10 px-6 pt-10 pb-8" style={{ maxWidth: "62%" }}>
+          <h1
+            className="font-serif font-bold leading-tight"
+            style={{ fontSize: "clamp(1.75rem, 6vw, 3rem)", color: "hsl(14 72% 18%)" }}
+          >
             The 7 Purposes<br />of ISKCON
           </h1>
+
           <div
-            className="inline-block mt-3 mb-3 px-5 py-1.5 rounded-full font-serif italic font-semibold"
-            style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "1.05rem" }}
+            className="inline-block mt-3 px-4 py-1.5 rounded-full font-serif italic font-semibold"
+            style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.8rem, 2.5vw, 1rem)" }}
           >
             &amp; Community Building
           </div>
-          <p className="font-sans" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem", lineHeight: 1.5 }}>
-            How to apply the 7 Purposes of ISKCON in our daily life &amp; in our community
+
+          <p
+            className="font-sans mt-3 leading-snug"
+            style={{ color: "hsl(14 55% 28%)", fontSize: "clamp(0.72rem, 2vw, 0.85rem)" }}
+          >
+            Applying ISKCON's purposes<br />in daily life &amp; community
           </p>
-        </div>
-      </div>
 
-      {/* Intro divider */}
-      <div className="px-5 pt-4 pb-1 max-w-lg mx-auto text-center">
-        <div className="w-16 h-px bg-primary/30 mx-auto" />
-      </div>
-
-      {/* ROOTS section */}
-      <div className="px-5 pt-5 pb-1 max-w-lg mx-auto">
-        <div className="flex items-center gap-3">
-          <span className="text-blue-700 font-serif text-xl italic font-semibold">Roots</span>
-          <div className="flex-1 h-px bg-blue-300/50" />
-        </div>
-        <p className="text-muted-foreground text-xs mt-0.5 font-sans">The foundation of community life</p>
-      </div>
-
-      <div className="px-5 max-w-lg mx-auto space-y-3 mt-2">
-        {purposes.slice(0, 3).map((purpose, i) => (
+          {/* Why? button */}
           <Link
-            key={purpose.id}
-            href={`/purpose/${purpose.id}`}
-            data-testid={`purpose-card-${purpose.id}`}
-            className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-sm border border-border/60 hover-elevate active:scale-[0.98] transition-transform animate-in fade-in slide-in-from-bottom-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
-            style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
+            href="/why"
+            className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-full font-sans font-semibold text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+            style={{
+              borderColor: "hsl(14 72% 18% / 0.35)",
+              color: "hsl(14 72% 18%)",
+              background: "hsl(40 58% 84% / 0.6)",
+              fontSize: "0.85rem",
+            }}
           >
-            <img
-              src={purpose.logo}
-              alt={purpose.title}
-              className="w-14 h-14 rounded-full shrink-0 object-cover"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2">
-                <span className="text-primary font-bold text-sm font-sans">{purpose.id}.</span>
-                <h2 className="font-serif text-xl font-bold text-foreground leading-tight">{purpose.title}</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2 font-sans">{purpose.shortDescription}</p>
-            </div>
-            <ChevronRight className="w-5 h-5 text-primary/50 shrink-0" />
+            <HelpCircle className="w-4 h-4" />
+            Why?
           </Link>
-        ))}
-      </div>
-
-      {/* FRUITS section */}
-      <div className="px-5 pt-6 pb-1 max-w-lg mx-auto">
-        <div className="flex items-center gap-3">
-          <span className="text-primary font-serif text-xl italic font-semibold">Fruits</span>
-          <div className="flex-1 h-px bg-primary/30" />
         </div>
-        <p className="text-muted-foreground text-xs mt-0.5 font-sans">Growing through practice and service</p>
       </div>
 
-      <div className="px-5 max-w-lg mx-auto space-y-3 mt-2">
-        {purposes.slice(3).map((purpose, i) => (
-          <Link
-            key={purpose.id}
-            href={`/purpose/${purpose.id}`}
-            data-testid={`purpose-card-${purpose.id}`}
-            className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-sm border border-border/60 hover-elevate active:scale-[0.98] transition-transform animate-in fade-in slide-in-from-bottom-3 focus:outline-none focus:ring-2 focus:ring-primary/40"
-            style={{ animationDelay: `${(i + 3) * 80}ms`, animationFillMode: "both" }}
-          >
-            <img
-              src={purpose.logo}
-              alt={purpose.title}
-              className="w-14 h-14 rounded-full shrink-0 object-cover"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2">
-                <span className="text-primary font-bold text-sm font-sans">{purpose.id}.</span>
-                <h2 className="font-serif text-xl font-bold text-foreground leading-tight">{purpose.title}</h2>
-              </div>
-              <p className="text-muted-foreground text-sm leading-snug mt-0.5 line-clamp-2 font-sans">{purpose.shortDescription}</p>
-            </div>
-            <ChevronRight className="w-5 h-5 text-primary/50 shrink-0" />
-          </Link>
-        ))}
+      {/* ── PURPOSE LIST ─────────────────────────────────────────── */}
+      <div className="max-w-lg mx-auto px-5 mt-6">
+        <ul className="divide-y divide-border/50">
+          {purposes.map((purpose) => (
+            <li key={purpose.id}>
+              <Link
+                href={`/purpose/${purpose.id}`}
+                className="flex items-center gap-4 py-3.5 group focus:outline-none"
+              >
+                {/* Logo */}
+                <img
+                  src={purpose.logo}
+                  alt={purpose.title}
+                  className="w-12 h-12 rounded-full shrink-0 object-cover"
+                  style={{ boxShadow: "0 1px 4px hsl(14 72% 18% / 0.12)" }}
+                />
+
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                  <h2 className="font-serif text-lg font-semibold text-foreground leading-tight">
+                    {purpose.title}
+                  </h2>
+                  <p className="text-muted-foreground text-sm leading-snug mt-0.5 font-sans line-clamp-1">
+                    {purpose.shortDescription}
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <ChevronRight
+                  className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-0.5"
+                  style={{ color: "hsl(26 68% 42% / 0.6)" }}
+                />
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Footer quote */}
-      <div className="mt-10 px-6 max-w-lg mx-auto text-center">
-        <p className="font-serif text-foreground/50 text-sm italic">
+      <div className="mt-8 px-6 max-w-lg mx-auto text-center">
+        <p className="font-serif text-foreground/40 text-sm italic">
           "Big fruits only grow from strong roots"
         </p>
       </div>
