@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import PurposeDetail from "@/pages/purpose-detail";
 import Why from "@/pages/why";
+import When from "@/pages/when";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/purpose/:id" component={PurposeDetail} />
       <Route path="/why" component={Why} />
+      <Route path="/when" component={When} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ChevronRight, HelpCircle } from "lucide-react";
+import { ChevronRight, HelpCircle, Clock } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774930486395.png";
 import logoCommunity from "@assets/7p_Community3.png_1774930486395.png";
@@ -24,15 +24,35 @@ export default function Home() {
     <div className="min-h-[100dvh] bg-background pb-20">
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div
-        className="flex w-full overflow-hidden"
-        style={{ minHeight: 300, background: "hsl(40 56% 83%)" }}
-      >
-        {/* Left: text — same flex height as the image column */}
+      <div className="relative w-full overflow-hidden" style={{ minHeight: 300 }}>
+
+        {/* Photo — full bleed background */}
+        <img
+          src={prabhupadaPhoto}
+          alt="Srila Prabhupada"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "72% 12%",
+          }}
+        />
+
+        {/* Gradient overlays — parchment bleeds in from left and bottom, never a hard edge */}
         <div
-          className="flex flex-col justify-center px-6 py-8 shrink-0"
-          style={{ width: "54%", background: "linear-gradient(to right, hsl(40 58% 84%) 85%, transparent 100%)" }}
-        >
+          className="absolute inset-0"
+          style={{
+            background: [
+              "linear-gradient(to right,  hsl(40 56% 83% / 1) 0%, hsl(40 56% 83% / 0.92) 38%, hsl(40 56% 83% / 0.45) 65%, hsl(40 56% 83% / 0) 100%)",
+              "linear-gradient(to bottom, hsl(40 56% 83% / 0.3) 0%, transparent 30%, transparent 60%, hsl(40 56% 83% / 0.7) 100%)",
+            ].join(", "),
+          }}
+        />
+
+        {/* Text content — sits on top */}
+        <div className="relative z-10 px-6 pt-10 pb-8" style={{ maxWidth: "68%" }}>
           <h1
             className="font-serif font-bold leading-tight"
             style={{ fontSize: "clamp(1.5rem, 5.5vw, 2.6rem)", color: "hsl(14 72% 18%)" }}
@@ -41,7 +61,7 @@ export default function Home() {
           </h1>
 
           <div
-            className="inline-block mt-3 px-4 py-1.5 rounded-full font-serif italic font-semibold self-start"
+            className="inline-block mt-3 px-4 py-1.5 rounded-full font-serif italic font-semibold"
             style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.95rem)" }}
           >
             &amp; Community Building
@@ -54,42 +74,35 @@ export default function Home() {
             Applying ISKCON's purposes<br />in daily life &amp; community
           </p>
 
-          {/* Why? button */}
-          <Link
-            href="/why"
-            className="inline-flex items-center gap-1.5 mt-4 self-start px-4 py-2 rounded-full font-sans font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
-            style={{
-              borderColor: "hsl(14 72% 18% / 0.3)",
-              color: "hsl(14 72% 18%)",
-              background: "transparent",
-              fontSize: "0.82rem",
-            }}
-          >
-            <HelpCircle className="w-3.5 h-3.5" />
-            Why?
-          </Link>
-        </div>
-
-        {/* Right: photo — flush against the text column, fills remaining space */}
-        <div className="relative flex-1 overflow-hidden">
-          {/* Micro-blend at the seam only */}
-          <div
-            className="absolute inset-y-0 left-0 z-10"
-            style={{ width: 32, background: "linear-gradient(to right, hsl(40 58% 84%), transparent)" }}
-          />
-          <img
-            src={prabhupadaPhoto}
-            alt="Srila Prabhupada"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center 10%",
-            }}
-          />
+          {/* Why? / When? buttons */}
+          <div className="flex gap-2 mt-4 flex-wrap">
+            <Link
+              href="/why"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+              style={{
+                borderColor: "hsl(14 72% 18% / 0.3)",
+                color: "hsl(14 72% 18%)",
+                background: "hsl(40 58% 88% / 0.65)",
+                fontSize: "0.82rem",
+              }}
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              Why?
+            </Link>
+            <Link
+              href="/when"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+              style={{
+                borderColor: "hsl(14 72% 18% / 0.3)",
+                color: "hsl(14 72% 18%)",
+                background: "hsl(40 58% 88% / 0.65)",
+                fontSize: "0.82rem",
+              }}
+            >
+              <Clock className="w-3.5 h-3.5" />
+              When?
+            </Link>
+          </div>
         </div>
       </div>
 
