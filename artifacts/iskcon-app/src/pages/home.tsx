@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import radhadeshLogo from "@assets/image_1774933719680.png";
-import sevenPLogo from "@assets/7p_Logo_1774938499855.png";
+import sevenPLogo from "@assets/7p_LogoWhite_1774938748857.png";
 import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
 import logoCommunity from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
 import logoHolyPlace from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
