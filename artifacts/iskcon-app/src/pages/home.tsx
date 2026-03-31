@@ -205,7 +205,7 @@ export default function Home() {
               <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 94%)", textShadow: "0 1px 8px rgba(0,0,0,0.7), 0 0px 2px rgba(0,0,0,0.9)" }}>
                 <span style={{ color: "hsl(26 68% 68%)" }}>"</span>{quotes[current].text}<span style={{ color: "hsl(26 68% 68%)" }}>"</span>
               </p>
-              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.72rem", color: "hsl(26 60% 75%)", letterSpacing: "0.04em", textShadow: "0 1px 6px rgba(0,0,0,0.8)" }}>
+              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.72rem", color: "hsl(26 60% 75%)", letterSpacing: "0.04em", textShadow: "0 1px 8px rgba(0,0,0,0.85), 0 0px 2px rgba(0,0,0,0.95)" }}>
                 {quotes[current].ref}
               </p>
             </a>
