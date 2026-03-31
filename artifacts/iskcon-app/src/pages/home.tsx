@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
-import radhadeshLogo from "@assets/image_1774933719680.png";
+import radhadeshLogo from "@assets/image_1774938925316.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
 import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
 import logoCommunity from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
@@ -121,13 +121,13 @@ export default function Home() {
           href="https://www.radhadesh.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute top-3 right-3 z-20 rounded-full overflow-hidden"
-          style={{ width: 40, height: 40, boxShadow: "0 1px 8px hsl(14 35% 6% / 0.4)" }}
+          className="absolute top-3 right-3 z-20 rounded-lg overflow-hidden"
+          style={{ boxShadow: "0 1px 8px hsl(14 35% 6% / 0.5)" }}
         >
           <img
             src={radhadeshLogo}
             alt="Domaine de Radhadesh"
-            style={{ width: 40, height: 40, objectFit: "cover", display: "block" }}
+            style={{ height: 38, width: "auto", display: "block" }}
           />
         </a>
 
@@ -136,13 +136,13 @@ export default function Home() {
 
           {/* Title */}
           <div className="px-6 pt-10">
-            <img
-              src={sevenPLogo}
-              alt="7 Purposes"
-              style={{ height: 72, width: "auto", mixBlendMode: "screen", marginBottom: "0.5rem" }}
-            />
             <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
-              The 7 Purposes<br />of ISKCON
+              The{" "}
+              <img
+                src={sevenPLogo}
+                alt="7"
+                style={{ height: "1.15em", width: "auto", display: "inline-block", verticalAlign: "middle", mixBlendMode: "screen", marginBottom: "0.1em" }}
+              />{" "}Purposes<br />of ISKCON
             </h1>
             <div
               className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
