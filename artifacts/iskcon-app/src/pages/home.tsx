@@ -150,8 +150,20 @@ export default function Home() {
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
 
-          {/* Top bar — title right */}
-          <div className="px-6 pt-10 flex items-start justify-end gap-4">
+          {/* Top bar — You pill left, title right */}
+          <div className="px-6 pt-10 flex items-start justify-between gap-4">
+
+            {/* You pill — top left */}
+            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold focus:outline-none shrink-0 mt-1" style={{ background: "hsl(40 80% 78%)", color: "hsl(14 72% 18%)", fontSize: "0.85rem" }}>
+              {currentUser ? (
+                currentUser.photoDataUrl
+                  ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
+                  : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(14 55% 30%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
+              ) : (
+                <UserCircle className="w-4 h-4" />
+              )}
+              {currentUser ? currentUser.fullName.split(" ")[0] : "You"}
+            </Link>
 
             {/* 7P logo + title */}
             <div className="flex flex-col items-end text-right">
@@ -208,26 +220,15 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Buttons — 2×2 grid so each row has exactly two pills */}
-          <div className="px-6 pt-4 pb-5 grid grid-cols-2 gap-2 max-w-xs mx-auto">
-            {/* You — warm golden accent */}
-            <Link href="/register" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold focus:outline-none" style={{ background: "hsl(40 80% 78%)", color: "hsl(14 72% 18%)", fontSize: "0.85rem" }}>
-              {currentUser ? (
-                currentUser.photoDataUrl
-                  ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
-                  : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 18, height: 18, background: "hsl(14 55% 30%)", color: "hsl(40 80% 96%)", fontSize: "0.6rem" }}>{currentUser.fullName[0]}</div>
-              ) : (
-                <UserCircle className="w-4 h-4" />
-              )}
-              {currentUser ? `Welcome ${currentUser.fullName.split(" ")[0]}` : "You"}
-            </Link>
-            <Link href="/why" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+          {/* Buttons — Why / When / Vision centred row */}
+          <div className="px-6 pt-4 pb-5 flex items-center justify-center gap-2">
+            <Link href="/why" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <HelpCircle className="w-4 h-4" /> Why?
             </Link>
-            <Link href="/when" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+            <Link href="/when" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Clock className="w-4 h-4" /> When?
             </Link>
-            <Link href="/vision" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
+            <Link href="/vision" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Eye className="w-4 h-4" /> Vision
             </Link>
           </div>
