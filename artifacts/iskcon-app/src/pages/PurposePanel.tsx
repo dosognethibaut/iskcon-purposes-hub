@@ -100,7 +100,7 @@ function CommentSection({
   itemType: "activity" | "message";
   purposeId: number;
   token: string | null;
-  currentUser: { fullName: string } | null;
+  currentUser: { fullName: string; photoDataUrl?: string | null } | null;
 }) {
   const [comments, setComments] = useState<AnyComment[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -158,12 +158,18 @@ function CommentSection({
         <p className="font-sans text-xs text-center py-3" style={{ color: "hsl(14 30% 58%)" }}>No comments yet. Be the first!</p>
       ) : (
         <div className="space-y-2 mb-3">
-          {comments.map(c => (
+          {comments.map(c => {
+            const isMe = currentUser && c.authorName === currentUser.fullName;
+            return (
             <div key={c.id} className="flex gap-2.5 items-start">
-              <div className="rounded-full shrink-0 flex items-center justify-center font-serif font-bold"
-                style={{ width: 28, height: 28, fontSize: "0.75rem", background: "hsl(14 18% 88%)", color: "hsl(14 55% 32%)" }}>
-                {c.authorName[0]}
-              </div>
+              {isMe && currentUser?.photoDataUrl ? (
+                <img src={currentUser.photoDataUrl} alt={c.authorName} className="rounded-full shrink-0 object-cover" style={{ width: 28, height: 28 }} />
+              ) : (
+                <div className="rounded-full shrink-0 flex items-center justify-center font-serif font-bold"
+                  style={{ width: 28, height: 28, fontSize: "0.75rem", background: isMe ? "hsl(14 35% 80%)" : "hsl(14 18% 88%)", color: "hsl(14 55% 32%)" }}>
+                  {c.authorName[0]}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2 mb-0.5">
                   <span className="font-sans font-semibold" style={{ fontSize: "0.75rem", color: "hsl(14 55% 28%)" }}>{c.authorName}</span>
@@ -172,16 +178,20 @@ function CommentSection({
                 <p className="font-sans leading-snug" style={{ fontSize: "0.82rem", color: "hsl(14 45% 28%)" }}>{c.content}</p>
               </div>
             </div>
-          ))}
+          );})}  
         </div>
       )}
 
       {currentUser ? (
         <div className="flex gap-2 items-end mt-2">
-          <div className="rounded-full shrink-0 flex items-center justify-center font-serif font-bold"
-            style={{ width: 28, height: 28, fontSize: "0.75rem", background: "hsl(14 18% 88%)", color: "hsl(14 55% 32%)" }}>
-            {currentUser.fullName[0]}
-          </div>
+          {currentUser.photoDataUrl ? (
+            <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full shrink-0 object-cover" style={{ width: 28, height: 28 }} />
+          ) : (
+            <div className="rounded-full shrink-0 flex items-center justify-center font-serif font-bold"
+              style={{ width: 28, height: 28, fontSize: "0.75rem", background: "hsl(14 18% 88%)", color: "hsl(14 55% 32%)" }}>
+              {currentUser.fullName[0]}
+            </div>
+          )}
           <div className="flex-1 flex items-end gap-2 rounded-2xl px-3 py-2"
             style={{ background: "hsl(40 40% 88%)", border: "1px solid hsl(14 25% 68% / 0.3)" }}>
             <textarea
