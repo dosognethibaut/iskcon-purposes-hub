@@ -412,19 +412,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             }}
           />
           {stats ? (
-            <div className="flex flex-col font-sans leading-tight" style={{ color: "hsl(14 40% 48%)" }}>
-              <div className="flex items-baseline gap-1">
-                <span className="text-lg font-bold" style={{ color: "hsl(14 55% 30%)" }}>{stats.connected}</span>
-                <span className="text-xs">connected</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-lg font-bold" style={{ color: "hsl(14 55% 30%)" }}>{stats.registered}</span>
-                <span className="text-xs">registered</span>
-              </div>
-            </div>
-          ) : (
-            <div className="font-sans text-xs" style={{ color: "hsl(14 40% 65%)" }}>Loading…</div>
-          )}
+            <span className="font-sans text-sm" style={{ color: "hsl(14 40% 48%)" }}>
+              {stats.connected}/{stats.registered}
+            </span>
+          ) : null}
         </div>
 
         {/* Domaine de Radhadesh divider */}
