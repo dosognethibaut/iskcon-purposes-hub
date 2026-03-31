@@ -2,9 +2,15 @@ import { useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowLeft, Camera, CheckCircle2, ClipboardList } from "lucide-react";
 
-const ROLES = ["Member", "Devotee", "Volunteer", "Sevaka", "Coordinator", "Pujari", "Teacher", "Other"];
 const COMMUNITIES = ["Domaine de Radhadesh"];
-const DEPARTMENTS = [
+const DEPT_ROLES = [
+  "Member",
+  "Devotee",
+  "Volunteer",
+  "Sevaka",
+  "Coordinator",
+  "Pujari",
+  "Teacher",
   "HR & Legal Affairs",
   "Accounting",
   "Sankirtana",
@@ -39,11 +45,15 @@ export default function Register() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
-    fullName: "", email: "", dob: "", community: "", role: "", department: "", departmentOther: "",
+    fullName: "", email: "", dob: "", community: "", deptRolesOther: "",
   });
+  const [deptRoles, setDeptRoles] = useState<string[]>([]);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const toggleDeptRole = (item: string) =>
+    setDeptRoles(prev => prev.includes(item) ? prev.filter(x => x !== item) : [...prev, item]);
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,7 +64,7 @@ export default function Register() {
     }
   };
 
-  const canSubmit = form.fullName && form.email && form.dob && form.community && form.role && surveyDone;
+  const canSubmit = form.fullName && form.email && form.dob && form.community && surveyDone;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,31 +172,43 @@ export default function Register() {
               </select>
             </Field>
 
-            {/* Role */}
-            <Field label="Role" required>
-              <select required value={form.role} onChange={set("role")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: form.role ? "hsl(14 72% 18%)" : "hsl(14 30% 55%)" }}>
-                <option value="" disabled>Select your role</option>
-                {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-              </select>
-            </Field>
-
-            {/* Department */}
-            <Field label="Department">
-              <select value={form.department} onChange={set("department")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: form.department ? "hsl(14 72% 18%)" : "hsl(14 30% 55%)" }}>
-                <option value="">Select your department (optional)</option>
-                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
-              </select>
-              {form.department === "Other" && (
+            {/* Department / Role — multi-select chips */}
+            <div>
+              <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>
+                Department / Role
+                <span className="font-normal text-xs ml-2" style={{ color: "hsl(14 40% 50%)" }}>select all that apply</span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {DEPT_ROLES.map(item => {
+                  const active = deptRoles.includes(item);
+                  return (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => toggleDeptRole(item)}
+                      className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
+                      style={{
+                        background: active ? "hsl(26 68% 42%)" : "hsl(40 40% 88%)",
+                        color: active ? "hsl(40 80% 96%)" : "hsl(14 45% 38%)",
+                        border: active ? "1.5px solid hsl(26 68% 42%)" : "1.5px solid hsl(14 25% 72%)",
+                      }}
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
+              </div>
+              {deptRoles.includes("Other") && (
                 <input
                   type="text"
-                  placeholder="Please specify your department"
-                  value={form.departmentOther}
-                  onChange={set("departmentOther")}
-                  className="mt-2 w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  placeholder="Please specify…"
+                  value={form.deptRolesOther}
+                  onChange={set("deptRolesOther")}
+                  className="mt-3 w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
                   style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }}
                 />
               )}
-            </Field>
+            </div>
 
             {/* Survey — mandatory */}
             <div>
