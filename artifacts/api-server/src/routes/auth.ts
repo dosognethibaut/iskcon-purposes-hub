@@ -74,6 +74,7 @@ router.post("/auth/register", async (req, res) => {
         community: user.community,
         deptRoles: body.deptRoles,
         photoDataUrl: user.photoDataUrl ?? null,
+        isAdmin: user.isAdmin,
       },
     });
   } catch (err) {
@@ -112,6 +113,7 @@ router.post("/auth/login", async (req, res) => {
         community: user.community,
         deptRoles: JSON.parse(user.deptRoles || "[]"),
         photoDataUrl: user.photoDataUrl ?? null,
+        isAdmin: user.isAdmin,
       },
     });
   } catch (err) {
@@ -145,6 +147,7 @@ router.get("/auth/me", async (req, res) => {
       community: user.community,
       deptRoles: JSON.parse(user.deptRoles || "[]"),
       photoDataUrl: user.photoDataUrl ?? null,
+      isAdmin: user.isAdmin,
     });
   } catch {
     res.status(401).json({ error: "Invalid or expired token" });

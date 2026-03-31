@@ -8,6 +8,7 @@ export interface CurrentUser {
   community: string;
   deptRoles: string[];
   photoDataUrl: string | null;
+  isAdmin: boolean;
 }
 
 interface AuthContextValue {
