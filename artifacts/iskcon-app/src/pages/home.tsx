@@ -210,7 +210,7 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="px-6 pt-4 pb-5 flex gap-2 flex-wrap">
+          <div className="px-6 pt-4 pb-5 flex gap-2 flex-wrap justify-center">
             <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               {currentUser ? (
                 currentUser.photoDataUrl
