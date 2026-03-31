@@ -1,5 +1,9 @@
 import { Router, type IRouter } from "express";
-import { db, purposesTable, activitiesTable, messagesTable, commentsTable, insertActivitySchema, insertMessageSchema, usersTable } from "@workspace/db";
+import {
+  db, purposesTable, activitiesTable, messagesTable,
+  commentsTable, activityCommentsTable,
+  insertActivitySchema, insertMessageSchema, usersTable,
+} from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import jwt from "jsonwebtoken";
@@ -12,11 +16,15 @@ async function getRequestUser(authHeader?: string) {
   if (!authHeader?.startsWith("Bearer ")) return null;
   try {
     const payload = jwt.verify(authHeader.slice(7), JWT_SECRET) as { sub: number };
-    const [user] = await db.select({ id: usersTable.id, isAdmin: usersTable.isAdmin, fullName: usersTable.fullName })
-      .from(usersTable).where(eq(usersTable.id, Number(payload.sub)));
+    const [user] = await db
+      .select({ id: usersTable.id, isAdmin: usersTable.isAdmin, fullName: usersTable.fullName })
+      .from(usersTable)
+      .where(eq(usersTable.id, Number(payload.sub)));
     return user ?? null;
   } catch { return null; }
 }
+
+// ── Purposes ────────────────────────────────────────────────────────────────
 
 router.get("/purposes", async (req, res) => {
   try {
@@ -41,13 +49,16 @@ router.get("/purposes/:id", async (req, res) => {
   }
 });
 
+// ── Activities ───────────────────────────────────────────────────────────────
+
 router.get("/purposes/:purposeId/activities", async (req, res) => {
   try {
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
-    const activities = await db.select().from(activitiesTable)
-      .where(eq(activitiesTable.purposeId, purposeId))
-      .orderBy(activitiesTable.createdAt);
+    const user = await getRequestUser(req.headers.authorization);
+    const activities = user?.isAdmin
+      ? await db.select().from(activitiesTable).where(eq(activitiesTable.purposeId, purposeId)).orderBy(activitiesTable.createdAt)
+      : await db.select().from(activitiesTable).where(and(eq(activitiesTable.purposeId, purposeId), eq(activitiesTable.approved, true))).orderBy(activitiesTable.createdAt);
     res.json(activities);
   } catch (err) {
     req.log.error({ err }, "Failed to fetch activities");
@@ -57,14 +68,30 @@ router.get("/purposes/:purposeId/activities", async (req, res) => {
 
 router.post("/purposes/:purposeId/activities", async (req, res) => {
   try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
     const body = insertActivitySchema.parse({ ...req.body, purposeId });
-    const [activity] = await db.insert(activitiesTable).values(body).returning();
+    const [activity] = await db.insert(activitiesTable).values({ ...body, approved: false }).returning();
     emailNewActivity({ title: activity.title, description: activity.description, authorName: activity.authorName, purposeId }).catch(() => {});
     res.status(201).json(activity);
   } catch (err) {
     req.log.error({ err }, "Failed to create activity");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.patch("/purposes/:purposeId/activities/:id/approve", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const [updated] = await db.update(activitiesTable).set({ approved: true }).where(eq(activitiesTable.id, id)).returning();
+    res.json(updated);
+  } catch (err) {
+    req.log.error({ err }, "Failed to approve activity");
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -80,6 +107,42 @@ router.delete("/purposes/:purposeId/activities/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.get("/purposes/:purposeId/activities/:activityId/comments", async (req, res) => {
+  try {
+    const activityId = Number(req.params.activityId);
+    if (isNaN(activityId)) { res.status(400).json({ error: "Invalid activityId" }); return; }
+    const comments = await db.select().from(activityCommentsTable)
+      .where(eq(activityCommentsTable.activityId, activityId))
+      .orderBy(activityCommentsTable.createdAt);
+    res.json(comments);
+  } catch (err) {
+    req.log.error({ err }, "Failed to fetch activity comments");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/purposes/:purposeId/activities/:activityId/comments", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
+    const activityId = Number(req.params.activityId);
+    if (isNaN(activityId)) { res.status(400).json({ error: "Invalid activityId" }); return; }
+    const body = z.object({ content: z.string().min(1) }).parse(req.body);
+    const [comment] = await db.insert(activityCommentsTable).values({
+      activityId,
+      userId: user.id,
+      authorName: user.fullName,
+      content: body.content,
+    }).returning();
+    res.status(201).json(comment);
+  } catch (err) {
+    req.log.error({ err }, "Failed to create activity comment");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ── Messages ─────────────────────────────────────────────────────────────────
 
 router.get("/purposes/:purposeId/messages", async (req, res) => {
   try {
