@@ -219,7 +219,7 @@ export default function Home() {
               ) : (
                 <UserCircle className="w-4 h-4" />
               )}
-              {currentUser ? currentUser.fullName.split(" ")[0] : "You"}
+              {currentUser ? `Welcome ${currentUser.fullName.split(" ")[0]}` : "You"}
             </Link>
             <Link href="/why" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <HelpCircle className="w-4 h-4" /> Why?
