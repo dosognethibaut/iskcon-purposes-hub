@@ -154,7 +154,7 @@ export default function Home() {
           <div className="px-6 pt-10 flex items-start justify-between gap-4">
 
             {/* You pill — top left */}
-            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold focus:outline-none shrink-0 mt-1" style={{ background: "hsl(40 80% 78%)", color: "hsl(14 72% 18%)", fontSize: "0.85rem" }}>
+            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none shrink-0 mt-1" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               {currentUser ? (
                 currentUser.photoDataUrl
                   ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 18, height: 18 }} />
