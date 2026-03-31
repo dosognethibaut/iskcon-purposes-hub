@@ -54,7 +54,7 @@ const accentByTitle: Record<string, string> = {
   "Community":     "hsl(220 60% 44%)",
   "Applying":      "hsl(14 18% 33%)",
   "Holy Place":    "hsl(14 8% 22%)",
-  "Simple Living": "hsl(75 52% 38%)",
+  "Simple Living": "hsl(168 42% 33%)",
   "Sharing":       "hsl(14 40% 30%)",
 };
 

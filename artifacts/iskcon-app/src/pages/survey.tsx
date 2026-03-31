@@ -19,13 +19,34 @@ const purposes = [
   { id: "sharing",    label: "Sharing",       logo: logoSharing },
 ];
 
-const questions = [
-  "Which of the 7 Purposes do you feel most connected to right now?",
-  "Which purposes would you like to develop or grow in?",
-  "Where do you feel you already contribute to the community?",
-  "Which purposes inspire you most to serve others?",
-  "Which purposes feel most challenging or unfamiliar to you?",
+const sections = [
+  {
+    title: "Personal",
+    questions: [
+      "Which 3 purposes appeal most to you or are most relevant at your current stage of life? Select your top 3 in order of priority.",
+      "Which purpose would you put at the bottom of your list?",
+      "Which purpose is not so relevant for you right now, but you would like to make more relevant?",
+    ],
+  },
+  {
+    title: "Community perspective",
+    questions: [
+      "List the 7 purposes from strongest to weakest, as you perceive our community is linked to them.",
+      "On which purpose should our community focus more?",
+    ],
+  },
+  {
+    title: "Your department",
+    subtitle: "If you are part of one or more departments, or are a department head",
+    questions: [
+      "Which purpose is linked to your department the strongest?",
+      "Which purpose would you like to link more closely to your department?",
+    ],
+  },
 ];
+
+const allQuestions = sections.flatMap(s => s.questions);
+const totalQuestions = allQuestions.length;
 
 function PurposeGrid({
   order,
@@ -35,7 +56,7 @@ function PurposeGrid({
   onToggle: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-7 gap-1.5 w-full">
+    <div className="grid grid-cols-7 gap-1 w-full">
       {purposes.map(p => {
         const rank = order.indexOf(p.id);
         const active = rank !== -1;
@@ -44,22 +65,21 @@ function PurposeGrid({
             key={p.id}
             type="button"
             onClick={() => onToggle(p.id)}
-            className="relative flex flex-col items-center gap-1.5 py-2 rounded-xl transition-all"
+            className="relative flex flex-col items-center gap-1 py-1.5 rounded-lg transition-all"
             style={{
-              background: active ? "hsl(26 68% 42% / 0.08)" : "transparent",
+              background: active ? "hsl(26 68% 42% / 0.1)" : "transparent",
               border: "none",
               outline: active ? "2px solid hsl(26 68% 42%)" : "2px solid transparent",
-              outlineOffset: 1,
+              outlineOffset: 0,
               opacity: active ? 1 : 0.38,
-              transform: active ? "scale(1.06)" : "scale(1)",
             }}
           >
             {active && (
               <span
                 className="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full font-sans font-bold"
                 style={{
-                  width: 17, height: 17,
-                  fontSize: "0.52rem",
+                  width: 15, height: 15,
+                  fontSize: "0.48rem",
                   background: "hsl(26 68% 42%)",
                   color: "hsl(40 90% 96%)",
                   lineHeight: 1,
@@ -72,12 +92,12 @@ function PurposeGrid({
             <img
               src={p.logo}
               alt={p.label}
-              style={{ width: 40, height: 40, objectFit: "contain", filter: active ? "none" : "grayscale(70%)" }}
+              style={{ width: 36, height: 36, objectFit: "contain", filter: active ? "none" : "grayscale(70%)" }}
             />
             <span
               className="font-sans text-center leading-tight px-0.5"
               style={{
-                fontSize: "0.5rem",
+                fontSize: "0.48rem",
                 color: active ? "hsl(26 55% 28%)" : "hsl(14 30% 50%)",
                 fontWeight: active ? 700 : 400,
               }}
@@ -93,7 +113,7 @@ function PurposeGrid({
 
 export default function Survey() {
   const [answers, setAnswers] = useState<Record<number, string[]>>(
-    () => Object.fromEntries(questions.map((_, i) => [i, []]))
+    () => Object.fromEntries(Array.from({ length: totalQuestions }, (_, i) => [i, []]))
   );
   const [submitted, setSubmitted] = useState(false);
 
@@ -107,8 +127,9 @@ export default function Survey() {
     });
   };
 
-  const answered = questions.filter((_, i) => answers[i].length > 0).length;
-  const allAnswered = answered === questions.length;
+  const answered = Array.from({ length: totalQuestions }, (_, i) => i)
+    .filter(i => answers[i].length > 0).length;
+  const allAnswered = answered === totalQuestions;
 
   const handleSubmit = () => {
     if (!allAnswered) return;
@@ -137,6 +158,8 @@ export default function Survey() {
     );
   }
 
+  let globalIndex = 0;
+
   return (
     <div className="min-h-[100dvh] pb-16" style={{ background: "hsl(40 30% 96%)" }}>
 
@@ -152,45 +175,65 @@ export default function Survey() {
           Community Survey
         </h1>
         <p className="font-sans mt-1 mb-3" style={{ color: "hsl(14 45% 38%)", fontSize: "0.88rem" }}>
-          {answered} / {questions.length} answered — tap logos in the order that feels right
+          {answered} / {totalQuestions} answered — tap logos in the order that feels right
         </p>
         <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(14 30% 70% / 0.25)" }}>
           <div
             className="h-full rounded-full transition-all"
-            style={{ width: `${(answered / questions.length) * 100}%`, background: "hsl(26 68% 42%)" }}
+            style={{ width: `${(answered / totalQuestions) * 100}%`, background: "hsl(26 68% 42%)" }}
           />
         </div>
       </div>
 
-      {/* Questions */}
-      <div className="max-w-lg mx-auto px-5 py-6 space-y-6">
-        {questions.map((q, qi) => (
-          <div
-            key={qi}
-            className="rounded-2xl p-4"
-            style={{ background: "hsl(40 40% 93%)", border: `1px solid ${answers[qi].length > 0 ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}
-          >
-            {/* Question */}
-            <div className="flex items-baseline gap-2 mb-3">
-              <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(26 68% 42%)" }}>
-                {String(qi + 1).padStart(2, "0")}
-              </span>
-              <p className="font-serif font-semibold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
-                {q}
-              </p>
+      {/* Questions by section */}
+      <div className="max-w-lg mx-auto px-5 py-6 space-y-8">
+        {sections.map((section) => (
+          <div key={section.title}>
+            {/* Section header */}
+            <div className="mb-4">
+              <h2 className="font-serif font-bold" style={{ fontSize: "1.1rem", color: "hsl(14 72% 18%)" }}>
+                {section.title}
+              </h2>
+              {section.subtitle && (
+                <p className="font-sans text-xs mt-0.5 italic" style={{ color: "hsl(14 40% 48%)" }}>
+                  {section.subtitle}
+                </p>
+              )}
+              <div className="mt-2 h-px" style={{ background: "hsl(14 25% 72%)" }} />
             </div>
 
-            {/* Logos grid — full width */}
-            <PurposeGrid
-              order={answers[qi]}
-              onToggle={id => toggle(qi, id)}
-            />
+            <div className="space-y-4">
+              {section.questions.map((q) => {
+                const qi = globalIndex++;
+                return (
+                  <div
+                    key={qi}
+                    className="rounded-2xl p-4"
+                    style={{ background: "hsl(40 40% 93%)", border: `1px solid ${answers[qi].length > 0 ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}
+                  >
+                    <div className="flex items-baseline gap-2 mb-3">
+                      <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(26 68% 42%)" }}>
+                        {String(qi + 1).padStart(2, "0")}
+                      </span>
+                      <p className="font-serif font-semibold leading-snug" style={{ fontSize: "0.92rem", color: "hsl(14 72% 18%)" }}>
+                        {q}
+                      </p>
+                    </div>
 
-            {answers[qi].length > 0 && (
-              <p className="font-sans text-xs mt-2" style={{ color: "hsl(26 55% 38%)" }}>
-                {answers[qi].length} selected
-              </p>
-            )}
+                    <PurposeGrid
+                      order={answers[qi]}
+                      onToggle={id => toggle(qi, id)}
+                    />
+
+                    {answers[qi].length > 0 && (
+                      <p className="font-sans text-xs mt-2" style={{ color: "hsl(26 55% 38%)" }}>
+                        {answers[qi].length} selected
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         ))}
 
@@ -204,7 +247,7 @@ export default function Survey() {
             cursor: allAnswered ? "pointer" : "not-allowed",
           }}
         >
-          {allAnswered ? "Submit survey" : `Answer all ${questions.length} questions to continue`}
+          {allAnswered ? "Submit survey" : `Answer all ${totalQuestions} questions to continue`}
         </button>
       </div>
     </div>
