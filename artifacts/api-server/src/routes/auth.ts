@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+import { emailNewRegistration, emailSurveyAnswers } from "../utils/email";
 
 const router: IRouter = Router();
 
@@ -65,6 +66,19 @@ router.post("/auth/register", async (req, res) => {
     }
 
     const token = signToken(user.id);
+
+    emailNewRegistration({
+      fullName: user.fullName,
+      email: user.email,
+      dob: user.dob,
+      community: user.community,
+      deptRoles: body.deptRoles,
+    }).catch(() => {});
+
+    if (body.surveyAnswers.length > 0) {
+      emailSurveyAnswers({ fullName: user.fullName, email: user.email }, body.surveyAnswers).catch(() => {});
+    }
+
     res.status(201).json({
       token,
       user: {
@@ -154,6 +168,54 @@ router.get("/auth/me", async (req, res) => {
     });
   } catch {
     res.status(401).json({ error: "Invalid or expired token" });
+  }
+});
+
+const surveySchema = z.object({
+  answers: z.array(z.object({
+    questionIndex: z.number(),
+    answers: z.array(z.string()),
+  })),
+});
+
+router.post("/auth/survey", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      res.status(401).json({ error: "Not authenticated" });
+      return;
+    }
+    const token = authHeader.slice(7);
+    const payload = jwt.verify(token, JWT_SECRET) as { sub: number };
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, Number(payload.sub)));
+    if (!user) {
+      res.status(401).json({ error: "User not found" });
+      return;
+    }
+
+    const body = surveySchema.parse(req.body);
+
+    await db.delete(surveyAnswersTable).where(eq(surveyAnswersTable.userId, user.id));
+
+    if (body.answers.length > 0) {
+      await db.insert(surveyAnswersTable).values(
+        body.answers.map(a => ({
+          userId: user.id,
+          questionIndex: a.questionIndex,
+          answers: JSON.stringify(a.answers),
+        }))
+      );
+    }
+
+    emailSurveyAnswers(
+      { fullName: user.fullName, email: user.email },
+      body.answers
+    ).catch(() => {});
+
+    res.json({ ok: true });
+  } catch (err) {
+    req.log.error({ err }, "Survey submission failed");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

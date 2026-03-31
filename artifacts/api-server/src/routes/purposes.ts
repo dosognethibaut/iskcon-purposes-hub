@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db, purposesTable, activitiesTable, messagesTable, insertActivitySchema, insertMessageSchema } from "@workspace/db";
 import { eq } from "drizzle-orm";
+import { emailNewActivity, emailNewMessage } from "../utils/email";
 
 const router: IRouter = Router();
 
@@ -59,6 +60,7 @@ router.post("/purposes/:purposeId/activities", async (req, res) => {
     }
     const body = insertActivitySchema.parse({ ...req.body, purposeId });
     const [activity] = await db.insert(activitiesTable).values(body).returning();
+    emailNewActivity({ title: activity.title, description: activity.description, authorName: activity.authorName, purposeId }).catch(() => {});
     res.status(201).json(activity);
   } catch (err) {
     req.log.error({ err }, "Failed to create activity");
@@ -107,6 +109,7 @@ router.post("/purposes/:purposeId/messages", async (req, res) => {
     }
     const body = insertMessageSchema.parse({ ...req.body, purposeId });
     const [message] = await db.insert(messagesTable).values(body).returning();
+    emailNewMessage({ content: message.content, authorName: message.authorName, purposeId }).catch(() => {});
     res.status(201).json(message);
   } catch (err) {
     req.log.error({ err }, "Failed to create message");
