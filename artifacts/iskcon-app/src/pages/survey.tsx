@@ -10,13 +10,13 @@ import logoSharing      from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
 import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
 
 const purposes = [
-  { id: "accessing",    label: "Accessing",     logo: logoAccessing },
-  { id: "learning",     label: "Learning",      logo: logoLearning },
-  { id: "community",    label: "Community",     logo: logoCommunity },
-  { id: "applying",     label: "Applying",      logo: logoApplying },
-  { id: "holy_place",   label: "Holy Place",    logo: logoHolyPlace },
-  { id: "simple",       label: "Simple Living", logo: logoSimpleLiving },
-  { id: "sharing",      label: "Sharing",       logo: logoSharing },
+  { id: "accessing",  label: "Accessing",     logo: logoAccessing },
+  { id: "learning",   label: "Learning",      logo: logoLearning },
+  { id: "community",  label: "Community",     logo: logoCommunity },
+  { id: "applying",   label: "Applying",      logo: logoApplying },
+  { id: "holy_place", label: "Holy Place",    logo: logoHolyPlace },
+  { id: "simple",     label: "Simple Living", logo: logoSimpleLiving },
+  { id: "sharing",    label: "Sharing",       logo: logoSharing },
 ];
 
 const questions = [
@@ -28,22 +28,23 @@ const questions = [
 ];
 
 function PurposeGrid({
-  selected,
+  order,
   onToggle,
 }: {
-  selected: Set<string>;
+  order: string[];
   onToggle: (id: string) => void;
 }) {
   return (
     <div className="grid grid-cols-4 gap-2">
       {purposes.map(p => {
-        const active = selected.has(p.id);
+        const rank = order.indexOf(p.id);
+        const active = rank !== -1;
         return (
           <button
             key={p.id}
             type="button"
             onClick={() => onToggle(p.id)}
-            className="flex flex-col items-center gap-1 p-1 rounded-xl transition-all"
+            className="relative flex flex-col items-center gap-1 p-1 rounded-xl transition-all"
             style={{
               background: "transparent",
               border: "none",
@@ -53,6 +54,22 @@ function PurposeGrid({
               transform: active ? "scale(1.08)" : "scale(1)",
             }}
           >
+            {/* Order badge */}
+            {active && (
+              <span
+                className="absolute -top-1 -right-1 flex items-center justify-center rounded-full font-sans font-bold"
+                style={{
+                  width: 16, height: 16,
+                  fontSize: "0.5rem",
+                  background: "hsl(26 68% 42%)",
+                  color: "hsl(40 90% 96%)",
+                  lineHeight: 1,
+                  zIndex: 1,
+                }}
+              >
+                {rank + 1}
+              </span>
+            )}
             <img
               src={p.logo}
               alt={p.label}
@@ -77,20 +94,22 @@ function PurposeGrid({
 }
 
 export default function Survey() {
-  const [answers, setAnswers] = useState<Record<number, Set<string>>>(
-    () => Object.fromEntries(questions.map((_, i) => [i, new Set<string>()]))
+  const [answers, setAnswers] = useState<Record<number, string[]>>(
+    () => Object.fromEntries(questions.map((_, i) => [i, []]))
   );
   const [submitted, setSubmitted] = useState(false);
 
   const toggle = (qi: number, id: string) => {
     setAnswers(prev => {
-      const next = new Set(prev[qi]);
-      next.has(id) ? next.delete(id) : next.add(id);
+      const current = prev[qi];
+      const next = current.includes(id)
+        ? current.filter(x => x !== id)
+        : [...current, id];
       return { ...prev, [qi]: next };
     });
   };
 
-  const answered = questions.filter((_, i) => answers[i].size > 0).length;
+  const answered = questions.filter((_, i) => answers[i].length > 0).length;
   const allAnswered = answered === questions.length;
 
   const handleSubmit = () => {
@@ -135,9 +154,8 @@ export default function Survey() {
           Community Survey
         </h1>
         <p className="font-sans mt-1 mb-3" style={{ color: "hsl(14 45% 38%)", fontSize: "0.88rem" }}>
-          {answered} / {questions.length} answered — select the purposes that match each question
+          {answered} / {questions.length} answered — tap logos in the order that feels right
         </p>
-        {/* Progress bar */}
         <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(14 30% 70% / 0.25)" }}>
           <div
             className="h-full rounded-full transition-all"
@@ -152,7 +170,7 @@ export default function Survey() {
           <div
             key={qi}
             className="rounded-2xl p-4"
-            style={{ background: "hsl(40 40% 93%)", border: `1px solid ${answers[qi].size > 0 ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}
+            style={{ background: "hsl(40 40% 93%)", border: `1px solid ${answers[qi].length > 0 ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}
           >
             <div className="flex gap-4 items-start">
               {/* Question */}
@@ -163,9 +181,9 @@ export default function Survey() {
                 <p className="font-serif font-semibold mt-0.5 leading-snug" style={{ fontSize: "0.9rem", color: "hsl(14 72% 18%)" }}>
                   {q}
                 </p>
-                {answers[qi].size > 0 && (
+                {answers[qi].length > 0 && (
                   <p className="font-sans text-xs mt-1.5" style={{ color: "hsl(26 55% 38%)" }}>
-                    {answers[qi].size} selected
+                    {answers[qi].length} selected
                   </p>
                 )}
               </div>
@@ -173,7 +191,7 @@ export default function Survey() {
               {/* Logos grid */}
               <div className="shrink-0" style={{ width: 160 }}>
                 <PurposeGrid
-                  selected={answers[qi]}
+                  order={answers[qi]}
                   onToggle={id => toggle(qi, id)}
                 />
               </div>
