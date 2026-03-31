@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import radhadeshLogo from "@assets/image_1774933719680.png";
+import sevenPLogo from "@assets/7p_Logo_1774938499855.png";
 import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
 import logoCommunity from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
 import logoHolyPlace from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
@@ -135,6 +136,11 @@ export default function Home() {
 
           {/* Title */}
           <div className="px-6 pt-10">
+            <img
+              src={sevenPLogo}
+              alt="7 Purposes"
+              style={{ height: 72, width: "auto", mixBlendMode: "screen", marginBottom: "0.5rem" }}
+            />
             <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
               The 7 Purposes<br />of ISKCON
             </h1>
