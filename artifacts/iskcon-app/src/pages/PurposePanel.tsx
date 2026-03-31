@@ -42,9 +42,6 @@ const accentByTitle: Record<string, string> = {
   "Sharing":       "hsl(14 40% 30%)",
 };
 
-const ACTIVITY_GREEN = "hsl(145 45% 36%)";
-const ACTIVITY_GREEN_BG = "hsl(145 28% 91%)";
-const ACTIVITY_GREEN_BORDER = "hsl(145 35% 72% / 0.6)";
 
 interface PurposePanelProps {
   purposeId: number;
@@ -152,7 +149,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             {isLoadingActivities ? (
               <div className="flex justify-center p-8">
-                <Loader2 className="w-6 h-6 animate-spin" style={{ color: ACTIVITY_GREEN }} />
+                <Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} />
               </div>
             ) : !activities?.length ? (
               <div className="rounded-2xl p-8 text-center border border-dashed" style={{ background: "hsl(40 40% 90% / 0.5)", borderColor: "hsl(14 30% 60% / 0.3)" }}>
@@ -167,10 +164,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     <div
                       key={activity.id}
                       className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: ACTIVITY_GREEN_BG, border: `1px solid ${ACTIVITY_GREEN_BORDER}`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
+                      style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
                     >
-                      {/* Green top stripe */}
-                      <div style={{ height: 3, background: ACTIVITY_GREEN }} />
+                      {/* Accent top stripe */}
+                      <div style={{ height: 3, background: accent }} />
 
                       {/* Header row — always visible, clickable */}
                       <button
@@ -178,27 +175,27 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         onClick={() => toggleActivity(activity.id)}
                         className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
                       >
-                        <CalendarDays className="w-4 h-4 shrink-0" style={{ color: ACTIVITY_GREEN }} />
-                        <span className="flex-1 font-serif font-bold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(145 45% 14%)" }}>
+                        <CalendarDays className="w-4 h-4 shrink-0" style={{ color: accent }} />
+                        <span className="flex-1 font-serif font-bold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
                           {activity.title}
                         </span>
                         {currentUser ? (
                           isOpen
-                            ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: ACTIVITY_GREEN }} />
-                            : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: ACTIVITY_GREEN }} />
+                            ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: accent }} />
+                            : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: accent }} />
                         ) : (
-                          <Lock className="w-3.5 h-3.5 shrink-0" style={{ color: ACTIVITY_GREEN, opacity: 0.6 }} />
+                          <Lock className="w-3.5 h-3.5 shrink-0" style={{ color: accent, opacity: 0.55 }} />
                         )}
                       </button>
 
                       {/* Expanded content — only when open and signed in */}
                       {isOpen && currentUser && (
-                        <div className="px-4 pb-4" style={{ borderTop: `1px solid ${ACTIVITY_GREEN_BORDER}` }}>
-                          <p className="font-sans text-sm leading-relaxed mt-3 mb-3" style={{ color: "hsl(145 30% 22%)" }}>
+                        <div className="px-4 pb-4" style={{ borderTop: `1px solid ${accent}25` }}>
+                          <p className="font-sans text-sm leading-relaxed mt-3 mb-3" style={{ color: "hsl(14 50% 28%)" }}>
                             {activity.description}
                           </p>
-                          <div className="flex justify-between items-center text-xs" style={{ color: "hsl(145 25% 42%)" }}>
-                            <span className="font-semibold">By {activity.authorName}</span>
+                          <div className="flex justify-between items-center text-xs" style={{ color: "hsl(14 35% 48%)" }}>
+                            <span className="font-semibold" style={{ color: accent }}>By {activity.authorName}</span>
                             <span>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                           </div>
                         </div>
@@ -249,9 +246,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
           </TabsContent>
 
           {/* ── MESSAGES TAB ── */}
-          <TabsContent value="messages" className="space-y-6">
+          <TabsContent value="messages" className="space-y-4">
             <div className="space-y-3">
-              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(14 72% 18%)" }}>Community Messages</h2>
               {isLoadingMessages ? (
                 <div className="flex justify-center p-8">
                   <Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} />
@@ -264,12 +260,15 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
               ) : (
                 <div className="space-y-3">
                   {messages.map((message, i) => (
-                    <div key={message.id} className="rounded-2xl p-5 shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
-                      <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: "hsl(14 65% 22%)" }}>"{message.content}"</p>
-                      <div className="flex justify-between items-center text-xs" style={{ color: "hsl(14 40% 50%)" }}>
-                        <span className="font-bold" style={{ color: accent }}>— {message.authorName}</span>
-                        <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
+                    <div key={message.id} className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
+                      style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}35`, animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
+                      <div style={{ height: 3, background: accent }} />
+                      <div className="p-5">
+                        <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: "hsl(14 65% 22%)" }}>"{message.content}"</p>
+                        <div className="flex justify-between items-center text-xs" style={{ color: "hsl(14 40% 50%)" }}>
+                          <span className="font-bold" style={{ color: accent }}>— {message.authorName}</span>
+                          <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -277,8 +276,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
               )}
             </div>
 
-            <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.25)" }}>
-              <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: "hsl(14 45% 40%)" }} />
+            <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}35` }}>
+              <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
               <h3 className="font-serif text-lg font-bold mb-4" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
               {!currentUser ? (
                 <SignInPrompt />
@@ -298,7 +297,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
                     </div>
-                    <Button type="submit" variant="outline" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide" disabled={createMessage.isPending} style={{ borderColor: "hsl(14 30% 55% / 0.4)", color: "hsl(14 60% 28%)" }}>
+                    <Button type="submit" variant="outline" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide" disabled={createMessage.isPending} style={{ borderColor: `${accent}60`, color: accent }}>
                       {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Post Message
                     </Button>
