@@ -190,7 +190,7 @@ export default function Register() {
       });
       if (!res.ok) throw new Error("Survey submission failed");
       toast.success("Registration complete! Hare Krishna 🙏");
-      navigate("/register");
+      setRegistrationStep(1);
     } catch {
       toast.error("Failed to submit survey. Please try again.");
     } finally {
