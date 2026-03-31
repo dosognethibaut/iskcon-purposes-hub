@@ -24,55 +24,32 @@ export default function Home() {
     <div className="min-h-[100dvh] bg-background pb-20">
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div className="relative w-full overflow-hidden" style={{ minHeight: 320 }}>
-
-        {/* Parchment base */}
+      <div
+        className="flex w-full overflow-hidden"
+        style={{ minHeight: 300, background: "hsl(40 56% 83%)" }}
+      >
+        {/* Left: text — same flex height as the image column */}
         <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(38 50% 79%) 50%, hsl(35 44% 72%) 100%)" }}
-        />
-
-        {/* Prabhupada photo — right-aligned, fade to left */}
-        <div className="absolute top-0 right-0 bottom-0" style={{ width: "55%" }}>
-          <img
-            src={prabhupadaPhoto}
-            alt="Srila Prabhupada"
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              height: "115%",
-              width: "auto",
-              objectFit: "cover",
-              objectPosition: "top center",
-            }}
-          />
-          {/* Fade left edge into parchment */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to right, hsl(40 58% 84%) 0%, hsl(40 58% 84% / 0.6) 25%, transparent 65%)" }}
-          />
-        </div>
-
-        {/* Text content */}
-        <div className="relative z-10 px-6 pt-10 pb-8" style={{ maxWidth: "62%" }}>
+          className="flex flex-col justify-center px-6 py-8 shrink-0"
+          style={{ width: "54%", background: "linear-gradient(to right, hsl(40 58% 84%) 85%, transparent 100%)" }}
+        >
           <h1
             className="font-serif font-bold leading-tight"
-            style={{ fontSize: "clamp(1.75rem, 6vw, 3rem)", color: "hsl(14 72% 18%)" }}
+            style={{ fontSize: "clamp(1.5rem, 5.5vw, 2.6rem)", color: "hsl(14 72% 18%)" }}
           >
             The 7 Purposes<br />of ISKCON
           </h1>
 
           <div
-            className="inline-block mt-3 px-4 py-1.5 rounded-full font-serif italic font-semibold"
-            style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.8rem, 2.5vw, 1rem)" }}
+            className="inline-block mt-3 px-4 py-1.5 rounded-full font-serif italic font-semibold self-start"
+            style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.95rem)" }}
           >
             &amp; Community Building
           </div>
 
           <p
             className="font-sans mt-3 leading-snug"
-            style={{ color: "hsl(14 55% 28%)", fontSize: "clamp(0.72rem, 2vw, 0.85rem)" }}
+            style={{ color: "hsl(14 55% 28%)", fontSize: "clamp(0.7rem, 2vw, 0.82rem)" }}
           >
             Applying ISKCON's purposes<br />in daily life &amp; community
           </p>
@@ -80,17 +57,39 @@ export default function Home() {
           {/* Why? button */}
           <Link
             href="/why"
-            className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-full font-sans font-semibold text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="inline-flex items-center gap-1.5 mt-4 self-start px-4 py-2 rounded-full font-sans font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
             style={{
-              borderColor: "hsl(14 72% 18% / 0.35)",
+              borderColor: "hsl(14 72% 18% / 0.3)",
               color: "hsl(14 72% 18%)",
-              background: "hsl(40 58% 84% / 0.6)",
-              fontSize: "0.85rem",
+              background: "transparent",
+              fontSize: "0.82rem",
             }}
           >
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="w-3.5 h-3.5" />
             Why?
           </Link>
+        </div>
+
+        {/* Right: photo — flush against the text column, fills remaining space */}
+        <div className="relative flex-1 overflow-hidden">
+          {/* Micro-blend at the seam only */}
+          <div
+            className="absolute inset-y-0 left-0 z-10"
+            style={{ width: 32, background: "linear-gradient(to right, hsl(40 58% 84%), transparent)" }}
+          />
+          <img
+            src={prabhupadaPhoto}
+            alt="Srila Prabhupada"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 10%",
+            }}
+          />
         </div>
       </div>
 
