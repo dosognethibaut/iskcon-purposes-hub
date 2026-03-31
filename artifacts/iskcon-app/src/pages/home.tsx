@@ -4,13 +4,13 @@ import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle }
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import radhadeshLogo from "@assets/image_1774938925316.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
-import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
-import logoCommunity from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
-import logoHolyPlace from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
-import logoAccessing from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
-import logoLearning from "@assets/7p_LogoNoTitle_Learning_1774931916883.png";
-import logoApplying from "@assets/7p_LogoNoTitle_Applying_1774931916883.png";
-import logoSharing from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
+import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774940060432.png";
+import logoCommunity    from "@assets/7p_Community3.png_1774940060432.png";
+import logoHolyPlace    from "@assets/7p_HolyPlace3_1774940060432.png";
+import logoAccessing    from "@assets/7p_Accessing3_1774940060433.png";
+import logoLearning     from "@assets/7p_Learning3_1774940060433.png";
+import logoApplying     from "@assets/7p_Applying3_1774940060433.png";
+import logoSharing      from "@assets/7p_Sharing3_1774940060433.png";
 
 const quotes = [
   {
@@ -249,47 +249,38 @@ export default function Home() {
       <div className="pb-20">
         <div className="pt-8" />
 
-        {/* Logo strip — scrollable, big logos */}
-        <div className="overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
-          <div className="flex items-end gap-3 px-4" style={{ width: "max-content", minWidth: "100%" }}>
-            {purposes.map((p, i) => {
-              const active = activePurpose === i;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setActivePurpose(active ? null : i)}
-                  className="flex flex-col items-center gap-1.5 focus:outline-none shrink-0"
-                  style={{ opacity: activePurpose !== null && !active ? 0.35 : 1, transition: "opacity 0.2s", width: 72 }}
-                >
-                  <img
-                    src={p.logo}
-                    alt={p.title}
-                    style={{
-                      width: 72, height: 72,
-                      objectFit: "contain",
-                      transform: active ? "scale(1.1)" : "scale(1)",
-                      transition: "transform 0.2s",
-                    }}
-                  />
-                  <span
-                    className="font-sans text-center leading-tight w-full"
-                    style={{
-                      fontSize: "0.58rem",
-                      color: active ? "hsl(14 72% 18%)" : "hsl(14 40% 50%)",
-                      fontWeight: active ? 700 : 400,
-                    }}
-                  >
-                    {p.title}
-                  </span>
-                  <div
-                    className="rounded-full transition-all"
-                    style={{ width: active ? 24 : 0, height: 2, background: "hsl(26 68% 42%)", transition: "width 0.2s" }}
-                  />
-                </button>
-              );
-            })}
-          </div>
+        {/* Logo strip — centered, evenly distributed */}
+        <div className="flex items-end justify-center px-2">
+          {purposes.map((p, i) => {
+            const active = activePurpose === i;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActivePurpose(active ? null : i)}
+                className="flex-1 flex flex-col items-center gap-1 focus:outline-none"
+                style={{ opacity: activePurpose !== null && !active ? 0.35 : 1, transition: "opacity 0.2s" }}
+              >
+                <img
+                  src={p.logo}
+                  alt={p.title}
+                  style={{
+                    width: "100%",
+                    maxWidth: 64,
+                    height: "auto",
+                    aspectRatio: "1",
+                    objectFit: "contain",
+                    transform: active ? "scale(1.12)" : "scale(1)",
+                    transition: "transform 0.2s",
+                  }}
+                />
+                <div
+                  className="rounded-full transition-all"
+                  style={{ width: active ? 20 : 0, height: 2, background: "hsl(26 68% 42%)", transition: "width 0.2s" }}
+                />
+              </button>
+            );
+          })}
         </div>
 
         {/* Inline panel — no background, just text */}
