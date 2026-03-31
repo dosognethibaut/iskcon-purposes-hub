@@ -11,7 +11,7 @@ import {
 import {
   CalendarDays, MessageCircle, Loader2, Lock,
   ChevronDown, ChevronUp, CheckCircle2, Clock, MessageSquare, Send,
-  MapPin, Users, XCircle, Camera, ImagePlus,
+  MapPin, Users, XCircle, Camera, ImagePlus, Trash2,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/context/AuthContext";
@@ -51,6 +51,21 @@ const accentById: Record<number, string> = {
   7: "hsl(10 54% 35%)",    // Sharing — dark terra cotta (text colour in logo)
 };
 
+
+// ── Badge helpers (localStorage-based "seen" tracking) ──────────────────────
+function getSeenIds(key: string): Set<number> {
+  try { return new Set(JSON.parse(localStorage.getItem(key) ?? "[]") as number[]); }
+  catch { return new Set(); }
+}
+function markAllSeen(key: string, ids: number[]) {
+  localStorage.setItem(key, JSON.stringify(ids));
+  // Notify other tabs / home page
+  window.dispatchEvent(new StorageEvent("storage", { key }));
+}
+function countNew(ids: number[], seenKey: string): number {
+  const seen = getSeenIds(seenKey);
+  return ids.filter(id => !seen.has(id)).length;
+}
 
 interface AnyComment {
   id: number;
@@ -247,6 +262,11 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const [completingActivityId, setCompletingActivityId] = useState<number | null>(null);
   const [uncompletingActivityId, setUncompletingActivityId] = useState<number | null>(null);
   const [pendingCompleteForActivityId, setPendingCompleteForActivityId] = useState<number | null>(null);
+  const [deletingActivityId, setDeletingActivityId] = useState<number | null>(null);
+  const [deletingMessageId, setDeletingMessageId] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState("activities");
+  const [newActivitiesCount, setNewActivitiesCount] = useState(0);
+  const [newMessagesCount, setNewMessagesCount] = useState(0);
   const [joiningActivityId, setJoiningActivityId] = useState<number | null>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
@@ -478,10 +498,84 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     });
   };
 
+  const deleteActivity = async (id: number) => {
+    if (!token) return;
+    setDeletingActivityId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: [...getGetActivitiesQueryKey(purposeId), currentUser?.id ?? "anon"] });
+      toast.success("Activity deleted");
+    } catch {
+      toast.error("Failed to delete activity");
+    } finally {
+      setDeletingActivityId(null);
+    }
+  };
+
+  const deleteMessage = async (id: number) => {
+    if (!token) return;
+    setDeletingMessageId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/messages/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: [...getGetMessagesQueryKey(purposeId), currentUser?.id ?? "anon"] });
+      toast.success("Message deleted");
+    } catch {
+      toast.error("Failed to delete message");
+    } finally {
+      setDeletingMessageId(null);
+    }
+  };
+
+  // ── Derived lists ───────────────────────────────────────────────────────────
   const approvedActivities = (activities ?? []).filter((a: any) => a.approved === true);
   const pendingActivities  = (activities ?? []).filter((a: any) => a.approved === false);
   const approvedMessages   = (messages  ?? []).filter((m: any) => m.approved === true);
   const pendingMessages    = (messages  ?? []).filter((m: any) => m.approved === false);
+
+  // ── Badge tracking ──────────────────────────────────────────────────────────
+  const seenActsKey = `iskcon_seen_acts_${purposeId}`;
+  const seenMsgsKey = `iskcon_seen_msgs_${purposeId}`;
+
+  const approvedActivityIds = approvedActivities.map((a: any) => a.id);
+  const approvedMessageIds  = approvedMessages.map((m: any) => m.id);
+
+  // When on activities tab and data updates → mark seen immediately
+  useEffect(() => {
+    if (activeTab === "activities" && approvedActivityIds.length > 0) {
+      markAllSeen(seenActsKey, approvedActivityIds);
+      setNewActivitiesCount(0);
+    } else if (activeTab !== "activities") {
+      setNewActivitiesCount(countNew(approvedActivityIds, seenActsKey));
+    }
+  }, [JSON.stringify(approvedActivityIds), activeTab]);
+
+  useEffect(() => {
+    if (activeTab === "messages" && approvedMessageIds.length > 0) {
+      markAllSeen(seenMsgsKey, approvedMessageIds);
+      setNewMessagesCount(0);
+    } else if (activeTab !== "messages") {
+      setNewMessagesCount(countNew(approvedMessageIds, seenMsgsKey));
+    }
+  }, [JSON.stringify(approvedMessageIds), activeTab]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (value === "activities") {
+      markAllSeen(seenActsKey, approvedActivityIds);
+      setNewActivitiesCount(0);
+    } else if (value === "messages") {
+      markAllSeen(seenMsgsKey, approvedMessageIds);
+      setNewMessagesCount(0);
+    }
+  };
 
   return (
     <div className="mt-2">
@@ -524,14 +618,24 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 
-        <Tabs defaultValue="activities" className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
             style={{ background: "hsl(38 40% 80%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
             <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(14 55% 30%)" }}>
               <CalendarDays className="w-4 h-4 mr-1.5" /> Activities
+              {newActivitiesCount > 0 && (
+                <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
+                  {newActivitiesCount > 9 ? "9+" : newActivitiesCount}
+                </span>
+              )}
             </TabsTrigger>
             <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(14 55% 30%)" }}>
               <MessageCircle className="w-4 h-4 mr-1.5" /> Messages
+              {newMessagesCount > 0 && (
+                <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
+                  {newMessagesCount > 9 ? "9+" : newMessagesCount}
+                </span>
+              )}
             </TabsTrigger>
           </TabsList>
 
@@ -561,7 +665,13 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           <span className="font-sans text-xs font-semibold" style={{ color: "hsl(14 45% 38%)" }}>By {activity.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <button onClick={() => deleteActivity(activity.id)} disabled={deletingActivityId === activity.id}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
+                            style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 40% 45%)", background: "transparent", opacity: deletingActivityId === activity.id ? 0.5 : 1 }}>
+                            {deletingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                            Delete
+                          </button>
                           <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
                             style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent", opacity: disapprovingActivityId === activity.id ? 0.5 : 1 }}>
@@ -738,6 +848,12 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                                     {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
                                     Unpublish
                                   </button>
+                                  <button onClick={() => deleteActivity(activity.id)} disabled={deletingActivityId === activity.id}
+                                    className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                    style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 40% 45%)", background: "transparent" }}>
+                                    {deletingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                                    Delete
+                                  </button>
                                 </>
                               )}
                               <button onClick={() => toggleComments(activity.id, "activity")}
@@ -898,7 +1014,13 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           <span className="font-sans text-xs font-semibold" style={{ color: "hsl(14 45% 38%)" }}>— {message.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <button onClick={() => deleteMessage(message.id)} disabled={deletingMessageId === message.id}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
+                            style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 40% 45%)", background: "transparent", opacity: deletingMessageId === message.id ? 0.5 : 1 }}>
+                            {deletingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                            Delete
+                          </button>
                           <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans font-semibold text-xs border transition-opacity"
                             style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent", opacity: disapprovingMessageId === message.id ? 0.5 : 1 }}>
@@ -946,14 +1068,22 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                             <span className="font-bold" style={{ color: "hsl(14 45% 38%)" }}>— {message.authorName}</span>
                             <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             {currentUser?.isAdmin && (
-                              <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
-                                className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
-                                style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent" }}>
-                                {disapprovingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
-                                Unpublish
-                              </button>
+                              <>
+                                <button onClick={() => disapproveMessage(message.id)} disabled={disapprovingMessageId === message.id}
+                                  className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                  style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent" }}>
+                                  {disapprovingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                                  Unpublish
+                                </button>
+                                <button onClick={() => deleteMessage(message.id)} disabled={deletingMessageId === message.id}
+                                  className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                  style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 40% 45%)", background: "transparent" }}>
+                                  {deletingMessageId === message.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                                  Delete
+                                </button>
+                              </>
                             )}
                             <button onClick={() => toggleComments(message.id, "message")}
                               className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"

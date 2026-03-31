@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import PurposePanel from "./PurposePanel";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, Eye } from "lucide-react";
@@ -102,11 +102,50 @@ const purposes = [
   },
 ];
 
+const HOME_API = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+function getSeenIds(key: string): Set<number> {
+  try { return new Set(JSON.parse(localStorage.getItem(key) ?? "[]") as number[]); }
+  catch { return new Set(); }
+}
+function countNew(ids: number[], seenKey: string): number {
+  const seen = getSeenIds(seenKey);
+  return ids.filter(id => !seen.has(id)).length;
+}
+
 export default function Home() {
   const { currentUser } = useAuth();
   const [current, setCurrent] = useState(0);
   const [fading, setFading] = useState(false);
   const [activePurpose, setActivePurpose] = useState<number | null>(null);
+  const [purposeBadges, setPurposeBadges] = useState<Record<number, number>>({});
+
+  const computeBadges = useCallback((data: Record<number, { activityIds: number[]; messageIds: number[] }> | null) => {
+    if (!data) return;
+    const counts: Record<number, number> = {};
+    for (const [pid, { activityIds, messageIds }] of Object.entries(data)) {
+      const n = Number(pid);
+      counts[n] = countNew(activityIds, `iskcon_seen_acts_${n}`) + countNew(messageIds, `iskcon_seen_msgs_${n}`);
+    }
+    setPurposeBadges(counts);
+  }, []);
+
+  // Fetch badge data every 4s
+  useEffect(() => {
+    let lastData: Record<number, { activityIds: number[]; messageIds: number[] }> | null = null;
+    const fetchBadges = () => {
+      fetch(`${HOME_API}/api/badges`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d) { lastData = d; computeBadges(d); } })
+        .catch(() => {});
+    };
+    fetchBadges();
+    const interval = setInterval(fetchBadges, 4000);
+    // Re-compute when PurposePanel marks items as seen
+    const onStorage = () => { if (lastData) computeBadges(lastData); };
+    window.addEventListener("storage", onStorage);
+    return () => { clearInterval(interval); window.removeEventListener("storage", onStorage); };
+  }, [computeBadges]);
 
   const goTo = (index: number) => {
     setFading(true);
@@ -263,11 +302,21 @@ export default function Home() {
                   width: 80,
                 }}
               >
-                <img
-                  src={p.logo}
-                  alt={p.title}
-                  style={{ width: 80, height: 80, objectFit: "contain" }}
-                />
+                <div className="relative" style={{ width: 80, height: 80 }}>
+                  <img
+                    src={p.logo}
+                    alt={p.title}
+                    style={{ width: 80, height: 80, objectFit: "contain" }}
+                  />
+                  {(purposeBadges[p.id] ?? 0) > 0 && (
+                    <span
+                      className="absolute -top-1 -right-1 min-w-[20px] h-5 flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1 shadow"
+                      style={{ background: "hsl(0 80% 48%)", lineHeight: 1 }}
+                    >
+                      {(purposeBadges[p.id] ?? 0) > 9 ? "9+" : purposeBadges[p.id]}
+                    </span>
+                  )}
+                </div>
                 <div
                   className="rounded-full"
                   style={{ width: active ? 20 : 0, height: 2, background: "hsl(26 68% 42%)", transition: "width 0.2s" }}

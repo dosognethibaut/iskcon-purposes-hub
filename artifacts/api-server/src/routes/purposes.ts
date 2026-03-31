@@ -234,8 +234,12 @@ router.patch("/purposes/:purposeId/activities/:id/disapprove", async (req, res) 
 
 router.delete("/purposes/:purposeId/activities/:id", async (req, res) => {
   try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
     const id = Number(req.params.id);
     if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    await db.delete(activityParticipantsTable).where(eq(activityParticipantsTable.activityId, id));
+    await db.delete(activityCommentsTable).where(eq(activityCommentsTable.activityId, id));
     await db.delete(activitiesTable).where(eq(activitiesTable.id, id));
     res.status(204).send();
   } catch (err) {
@@ -339,8 +343,11 @@ router.patch("/purposes/:purposeId/messages/:id/disapprove", async (req, res) =>
 
 router.delete("/purposes/:purposeId/messages/:id", async (req, res) => {
   try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
     const id = Number(req.params.id);
     if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    await db.delete(commentsTable).where(eq(commentsTable.messageId, id));
     await db.delete(messagesTable).where(eq(messagesTable.id, id));
     res.status(204).send();
   } catch (err) {
@@ -379,6 +386,33 @@ router.post("/purposes/:purposeId/messages/:messageId/comments", async (req, res
     res.status(201).json(comment);
   } catch (err) {
     req.log.error({ err }, "Failed to create comment");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ── Badges — lightweight feed of approved IDs per purpose ────────────────────
+
+router.get("/badges", async (_req, res) => {
+  try {
+    const activities = await db
+      .select({ id: activitiesTable.id, purposeId: activitiesTable.purposeId })
+      .from(activitiesTable)
+      .where(eq(activitiesTable.approved, true));
+    const messages = await db
+      .select({ id: messagesTable.id, purposeId: messagesTable.purposeId })
+      .from(messagesTable)
+      .where(eq(messagesTable.approved, true));
+    const map: Record<number, { activityIds: number[]; messageIds: number[] }> = {};
+    for (const a of activities) {
+      if (!map[a.purposeId]) map[a.purposeId] = { activityIds: [], messageIds: [] };
+      map[a.purposeId].activityIds.push(a.id);
+    }
+    for (const m of messages) {
+      if (!map[m.purposeId]) map[m.purposeId] = { activityIds: [], messageIds: [] };
+      map[m.purposeId].messageIds.push(m.id);
+    }
+    res.json(map);
+  } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
