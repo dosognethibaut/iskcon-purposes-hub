@@ -63,12 +63,12 @@ const quotes = [
 ];
 
 const purposes = [
-  { id: 1, title: "Accessing",     shortDescription: "Open the doors to spiritual knowledge for everyone.",         logo: logoAccessing },
-  { id: 2, title: "Learning",      shortDescription: "Deepen understanding through study and devotional hearing.",  logo: logoLearning },
-  { id: 3, title: "Community",     shortDescription: "Build a loving spiritual family on the path together.",      logo: logoCommunity },
-  { id: 4, title: "Applying",      shortDescription: "Put spiritual principles into practice in daily life.",      logo: logoApplying },
-  { id: 5, title: "Holy Place",    shortDescription: "Create and maintain sacred spaces for transcendence.",      logo: logoHolyPlace },
-  { id: 6, title: "Simple Living", shortDescription: "Embrace a natural way of life rooted in spiritual values.", logo: logoSimpleLiving },
+  { id: 1, title: "Simple Living", shortDescription: "Embrace a natural way of life rooted in spiritual values.", logo: logoSimpleLiving },
+  { id: 2, title: "Community",     shortDescription: "Build a loving spiritual family on the path together.",      logo: logoCommunity },
+  { id: 3, title: "Holy Place",    shortDescription: "Create and maintain sacred spaces for transcendence.",      logo: logoHolyPlace },
+  { id: 4, title: "Accessing",     shortDescription: "Open the doors to spiritual knowledge for everyone.",        logo: logoAccessing },
+  { id: 5, title: "Learning",      shortDescription: "Deepen understanding through study and devotional hearing.", logo: logoLearning },
+  { id: 6, title: "Applying",      shortDescription: "Put spiritual principles into practice in daily life.",      logo: logoApplying },
   { id: 7, title: "Sharing",       shortDescription: "Spread Krishna consciousness with open hands and heart.",    logo: logoSharing },
 ];
 

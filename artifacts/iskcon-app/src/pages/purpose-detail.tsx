@@ -158,14 +158,9 @@ export default function PurposeDetail() {
         </Link>
 
         <div className="max-w-lg mx-auto flex items-center gap-5">
-          {/* Logo */}
+          {/* Logo — no background, just the image */}
           {logo && (
-            <div
-              className="shrink-0 rounded-2xl flex items-center justify-center p-2"
-              style={{ background: "hsl(40 50% 92%)", boxShadow: "0 2px 12px hsl(14 40% 30% / 0.15)", width: 76, height: 76 }}
-            >
-              <img src={logo} alt={purpose.title} style={{ width: 56, height: 56, objectFit: "contain" }} />
-            </div>
+            <img src={logo} alt={purpose.title} className="shrink-0" style={{ width: 80, height: 80, objectFit: "contain" }} />
           )}
 
           <div className="flex-1 min-w-0">

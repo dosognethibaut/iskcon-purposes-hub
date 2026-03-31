@@ -43,18 +43,20 @@ function PurposeGrid({
             key={p.id}
             type="button"
             onClick={() => onToggle(p.id)}
-            className="flex flex-col items-center gap-1 p-1.5 rounded-xl transition-all"
+            className="flex flex-col items-center gap-1 p-1 rounded-xl transition-all"
             style={{
-              background: active ? "hsl(26 68% 42% / 0.12)" : "hsl(40 30% 90%)",
-              border: `1.5px solid ${active ? "hsl(26 68% 42%)" : "hsl(14 20% 78%)"}`,
-              opacity: active ? 1 : 0.55,
-              transform: active ? "scale(1.04)" : "scale(1)",
+              background: "transparent",
+              border: "none",
+              outline: active ? "2px solid hsl(26 68% 42%)" : "2px solid transparent",
+              outlineOffset: 1,
+              opacity: active ? 1 : 0.4,
+              transform: active ? "scale(1.08)" : "scale(1)",
             }}
           >
             <img
               src={p.logo}
               alt={p.label}
-              style={{ width: 32, height: 32, objectFit: "contain", filter: active ? "none" : "grayscale(60%)" }}
+              style={{ width: 34, height: 34, objectFit: "contain", filter: active ? "none" : "grayscale(70%)" }}
             />
             <span
               className="font-sans text-center leading-tight"
