@@ -237,6 +237,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const [completingActivityId, setCompletingActivityId] = useState<number | null>(null);
   const [uncompletingActivityId, setUncompletingActivityId] = useState<number | null>(null);
   const [pendingCompleteForActivityId, setPendingCompleteForActivityId] = useState<number | null>(null);
+  const [joiningActivityId, setJoiningActivityId] = useState<number | null>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   const { data: activities, isLoading: isLoadingActivities } = useGetActivities(purposeId, {
@@ -389,6 +390,43 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       toast.error("Failed to unmark activity");
     } finally {
       setUncompletingActivityId(null);
+    }
+  };
+
+  const joinActivity = async (id: number) => {
+    if (!token) return;
+    setJoiningActivityId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/join`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (res.status === 409) { toast.error("Activity is full"); return; }
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
+      toast.success("You joined this activity!");
+    } catch {
+      toast.error("Failed to join activity");
+    } finally {
+      setJoiningActivityId(null);
+    }
+  };
+
+  const leaveActivity = async (id: number) => {
+    if (!token) return;
+    setJoiningActivityId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/join`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
+      toast.success("You left this activity");
+    } catch {
+      toast.error("Failed to leave activity");
+    } finally {
+      setJoiningActivityId(null);
     }
   };
 
@@ -585,6 +623,43 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                             </span>
                           )}
                         </div>
+                        {/* Right-side: participation + expand */}
+                        <div className="flex items-center gap-2 shrink-0" onClick={e => e.stopPropagation()}>
+                          {/* Participant count badge */}
+                          {activity.maxParticipants && !isDone && (
+                            <span className="font-sans text-xs px-1.5 py-0.5 rounded-full" style={{
+                              background: activity.participantCount >= activity.maxParticipants ? "hsl(358 52% 42% / 0.12)" : "hsl(14 20% 85%)",
+                              color: activity.participantCount >= activity.maxParticipants ? "hsl(358 52% 40%)" : "hsl(14 40% 45%)",
+                            }}>
+                              {activity.participantCount}/{activity.maxParticipants}
+                            </span>
+                          )}
+                          {/* Join / Leave — signed-in, not done */}
+                          {currentUser && !isDone && !currentUser.isAdmin && (
+                            activity.isJoined ? (
+                              <button
+                                onClick={() => leaveActivity(activity.id)}
+                                disabled={joiningActivityId === activity.id}
+                                className="font-sans text-xs font-semibold px-3 py-1 rounded-full border transition-colors"
+                                style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 45% 38%)", background: "hsl(14 20% 90%)" }}>
+                                {joiningActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin inline" /> : "Leave"}
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => joinActivity(activity.id)}
+                                disabled={joiningActivityId === activity.id || (activity.maxParticipants && activity.participantCount >= activity.maxParticipants)}
+                                className="font-sans text-xs font-semibold px-3 py-1 rounded-full transition-colors"
+                                style={{
+                                  background: (activity.maxParticipants && activity.participantCount >= activity.maxParticipants) ? "hsl(14 20% 80%)" : accent,
+                                  color: (activity.maxParticipants && activity.participantCount >= activity.maxParticipants) ? "hsl(14 40% 45%)" : "white",
+                                  opacity: joiningActivityId === activity.id ? 0.6 : 1,
+                                }}>
+                                {joiningActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin inline" /> : activity.maxParticipants && activity.participantCount >= activity.maxParticipants ? "Full" : "Join"}
+                              </button>
+                            )
+                          )}
+                        </div>
+                        {/* Expand/collapse arrow (separate click zone handled by button parent) */}
                         {isDone
                           ? <span className="font-sans text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: "rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.9)" }}>Done</span>
                           : currentUser

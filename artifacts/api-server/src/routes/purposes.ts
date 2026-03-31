@@ -1,10 +1,10 @@
 import { Router, type IRouter } from "express";
 import {
   db, purposesTable, activitiesTable, messagesTable,
-  commentsTable, activityCommentsTable,
+  commentsTable, activityCommentsTable, activityParticipantsTable,
   insertActivitySchema, insertMessageSchema, usersTable,
 } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import jwt from "jsonwebtoken";
 import { emailNewActivity, emailNewMessage } from "../utils/email";
@@ -51,17 +51,65 @@ router.get("/purposes/:id", async (req, res) => {
 
 // ── Activities ───────────────────────────────────────────────────────────────
 
+// Helper: enrich activities with participant counts and isJoined
+async function enrichActivities(rawActivities: any[], userId?: number) {
+  if (!rawActivities.length) return [];
+  const ids = rawActivities.map((a: any) => a.id);
+  const counts = await db
+    .select({
+      activityId: activityParticipantsTable.activityId,
+      count: sql<number>`cast(count(*) as int)`,
+    })
+    .from(activityParticipantsTable)
+    .where(sql`${activityParticipantsTable.activityId} = ANY(${ids})`)
+    .groupBy(activityParticipantsTable.activityId);
+
+  const joined = userId
+    ? await db
+        .select({ activityId: activityParticipantsTable.activityId })
+        .from(activityParticipantsTable)
+        .where(and(
+          sql`${activityParticipantsTable.activityId} = ANY(${ids})`,
+          eq(activityParticipantsTable.userId, userId),
+        ))
+    : [];
+
+  const countMap: Record<number, number> = {};
+  counts.forEach((c: any) => { countMap[c.activityId] = c.count; });
+  const joinedSet = new Set(joined.map((j: any) => j.activityId));
+
+  return rawActivities.map((a: any) => ({
+    ...a,
+    participantCount: countMap[a.id] ?? 0,
+    isJoined: joinedSet.has(a.id),
+  }));
+}
+
 router.get("/purposes/:purposeId/activities", async (req, res) => {
   try {
     const purposeId = Number(req.params.purposeId);
     if (isNaN(purposeId)) { res.status(400).json({ error: "Invalid purposeId" }); return; }
     const user = await getRequestUser(req.headers.authorization);
-    const activities = user?.isAdmin
+    const raw = user?.isAdmin
       ? await db.select().from(activitiesTable).where(eq(activitiesTable.purposeId, purposeId)).orderBy(activitiesTable.createdAt)
       : await db.select().from(activitiesTable).where(and(eq(activitiesTable.purposeId, purposeId), eq(activitiesTable.approved, true))).orderBy(activitiesTable.createdAt);
-    res.json(activities);
+    res.json(await enrichActivities(raw, user?.id));
   } catch (err) {
     req.log.error({ err }, "Failed to fetch activities");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Cross-purpose calendar feed — all approved activities with a scheduled date
+router.get("/activities", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    const raw = await db.select().from(activitiesTable)
+      .where(and(eq(activitiesTable.approved, true), isNotNull(activitiesTable.scheduledAt)))
+      .orderBy(activitiesTable.scheduledAt);
+    res.json(await enrichActivities(raw, user?.id));
+  } catch (err) {
+    req.log.error({ err }, "Failed to fetch calendar activities");
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -78,6 +126,47 @@ router.post("/purposes/:purposeId/activities", async (req, res) => {
     res.status(201).json(activity);
   } catch (err) {
     req.log.error({ err }, "Failed to create activity");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/purposes/:purposeId/activities/:id/join", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const [activity] = await db.select().from(activitiesTable).where(eq(activitiesTable.id, id));
+    if (!activity || !activity.approved) { res.status(404).json({ error: "Activity not found" }); return; }
+    const [countRow] = await db
+      .select({ count: sql<number>`cast(count(*) as int)` })
+      .from(activityParticipantsTable)
+      .where(eq(activityParticipantsTable.activityId, id));
+    const current = countRow?.count ?? 0;
+    if (activity.maxParticipants && current >= activity.maxParticipants) {
+      res.status(409).json({ error: "Activity is full" }); return;
+    }
+    await db.insert(activityParticipantsTable)
+      .values({ activityId: id, userId: user.id })
+      .onConflictDoNothing();
+    res.json({ joined: true, participantCount: current + 1 });
+  } catch (err) {
+    req.log.error({ err }, "Failed to join activity");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/purposes/:purposeId/activities/:id/join", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user) { res.status(401).json({ error: "Not authenticated" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    await db.delete(activityParticipantsTable)
+      .where(and(eq(activityParticipantsTable.activityId, id), eq(activityParticipantsTable.userId, user.id)));
+    res.json({ joined: false });
+  } catch (err) {
+    req.log.error({ err }, "Failed to leave activity");
     res.status(500).json({ error: "Internal server error" });
   }
 });

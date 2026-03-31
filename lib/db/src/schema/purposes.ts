@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, unique } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./users";
@@ -54,6 +54,13 @@ export const commentsTable = pgTable("comments", {
   content: text("content").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const activityParticipantsTable = pgTable("activity_participants", {
+  id: serial("id").primaryKey(),
+  activityId: integer("activity_id").notNull().references(() => activitiesTable.id, { onDelete: "cascade" }),
+  userId: integer("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+  joinedAt: timestamp("joined_at").notNull().defaultNow(),
+}, (t) => [unique().on(t.activityId, t.userId)]);
 
 export const insertActivitySchema = createInsertSchema(activitiesTable).omit({ id: true, createdAt: true, approved: true });
 export const insertMessageSchema = createInsertSchema(messagesTable).omit({ id: true, createdAt: true, approved: true });
