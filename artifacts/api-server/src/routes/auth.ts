@@ -120,6 +120,13 @@ router.post("/auth/login", async (req, res) => {
       return;
     }
 
+    const ADMIN_EMAILS = ["dosognethibaut@gmail.com"];
+    let isAdmin = user.isAdmin;
+    if (!isAdmin && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+      await db.update(usersTable).set({ isAdmin: true }).where(eq(usersTable.id, user.id));
+      isAdmin = true;
+    }
+
     const token = signToken(user.id);
     res.json({
       token,
@@ -131,7 +138,7 @@ router.post("/auth/login", async (req, res) => {
         community: user.community,
         deptRoles: JSON.parse(user.deptRoles || "[]"),
         photoDataUrl: user.photoDataUrl ?? null,
-        isAdmin: user.isAdmin,
+        isAdmin,
       },
     });
   } catch (err) {
