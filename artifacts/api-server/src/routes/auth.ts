@@ -44,7 +44,7 @@ router.post("/auth/register", async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(body.password, 12);
-    const ADMIN_EMAILS = ["dosognethibaut@gmail.com", "iskcon.7purposes@gmail.com"];
+    const ADMIN_EMAILS = ["iskcon.7purposes@gmail.com"];
 
     const [user] = await db.insert(usersTable).values({
       fullName: body.fullName,
@@ -120,11 +120,14 @@ router.post("/auth/login", async (req, res) => {
       return;
     }
 
-    const ADMIN_EMAILS = ["dosognethibaut@gmail.com", "iskcon.7purposes@gmail.com"];
+    const ADMIN_EMAILS = ["iskcon.7purposes@gmail.com"];
     let isAdmin = user.isAdmin;
     if (!isAdmin && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
       await db.update(usersTable).set({ isAdmin: true }).where(eq(usersTable.id, user.id));
       isAdmin = true;
+    } else if (isAdmin && !ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+      await db.update(usersTable).set({ isAdmin: false }).where(eq(usersTable.id, user.id));
+      isAdmin = false;
     }
 
     const token = signToken(user.id);

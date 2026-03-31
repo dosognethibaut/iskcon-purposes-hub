@@ -278,13 +278,12 @@ export default function Home() {
                     fontFamily: "'Lora', Georgia, serif",
                     fontWeight: 700,
                     fontSize: "0.95rem",
-                    color: active ? "hsl(26 68% 38%)" : "hsl(14 45% 42%)",
+                    color: "black",
                     lineHeight: 1,
                     marginBottom: "0.2rem",
-                    transition: "color 0.2s",
                   }}
                 >
-                  {p.id}
+                  {i + 1}
                 </span>
                 <img
                   src={p.logo}
