@@ -196,10 +196,10 @@ export default function Home() {
               className="block"
               style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
             >
-              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1rem, 3.5vw, 1.2rem)", color: "hsl(40 70% 94%)" }}>
+              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1.15rem, 4.5vw, 1.45rem)", color: "hsl(40 70% 94%)", textShadow: "0 0 14px rgba(0,0,0,1), 0 0 6px rgba(0,0,0,1), 0 0 2px rgba(0,0,0,1)" }}>
                 <span style={{ color: "hsl(26 68% 62%)" }}>"</span>{quotes[current].text}<span style={{ color: "hsl(26 68% 62%)" }}>"</span>
               </p>
-              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.72rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}>
+              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.82rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em", textShadow: "0 0 12px rgba(0,0,0,1), 0 0 5px rgba(0,0,0,1), 0 0 2px rgba(0,0,0,1)" }}>
                 {quotes[current].ref}
               </p>
             </a>
