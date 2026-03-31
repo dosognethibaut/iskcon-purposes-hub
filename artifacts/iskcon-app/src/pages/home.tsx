@@ -64,18 +64,47 @@ const quotes = [
 ];
 
 const purposes = [
-  { id: 4, title: "Accessing",     shortDescription: "Open the doors to spiritual knowledge for everyone.",        logo: logoAccessing },
-  { id: 5, title: "Learning",      shortDescription: "Deepen understanding through study and devotional hearing.", logo: logoLearning },
-  { id: 2, title: "Community",     shortDescription: "Build a loving spiritual family on the path together.",      logo: logoCommunity },
-  { id: 6, title: "Applying",      shortDescription: "Put spiritual principles into practice in daily life.",      logo: logoApplying },
-  { id: 3, title: "Holy Place",    shortDescription: "Create and maintain sacred spaces for transcendence.",      logo: logoHolyPlace },
-  { id: 1, title: "Simple Living", shortDescription: "Embrace a natural way of life rooted in spiritual values.", logo: logoSimpleLiving },
-  { id: 7, title: "Sharing",       shortDescription: "Spread Krishna consciousness with open hands and heart.",    logo: logoSharing },
+  {
+    id: 4, title: "Accessing", logo: logoAccessing,
+    shortDescription: "Open the doors to spiritual knowledge for everyone.",
+    officialText: "To systematically propagate spiritual knowledge to society at large and to educate all peoples in the techniques of spiritual life in order to check the imbalance of values in life and to achieve real unity and peace in the world.",
+  },
+  {
+    id: 5, title: "Learning", logo: logoLearning,
+    shortDescription: "Deepen understanding through study and devotional hearing.",
+    officialText: "To propagate a consciousness of Krishna as it is revealed in the Bhagavad-gita and Srimad-Bhagavatam.",
+  },
+  {
+    id: 2, title: "Community", logo: logoCommunity,
+    shortDescription: "Build a loving spiritual family on the path together.",
+    officialText: "To bring the members of the Society together with each other and nearer to Krishna, the prime entity, and thus to develop the idea within the members, and humanity at large, that each soul is part and parcel of the quality of Godhead (Krishna).",
+  },
+  {
+    id: 6, title: "Applying", logo: logoApplying,
+    shortDescription: "Put spiritual principles into practice in daily life.",
+    officialText: "To teach and encourage the sankirtan movement, congregational chanting of the holy names of God, as revealed in the teachings of Lord Sri Chaitanya Mahaprabhu.",
+  },
+  {
+    id: 3, title: "Holy Place", logo: logoHolyPlace,
+    shortDescription: "Create and maintain sacred spaces for transcendence.",
+    officialText: "To erect for the members and for society at large, a holy place of transcendental pastimes, dedicated to the personality of Krishna.",
+  },
+  {
+    id: 1, title: "Simple Living", logo: logoSimpleLiving,
+    shortDescription: "Embrace a natural way of life rooted in spiritual values.",
+    officialText: "To bring the members closer together for the purpose of teaching a simpler and more natural way of life.",
+  },
+  {
+    id: 7, title: "Sharing", logo: logoSharing,
+    shortDescription: "Spread Krishna consciousness with open hands and heart.",
+    officialText: "To, with a view towards achieving the aforementioned purposes, publish and distribute periodicals, magazines, books and other writings.",
+  },
 ];
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const [fading, setFading] = useState(false);
+  const [activePurpose, setActivePurpose] = useState<number | null>(null);
 
   const goTo = (index: number) => {
     setFading(true);
@@ -215,28 +244,107 @@ export default function Home() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════
-          WHAT — 7 Purposes list, revealed on scroll
+          WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
       <div className="pb-20">
-        {/* Subtle spacer */}
         <div className="pt-8" />
 
-        <div className="max-w-lg mx-auto px-5">
-          <ul className="divide-y divide-border/50">
-            {purposes.map((purpose) => (
-              <li key={purpose.id}>
-                <Link href={`/purpose/${purpose.id}`} className="flex items-center gap-4 py-4 group focus:outline-none">
-                  <img src={purpose.logo} alt={purpose.title} className="shrink-0 object-contain" style={{ width: 60, height: 60 }} />
-                  <div className="flex-1 min-w-0">
-                    <h2 className="font-serif text-xl font-semibold text-foreground leading-tight">{purpose.title}</h2>
-                    <p className="text-muted-foreground text-sm leading-snug mt-0.5 font-sans line-clamp-1">{purpose.shortDescription}</p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "hsl(26 68% 42% / 0.6)" }} />
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {/* Logo strip */}
+        <div className="flex justify-between items-end px-4 gap-1">
+          {purposes.map((p, i) => {
+            const active = activePurpose === i;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActivePurpose(active ? null : i)}
+                className="flex flex-col items-center gap-1 flex-1 focus:outline-none"
+                style={{ opacity: activePurpose !== null && !active ? 0.4 : 1, transition: "opacity 0.2s" }}
+              >
+                <img
+                  src={p.logo}
+                  alt={p.title}
+                  style={{
+                    width: "100%",
+                    maxWidth: 52,
+                    height: "auto",
+                    aspectRatio: "1",
+                    objectFit: "contain",
+                    transform: active ? "scale(1.15)" : "scale(1)",
+                    transition: "transform 0.2s",
+                  }}
+                />
+                <span
+                  className="font-sans text-center leading-tight"
+                  style={{
+                    fontSize: "0.5rem",
+                    color: active ? "hsl(14 72% 18%)" : "hsl(14 40% 50%)",
+                    fontWeight: active ? 700 : 400,
+                  }}
+                >
+                  {p.title}
+                </span>
+              </button>
+            );
+          })}
         </div>
+
+        {/* Active indicator bar */}
+        <div className="flex px-4 gap-1 mt-1">
+          {purposes.map((_, i) => (
+            <div
+              key={i}
+              className="flex-1 rounded-full transition-all"
+              style={{
+                height: 2,
+                background: activePurpose === i ? "hsl(26 68% 42%)" : "transparent",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Parchment panel */}
+        {activePurpose !== null && (
+          <div
+            className="mx-0 mt-4 relative"
+            style={{
+              background: "hsl(40 35% 88%)",
+              borderTop: "1px solid hsl(14 25% 72%)",
+              borderBottom: "1px solid hsl(14 25% 72%)",
+            }}
+          >
+            {/* Opening quote */}
+            <span
+              className="absolute font-serif font-bold select-none"
+              style={{ top: 10, left: 16, fontSize: "4rem", lineHeight: 1, color: "hsl(14 30% 58% / 0.45)" }}
+            >
+              "
+            </span>
+            {/* Closing quote */}
+            <span
+              className="absolute font-serif font-bold select-none"
+              style={{ bottom: -4, right: 16, fontSize: "4rem", lineHeight: 1, color: "hsl(14 30% 58% / 0.45)" }}
+            >
+              "
+            </span>
+
+            <div className="px-10 py-8 text-center">
+              <p
+                className="font-serif font-bold leading-relaxed"
+                style={{ fontSize: "1rem", color: "hsl(14 52% 18%)" }}
+              >
+                {purposes[activePurpose].officialText}
+              </p>
+              <Link
+                href={`/purpose/${purposes[activePurpose].id}`}
+                className="inline-flex items-center gap-1 mt-5 font-sans font-semibold text-xs"
+                style={{ color: "hsl(26 68% 42%)" }}
+              >
+                Explore {purposes[activePurpose].title} <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="mt-8 px-6 max-w-lg mx-auto text-center">
           <p className="font-serif text-foreground/40 text-sm italic">"Big fruits only grow from strong roots"</p>
