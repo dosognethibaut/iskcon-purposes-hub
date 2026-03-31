@@ -8,7 +8,7 @@ import {
   getGetActivitiesQueryKey,
   getGetMessagesQueryKey,
 } from "@workspace/api-client-react";
-import { ArrowLeft, MessageCircle, CalendarDays, Loader2, Leaf, Users, Building2, Globe, BookOpen, Lightbulb, Share2 } from "lucide-react";
+import { ArrowLeft, MessageCircle, CalendarDays, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,20 +20,32 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import type { LucideIcon } from "lucide-react";
+import logoAccessing    from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
+import logoLearning     from "@assets/7p_LogoNoTitle_Learning_1774931916883.png";
+import logoApplying     from "@assets/7p_LogoNoTitle_Applying_1774931916883.png";
+import logoCommunity    from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
+import logoHolyPlace    from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
+import logoSharing      from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
+import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
 
-const iconMap: Record<string, LucideIcon> = {
-  Leaf, Users, Building2, Globe, BookOpen, Lightbulb, Share2,
+const logoByTitle: Record<string, string> = {
+  "Accessing":     logoAccessing,
+  "Learning":      logoLearning,
+  "Community":     logoCommunity,
+  "Applying":      logoApplying,
+  "Holy Place":    logoHolyPlace,
+  "Simple Living": logoSimpleLiving,
+  "Sharing":       logoSharing,
 };
 
-const iconBgMap: Record<string, string> = {
-  Leaf: "bg-emerald-600",
-  Users: "bg-blue-700",
-  Building2: "bg-stone-600",
-  Globe: "bg-amber-700",
-  BookOpen: "bg-amber-800",
-  Lightbulb: "bg-orange-700",
-  Share2: "bg-red-800",
+const accentByTitle: Record<string, string> = {
+  "Accessing":     "hsl(200 65% 38%)",
+  "Learning":      "hsl(35 70% 40%)",
+  "Community":     "hsl(220 52% 42%)",
+  "Applying":      "hsl(26 68% 42%)",
+  "Holy Place":    "hsl(160 45% 35%)",
+  "Simple Living": "hsl(90 42% 36%)",
+  "Sharing":       "hsl(14 65% 38%)",
 };
 
 const activitySchema = z.object({
@@ -101,7 +113,7 @@ export default function PurposeDetail() {
 
   if (isLoadingPurpose) {
     return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-background relative z-10">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <p className="text-muted-foreground font-serif italic animate-pulse">Loading...</p>
@@ -112,93 +124,120 @@ export default function PurposeDetail() {
 
   if (!purpose) {
     return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-6 text-center relative z-10">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-6 text-center">
         <h2 className="font-serif text-2xl mb-4 text-foreground">Purpose not found</h2>
-        <Link href="/" className="text-primary font-medium hover:underline flex items-center justify-center gap-2">
+        <Link href="/" className="text-primary font-medium hover:underline flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Return Home
         </Link>
       </div>
     );
   }
 
-  const IconComp = iconMap[purpose.icon] ?? BookOpen;
-  const iconBg = iconBgMap[purpose.icon] ?? "bg-amber-700";
+  const logo = logoByTitle[purpose.title];
+  const accent = accentByTitle[purpose.title] ?? "hsl(26 68% 42%)";
 
   return (
-    <div className="min-h-[100dvh] bg-background pb-20 overflow-x-hidden relative z-10">
+    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(38 52% 86%)" }}>
 
-      {/* Header */}
-      <div className="bg-card/80 border-b border-border/60 px-5 pt-10 pb-8 relative shadow-sm">
+      {/* Header — parchment gradient matching home */}
+      <div
+        className="relative px-5 pt-10 pb-8"
+        style={{
+          background: "linear-gradient(160deg, hsl(38 52% 82%) 0%, hsl(36 48% 78%) 100%)",
+          borderBottom: "1px solid hsl(14 30% 60% / 0.25)",
+        }}
+      >
+        {/* Back button */}
         <Link
           href="/"
           data-testid="back-button"
-          className="absolute top-8 left-4 w-10 h-10 flex items-center justify-center rounded-full bg-background/80 border border-border/60 text-foreground shadow-sm hover:scale-105 transition-transform"
+          className="inline-flex items-center gap-1.5 text-sm font-sans mb-6 opacity-60 hover:opacity-100 transition-opacity"
+          style={{ color: "hsl(14 72% 18%)" }}
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4" /> Back
         </Link>
 
-        <div className="max-w-lg mx-auto mt-8 text-center animate-in slide-in-from-bottom-3 fade-in duration-500">
-          {/* Icon circle */}
-          <div className={`${iconBg} w-20 h-20 rounded-full flex items-center justify-center text-white mx-auto mb-5 shadow-md ring-4 ring-white/30`}>
-            <IconComp className="w-10 h-10" />
+        <div className="max-w-lg mx-auto flex items-center gap-5">
+          {/* Logo */}
+          {logo && (
+            <div
+              className="shrink-0 rounded-2xl flex items-center justify-center p-2"
+              style={{ background: "hsl(40 50% 92%)", boxShadow: "0 2px 12px hsl(14 40% 30% / 0.15)", width: 76, height: 76 }}
+            >
+              <img src={logo} alt={purpose.title} style={{ width: 56, height: 56, objectFit: "contain" }} />
+            </div>
+          )}
+
+          <div className="flex-1 min-w-0">
+            {/* Purpose number badge */}
+            <div
+              className="inline-block px-3 py-0.5 rounded-full font-sans text-xs font-bold tracking-widest uppercase mb-2"
+              style={{ background: accent, color: "hsl(40 80% 96%)" }}
+            >
+              Purpose {purpose.number}
+            </div>
+            <h1
+              className="font-serif font-bold leading-tight"
+              style={{ fontSize: "clamp(1.5rem, 6vw, 2.2rem)", color: "hsl(14 72% 16%)" }}
+            >
+              {purpose.title}
+            </h1>
           </div>
-
-          {/* Orange badge / ribbon matching graphic charter */}
-          <div className="inline-block bg-primary px-5 py-1.5 rounded-full mb-3 shadow-sm">
-            <span className="text-primary-foreground font-serif italic text-sm font-semibold tracking-wide">
-              Purpose {purpose.number} &mdash; {purpose.title}
-            </span>
-          </div>
-
-          <h1 className="font-serif text-4xl font-bold text-foreground leading-tight mb-4 px-2">
-            {purpose.title}
-          </h1>
-
-          <p className="text-foreground/70 text-base leading-relaxed px-2 font-sans max-w-sm mx-auto">
-            {purpose.fullDescription}
-          </p>
         </div>
+
+        {/* Description */}
+        <p
+          className="font-sans leading-relaxed mt-4 max-w-lg mx-auto"
+          style={{ color: "hsl(14 50% 30%)", fontSize: "0.92rem" }}
+        >
+          {purpose.fullDescription}
+        </p>
       </div>
 
       {/* Divider */}
       <div className="max-w-lg mx-auto px-5">
         <div className="flex items-center gap-3 py-5">
-          <div className="flex-1 h-px bg-border/60" />
-          <span className="text-muted-foreground text-xs font-sans uppercase tracking-widest">Community</span>
-          <div className="flex-1 h-px bg-border/60" />
+          <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
+          <span className="font-sans text-xs uppercase tracking-widest" style={{ color: "hsl(14 40% 50%)" }}>Community</span>
+          <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 
         <Tabs defaultValue="activities" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 h-14 bg-card/60 border border-border/50 rounded-2xl shadow-sm p-1.5 mb-6">
+          <TabsList
+            className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
+            style={{ background: "hsl(38 40% 80%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}
+          >
             <TabsTrigger
               value="activities"
-              className="rounded-xl font-semibold font-sans data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all text-sm"
+              className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm"
+              style={{ color: "hsl(14 55% 30%)" }}
             >
-              <CalendarDays className="w-4 h-4 mr-2" />
+              <CalendarDays className="w-4 h-4 mr-1.5" />
               Activities
             </TabsTrigger>
             <TabsTrigger
               value="messages"
-              className="rounded-xl font-semibold font-sans data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all text-sm"
+              className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm"
+              style={{ color: "hsl(14 55% 30%)" }}
             >
-              <MessageCircle className="w-4 h-4 mr-2" />
+              <MessageCircle className="w-4 h-4 mr-1.5" />
               Messages
             </TabsTrigger>
           </TabsList>
 
           {/* ACTIVITIES TAB */}
-          <TabsContent value="activities" className="space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-400">
+          <TabsContent value="activities" className="space-y-6">
 
             <div className="space-y-3">
-              <h2 className="font-serif text-2xl font-bold text-foreground">Proposed Activities</h2>
+              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(14 72% 18%)" }}>Proposed Activities</h2>
               {isLoadingActivities ? (
                 <div className="flex justify-center p-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-primary/60" />
+                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} />
                 </div>
               ) : !activities?.length ? (
-                <div className="bg-card/60 rounded-2xl p-8 text-center border border-dashed border-border/60">
-                  <CalendarDays className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm font-sans">No activities proposed yet. Be the first!</p>
+                <div className="rounded-2xl p-8 text-center border border-dashed" style={{ background: "hsl(40 40% 90% / 0.5)", borderColor: "hsl(14 30% 60% / 0.3)" }}>
+                  <CalendarDays className="w-8 h-8 mx-auto mb-3" style={{ color: "hsl(14 30% 60% / 0.5)" }} />
+                  <p className="font-sans text-sm" style={{ color: "hsl(14 40% 48%)" }}>No activities proposed yet. Be the first!</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -206,13 +245,13 @@ export default function PurposeDetail() {
                     <div
                       key={activity.id}
                       data-testid={`activity-card-${activity.id}`}
-                      className="bg-card rounded-2xl p-5 shadow-sm border border-border/60 animate-in fade-in slide-in-from-bottom-2"
-                      style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
+                      className="rounded-2xl p-5 shadow-sm animate-in fade-in slide-in-from-bottom-2"
+                      style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
                     >
-                      <h3 className="font-serif text-lg font-bold text-foreground mb-1.5">{activity.title}</h3>
-                      <p className="text-foreground/70 text-sm leading-relaxed font-sans mb-4">{activity.description}</p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground font-sans pt-3 border-t border-border/40">
-                        <span className="font-semibold text-foreground/80">By {activity.authorName}</span>
+                      <h3 className="font-serif text-lg font-bold mb-1.5" style={{ color: "hsl(14 72% 18%)" }}>{activity.title}</h3>
+                      <p className="font-sans text-sm leading-relaxed mb-4" style={{ color: "hsl(14 50% 35%)" }}>{activity.description}</p>
+                      <div className="flex justify-between items-center text-xs pt-3" style={{ borderTop: "1px solid hsl(14 30% 60% / 0.2)", color: "hsl(14 40% 50%)" }}>
+                        <span className="font-semibold" style={{ color: "hsl(14 60% 28%)" }}>By {activity.authorName}</span>
                         <span>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                       </div>
                     </div>
@@ -222,11 +261,11 @@ export default function PurposeDetail() {
             </div>
 
             {/* Activity form */}
-            <div className="bg-card rounded-2xl p-5 shadow border border-primary/20 relative overflow-hidden">
-              <div className="absolute inset-x-0 top-0 h-1 bg-primary rounded-t-2xl" />
+            <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}40` }}>
+              <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-serif text-lg font-bold text-foreground">Propose an Activity</h3>
-                <span className="bg-primary/15 text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans">Admin</span>
+                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
+                <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans" style={{ background: `${accent}22`, color: accent }}>Admin</span>
               </div>
               <Form {...activityForm}>
                 <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-4">
@@ -235,14 +274,9 @@ export default function PurposeDetail() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80 font-sans text-sm">Activity Title</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Activity Title</FormLabel>
                         <FormControl>
-                          <Input
-                            data-testid="input-activity-title"
-                            placeholder="E.g., Sunday Feast Program"
-                            className="bg-background/60 h-11 rounded-xl border-border/70 font-sans"
-                            {...field}
-                          />
+                          <Input data-testid="input-activity-title" placeholder="E.g., Sunday Feast Program" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -253,14 +287,9 @@ export default function PurposeDetail() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80 font-sans text-sm">Description</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Description</FormLabel>
                         <FormControl>
-                          <Textarea
-                            data-testid="input-activity-description"
-                            placeholder="What will happen during this activity?"
-                            className="resize-none bg-background/60 min-h-[90px] rounded-xl border-border/70 font-sans"
-                            {...field}
-                          />
+                          <Textarea data-testid="input-activity-description" placeholder="What will happen during this activity?" className="resize-none min-h-[90px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -271,25 +300,15 @@ export default function PurposeDetail() {
                     name="authorName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80 font-sans text-sm">Your Name</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Name</FormLabel>
                         <FormControl>
-                          <Input
-                            data-testid="input-activity-author"
-                            placeholder="Enter your name"
-                            className="bg-background/60 h-11 rounded-xl border-border/70 font-sans"
-                            {...field}
-                          />
+                          <Input data-testid="input-activity-author" placeholder="Enter your name" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type="submit"
-                    data-testid="button-submit-activity"
-                    className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm active:scale-[0.98] transition-transform"
-                    disabled={createActivity.isPending}
-                  >
+                  <Button type="submit" data-testid="button-submit-activity" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
                     {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     Propose Activity
                   </Button>
@@ -299,18 +318,18 @@ export default function PurposeDetail() {
           </TabsContent>
 
           {/* MESSAGES TAB */}
-          <TabsContent value="messages" className="space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-400">
+          <TabsContent value="messages" className="space-y-6">
 
             <div className="space-y-3">
-              <h2 className="font-serif text-2xl font-bold text-foreground">Community Messages</h2>
+              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(14 72% 18%)" }}>Community Messages</h2>
               {isLoadingMessages ? (
                 <div className="flex justify-center p-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-primary/60" />
+                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} />
                 </div>
               ) : !messages?.length ? (
-                <div className="bg-card/60 rounded-2xl p-8 text-center border border-dashed border-border/60">
-                  <MessageCircle className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm font-sans">No messages yet. Share your reflections!</p>
+                <div className="rounded-2xl p-8 text-center border border-dashed" style={{ background: "hsl(40 40% 90% / 0.5)", borderColor: "hsl(14 30% 60% / 0.3)" }}>
+                  <MessageCircle className="w-8 h-8 mx-auto mb-3" style={{ color: "hsl(14 30% 60% / 0.5)" }} />
+                  <p className="font-sans text-sm" style={{ color: "hsl(14 40% 48%)" }}>No messages yet. Share your reflections!</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -318,14 +337,14 @@ export default function PurposeDetail() {
                     <div
                       key={message.id}
                       data-testid={`message-card-${message.id}`}
-                      className="bg-card rounded-2xl p-5 shadow-sm border border-border/60 animate-in fade-in slide-in-from-bottom-2"
-                      style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
+                      className="rounded-2xl p-5 shadow-sm animate-in fade-in slide-in-from-bottom-2"
+                      style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
                     >
-                      <p className="text-foreground/90 text-base leading-relaxed font-serif italic mb-4">
+                      <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: "hsl(14 65% 22%)" }}>
                         "{message.content}"
                       </p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground font-sans">
-                        <span className="text-primary font-bold">— {message.authorName}</span>
+                      <div className="flex justify-between items-center text-xs" style={{ color: "hsl(14 40% 50%)" }}>
+                        <span className="font-bold" style={{ color: accent }}>— {message.authorName}</span>
                         <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                       </div>
                     </div>
@@ -335,11 +354,11 @@ export default function PurposeDetail() {
             </div>
 
             {/* Message form */}
-            <div className="bg-card rounded-2xl p-5 shadow border border-foreground/10 relative overflow-hidden">
-              <div className="absolute inset-x-0 top-0 h-1 bg-foreground/20 rounded-t-2xl" />
+            <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.25)" }}>
+              <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: "hsl(14 45% 40%)" }} />
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-serif text-lg font-bold text-foreground">Share a Message</h3>
-                <span className="bg-foreground/10 text-foreground/70 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans">Member</span>
+                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
+                <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans" style={{ background: "hsl(14 30% 60% / 0.15)", color: "hsl(14 55% 32%)" }}>Member</span>
               </div>
               <Form {...messageForm}>
                 <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
@@ -348,14 +367,9 @@ export default function PurposeDetail() {
                     name="content"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80 font-sans text-sm">Your Message</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Message</FormLabel>
                         <FormControl>
-                          <Textarea
-                            data-testid="input-message-content"
-                            placeholder="Share your realizations or thoughts..."
-                            className="resize-none bg-background/60 min-h-[110px] rounded-xl border-border/70 font-sans"
-                            {...field}
-                          />
+                          <Textarea data-testid="input-message-content" placeholder="Share your realizations or thoughts..." className="resize-none min-h-[110px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -366,26 +380,15 @@ export default function PurposeDetail() {
                     name="authorName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground/80 font-sans text-sm">Your Name</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Name</FormLabel>
                         <FormControl>
-                          <Input
-                            data-testid="input-message-author"
-                            placeholder="Enter your name"
-                            className="bg-background/60 h-11 rounded-xl border-border/70 font-sans"
-                            {...field}
-                          />
+                          <Input data-testid="input-message-author" placeholder="Enter your name" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type="submit"
-                    data-testid="button-submit-message"
-                    variant="outline"
-                    className="w-full h-11 rounded-xl font-bold font-sans tracking-wide active:scale-[0.98] transition-transform border-foreground/20 text-foreground hover:bg-foreground/5"
-                    disabled={createMessage.isPending}
-                  >
+                  <Button type="submit" variant="outline" data-testid="button-submit-message" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide" disabled={createMessage.isPending} style={{ borderColor: "hsl(14 30% 55% / 0.4)", color: "hsl(14 60% 28%)" }}>
                     {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     Post Message
                   </Button>

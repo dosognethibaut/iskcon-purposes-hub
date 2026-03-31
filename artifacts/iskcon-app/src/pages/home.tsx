@@ -138,11 +138,20 @@ export default function Home() {
             <h1 className="font-serif font-bold leading-tight" style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}>
               The 7 Purposes<br />of ISKCON
             </h1>
-            <div
-              className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-              style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)" }}
-            >
-              &amp; Community Building
+            <div className="flex items-center gap-3 mt-2 flex-wrap">
+              <div
+                className="inline-block px-4 py-1 rounded-full font-serif italic font-semibold"
+                style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)" }}
+              >
+                &amp; Community Building
+              </div>
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full font-serif italic font-semibold"
+                style={{ background: "hsl(14 60% 22%)", color: "hsl(40 80% 92%)", fontSize: "clamp(0.75rem, 2.5vw, 0.9rem)", border: "1px solid hsl(40 60% 70% / 0.3)" }}
+              >
+                <UserCircle className="w-3.5 h-3.5" /> You
+              </Link>
             </div>
           </div>
 
@@ -189,9 +198,6 @@ export default function Home() {
             </Link>
             <Link href="/when" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Clock className="w-4 h-4" /> When?
-            </Link>
-            <Link href="/register" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
-              <UserCircle className="w-4 h-4" /> You
             </Link>
           </div>
 
