@@ -1,154 +1,221 @@
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { ChevronRight, HelpCircle, Clock } from "lucide-react";
+import { BookOpen, HelpCircle, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
-import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774930486395.png";
-import logoCommunity from "@assets/7p_Community3.png_1774930486395.png";
-import logoHolyPlace from "@assets/7p_HolyPlace3_1774930486395.png";
-import logoAccessing from "@assets/7p_Accessing3_1774930527997.png";
-import logoLearning from "@assets/7p_Learning3_1774930527997.png";
-import logoApplying from "@assets/7p_Applying3_1774930527997.png";
-import logoSharing from "@assets/7p_Sharing3_1774930527996.png";
 
-const purposes = [
-  { id: 1, title: "Accessing",    shortDescription: "Open the doors to spiritual knowledge for everyone.",          logo: logoAccessing },
-  { id: 2, title: "Learning",     shortDescription: "Deepen understanding through study and devotional hearing.",   logo: logoLearning },
-  { id: 3, title: "Community",    shortDescription: "Build a loving spiritual family on the path together.",       logo: logoCommunity },
-  { id: 4, title: "Applying",     shortDescription: "Put spiritual principles into practice in daily life.",       logo: logoApplying },
-  { id: 5, title: "Holy Place",   shortDescription: "Create and maintain sacred spaces for transcendence.",       logo: logoHolyPlace },
-  { id: 6, title: "Simple Living",shortDescription: "Embrace a natural way of life rooted in spiritual values.",  logo: logoSimpleLiving },
-  { id: 7, title: "Sharing",      shortDescription: "Spread Krishna consciousness with open hands and heart.",     logo: logoSharing },
+const quotes = [
+  {
+    text: "The Krishna consciousness movement is meant to teach people how to love God. This is the sum and substance of all our purposes.",
+    context: "On the essence of ISKCON's mission",
+  },
+  {
+    text: "Simple living and high thinking is the solution to economic problems. We do not need to work so hard. We only need to produce food and live peacefully.",
+    context: "On Simple Living",
+  },
+  {
+    text: "We want to create a community of devotees who live together, work together, and worship together. This is the ideal of Krishna consciousness.",
+    context: "On Community",
+  },
+  {
+    text: "Every town and every village should have a temple where people can come to learn the science of God. This is our mission — to create holy places all over the world.",
+    context: "On Holy Place",
+  },
+  {
+    text: "We are distributing this knowledge freely. Anyone who reads our books, who hears our philosophy, will be benefited. This is our purpose — accessing the truth.",
+    context: "On Accessing",
+  },
+  {
+    text: "You must learn the Bhagavad-gītā thoroughly. This is not ordinary knowledge — it is transcendental knowledge that liberates the soul.",
+    context: "On Learning",
+  },
+  {
+    text: "Whatever you do, do it for Krishna. Eat for Krishna, sleep for Krishna, work for Krishna. When everything is applied in Krishna's service, that is perfection.",
+    context: "On Applying",
+  },
+  {
+    text: "Go and preach. Give this knowledge to others. The greatest act of compassion is to share Krishna consciousness with those who are suffering in ignorance.",
+    context: "On Sharing",
+  },
 ];
 
 export default function Home() {
+  const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  const goTo = (index: number) => {
+    setFading(true);
+    setTimeout(() => {
+      setCurrent((index + quotes.length) % quotes.length);
+      setFading(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => goTo(current + 1), 6000);
+    return () => clearInterval(timer);
+  }, [current]);
+
   return (
-    <div className="min-h-[100dvh] bg-background pb-20">
+    <div className="min-h-[100dvh] flex flex-col overflow-hidden" style={{ background: "hsl(14 35% 12%)" }}>
 
-      {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div className="relative w-full overflow-hidden" style={{ minHeight: 300 }}>
-
-        {/* Photo — full bleed background */}
+      {/* ── FULL-SCREEN PHOTO BACKGROUND ─────────────────────────── */}
+      <div className="absolute inset-0">
         <img
           src={prabhupadaPhoto}
           alt="Srila Prabhupada"
           style={{
-            position: "absolute",
-            inset: 0,
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            objectPosition: "72% 12%",
+            objectPosition: "60% 8%",
           }}
         />
-
-        {/* Gradient overlays — parchment bleeds in from left and bottom, never a hard edge */}
+        {/* Subtle dark vignette — preserves photo visibility */}
         <div
           className="absolute inset-0"
           style={{
             background: [
-              "linear-gradient(to right,  hsl(40 56% 83% / 1) 0%, hsl(40 56% 83% / 0.92) 38%, hsl(40 56% 83% / 0.45) 65%, hsl(40 56% 83% / 0) 100%)",
-              "linear-gradient(to bottom, hsl(40 56% 83% / 0.3) 0%, transparent 30%, transparent 60%, hsl(40 56% 83% / 0.7) 100%)",
+              "linear-gradient(to bottom, hsl(14 35% 10% / 0.55) 0%, transparent 35%, transparent 50%, hsl(14 35% 10% / 0.85) 100%)",
+              "linear-gradient(to right, hsl(14 35% 10% / 0.2) 0%, transparent 50%)",
             ].join(", "),
           }}
         />
+      </div>
 
-        {/* Text content — sits on top */}
-        <div className="relative z-10 px-6 pt-10 pb-8" style={{ maxWidth: "68%" }}>
+      {/* ── CONTENT ──────────────────────────────────────────────── */}
+      <div className="relative z-10 flex flex-col min-h-[100dvh]">
+
+        {/* Top title */}
+        <div className="px-6 pt-10">
           <h1
             className="font-serif font-bold leading-tight"
-            style={{ fontSize: "clamp(1.5rem, 5.5vw, 2.6rem)", color: "hsl(14 72% 18%)" }}
+            style={{ fontSize: "clamp(1.6rem, 6vw, 2.8rem)", color: "hsl(40 80% 94%)" }}
           >
             The 7 Purposes<br />of ISKCON
           </h1>
-
           <div
-            className="inline-block mt-3 px-4 py-1.5 rounded-full font-serif italic font-semibold"
+            className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
             style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "clamp(0.75rem, 2.5vw, 0.95rem)" }}
           >
             &amp; Community Building
           </div>
+        </div>
 
-          <p
-            className="font-sans mt-3 leading-snug"
-            style={{ color: "hsl(14 55% 28%)", fontSize: "clamp(0.7rem, 2vw, 0.82rem)" }}
+        {/* Spacer to push quote to lower half */}
+        <div className="flex-1" />
+
+        {/* Quote carousel */}
+        <div className="px-6 pb-2">
+          <div
+            style={{
+              opacity: fading ? 0 : 1,
+              transform: fading ? "translateY(6px)" : "translateY(0)",
+              transition: "opacity 0.3s ease, transform 0.3s ease",
+            }}
           >
-            Applying ISKCON's purposes<br />in daily life &amp; community
-          </p>
+            {/* Quote mark */}
+            <div
+              className="font-serif font-bold mb-2 leading-none"
+              style={{ fontSize: "3.5rem", color: "hsl(26 68% 52% / 0.7)", lineHeight: 1 }}
+            >
+              "
+            </div>
 
-          {/* Why? / When? buttons */}
-          <div className="flex gap-2 mt-4 flex-wrap">
-            <Link
-              href="/why"
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
-              style={{
-                borderColor: "hsl(14 72% 18% / 0.3)",
-                color: "hsl(14 72% 18%)",
-                background: "hsl(40 58% 88% / 0.65)",
-                fontSize: "0.82rem",
-              }}
+            <p
+              className="font-serif italic leading-relaxed"
+              style={{ fontSize: "clamp(1rem, 3.5vw, 1.25rem)", color: "hsl(40 70% 94%)" }}
             >
-              <HelpCircle className="w-3.5 h-3.5" />
-              Why?
-            </Link>
-            <Link
-              href="/when"
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-sans font-semibold border transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
-              style={{
-                borderColor: "hsl(14 72% 18% / 0.3)",
-                color: "hsl(14 72% 18%)",
-                background: "hsl(40 58% 88% / 0.65)",
-                fontSize: "0.82rem",
-              }}
+              {quotes[current].text}
+            </p>
+
+            <p
+              className="font-sans mt-3"
+              style={{ fontSize: "0.78rem", color: "hsl(26 60% 70%)", letterSpacing: "0.04em" }}
             >
-              <Clock className="w-3.5 h-3.5" />
-              When?
-            </Link>
+              — Srila Prabhupada · {quotes[current].context}
+            </p>
+          </div>
+
+          {/* Dot / arrow navigation */}
+          <div className="flex items-center gap-3 mt-5">
+            <button
+              onClick={() => goTo(current - 1)}
+              className="rounded-full p-1.5 transition-colors"
+              style={{ background: "hsl(40 70% 94% / 0.12)" }}
+              aria-label="Previous quote"
+            >
+              <ChevronLeft className="w-4 h-4" style={{ color: "hsl(40 70% 90%)" }} />
+            </button>
+
+            <div className="flex gap-1.5 flex-1 justify-center">
+              {quotes.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className="rounded-full transition-all"
+                  style={{
+                    width: i === current ? 20 : 7,
+                    height: 7,
+                    background: i === current ? "hsl(26 68% 52%)" : "hsl(40 70% 94% / 0.35)",
+                  }}
+                  aria-label={`Quote ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={() => goTo(current + 1)}
+              className="rounded-full p-1.5 transition-colors"
+              style={{ background: "hsl(40 70% 94% / 0.12)" }}
+              aria-label="Next quote"
+            >
+              <ChevronRight className="w-4 h-4" style={{ color: "hsl(40 70% 90%)" }} />
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* ── PURPOSE LIST ─────────────────────────────────────────── */}
-      <div className="max-w-lg mx-auto px-5 mt-6">
-        <ul className="divide-y divide-border/50">
-          {purposes.map((purpose) => (
-            <li key={purpose.id}>
-              <Link
-                href={`/purpose/${purpose.id}`}
-                className="flex items-center gap-4 py-3.5 group focus:outline-none"
-              >
-                {/* Logo */}
-                <img
-                  src={purpose.logo}
-                  alt={purpose.title}
-                  className="w-12 h-12 rounded-full shrink-0 object-cover"
-                  style={{ boxShadow: "0 1px 4px hsl(14 72% 18% / 0.12)" }}
-                />
-
-                {/* Text */}
-                <div className="flex-1 min-w-0">
-                  <h2 className="font-serif text-lg font-semibold text-foreground leading-tight">
-                    {purpose.title}
-                  </h2>
-                  <p className="text-muted-foreground text-sm leading-snug mt-0.5 font-sans line-clamp-1">
-                    {purpose.shortDescription}
-                  </p>
-                </div>
-
-                {/* Arrow */}
-                <ChevronRight
-                  className="w-5 h-5 shrink-0 transition-transform group-hover:translate-x-0.5"
-                  style={{ color: "hsl(26 68% 42% / 0.6)" }}
-                />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Footer quote */}
-      <div className="mt-8 px-6 max-w-lg mx-auto text-center">
-        <p className="font-serif text-foreground/40 text-sm italic">
-          "Big fruits only grow from strong roots"
-        </p>
+        {/* Bottom buttons */}
+        <div className="px-6 pt-5 pb-10 flex gap-2 flex-wrap">
+          <Link
+            href="/purposes"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border transition-colors focus:outline-none"
+            style={{
+              borderColor: "hsl(40 70% 90% / 0.4)",
+              color: "hsl(40 80% 96%)",
+              background: "hsl(40 70% 94% / 0.12)",
+              fontSize: "0.85rem",
+            }}
+          >
+            <BookOpen className="w-4 h-4" />
+            What?
+          </Link>
+          <Link
+            href="/why"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border transition-colors focus:outline-none"
+            style={{
+              borderColor: "hsl(40 70% 90% / 0.4)",
+              color: "hsl(40 80% 96%)",
+              background: "hsl(40 70% 94% / 0.12)",
+              fontSize: "0.85rem",
+            }}
+          >
+            <HelpCircle className="w-4 h-4" />
+            Why?
+          </Link>
+          <Link
+            href="/when"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border transition-colors focus:outline-none"
+            style={{
+              borderColor: "hsl(40 70% 90% / 0.4)",
+              color: "hsl(40 80% 96%)",
+              background: "hsl(40 70% 94% / 0.12)",
+              fontSize: "0.85rem",
+            }}
+          >
+            <Clock className="w-4 h-4" />
+            When?
+          </Link>
+        </div>
       </div>
     </div>
   );
