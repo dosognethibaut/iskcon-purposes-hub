@@ -294,14 +294,11 @@ export default function Home() {
       </div>
 
       {/* Bottom quote banner */}
-      <div
-        className="w-full px-6 pt-4 pb-20 text-center"
-        style={{ background: "hsl(26 68% 42%)" }}
-      >
-        <p className="font-serif italic leading-relaxed" style={{ fontSize: "1rem", color: "hsl(40 80% 96%)" }}>
+      <div className="w-full px-6 pt-4 pb-20 text-center">
+        <p className="font-serif italic leading-relaxed" style={{ fontSize: "1rem", color: "hsl(14 52% 28%)" }}>
           "Your love for me will be shown by how much you cooperate with each other after I am gone."
         </p>
-        <p className="font-sans mt-2 text-xs tracking-wide" style={{ color: "hsl(40 70% 84%)" }}>
+        <p className="font-sans mt-2 text-xs tracking-wide" style={{ color: "hsl(14 35% 50%)" }}>
           Srila Prabhupada · 1977
         </p>
       </div>
