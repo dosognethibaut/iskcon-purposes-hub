@@ -96,6 +96,39 @@ router.patch("/purposes/:purposeId/activities/:id/approve", async (req, res) => 
   }
 });
 
+router.patch("/purposes/:purposeId/activities/:id/complete", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const body = z.object({ completedPhotoDataUrl: z.string().optional() }).parse(req.body);
+    const [updated] = await db.update(activitiesTable)
+      .set({ completedAt: new Date(), completedPhotoDataUrl: body.completedPhotoDataUrl ?? null })
+      .where(eq(activitiesTable.id, id)).returning();
+    res.json(updated);
+  } catch (err) {
+    req.log.error({ err }, "Failed to complete activity");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.patch("/purposes/:purposeId/activities/:id/uncomplete", async (req, res) => {
+  try {
+    const user = await getRequestUser(req.headers.authorization);
+    if (!user?.isAdmin) { res.status(403).json({ error: "Forbidden" }); return; }
+    const id = Number(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+    const [updated] = await db.update(activitiesTable)
+      .set({ completedAt: null, completedPhotoDataUrl: null })
+      .where(eq(activitiesTable.id, id)).returning();
+    res.json(updated);
+  } catch (err) {
+    req.log.error({ err }, "Failed to uncomplete activity");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.patch("/purposes/:purposeId/activities/:id/disapprove", async (req, res) => {
   try {
     const user = await getRequestUser(req.headers.authorization);

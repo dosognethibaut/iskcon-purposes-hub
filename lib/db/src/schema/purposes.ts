@@ -23,6 +23,8 @@ export const activitiesTable = pgTable("activities", {
   minParticipants: integer("min_participants"),
   maxParticipants: integer("max_participants"),
   approved: boolean("approved").notNull().default(false),
+  completedAt: timestamp("completed_at"),
+  completedPhotoDataUrl: text("completed_photo_data_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

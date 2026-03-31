@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useGetActivities,
@@ -11,7 +11,7 @@ import {
 import {
   CalendarDays, MessageCircle, Loader2, Lock,
   ChevronDown, ChevronUp, CheckCircle2, Clock, MessageSquare, Send,
-  MapPin, Users, XCircle,
+  MapPin, Users, XCircle, Camera, ImagePlus,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/context/AuthContext";
@@ -234,6 +234,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const [approvingMessageId, setApprovingMessageId] = useState<number | null>(null);
   const [disapprovingActivityId, setDisapprovingActivityId] = useState<number | null>(null);
   const [disapprovingMessageId, setDisapprovingMessageId] = useState<number | null>(null);
+  const [completingActivityId, setCompletingActivityId] = useState<number | null>(null);
+  const [uncompletingActivityId, setUncompletingActivityId] = useState<number | null>(null);
+  const [pendingCompleteForActivityId, setPendingCompleteForActivityId] = useState<number | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   const { data: activities, isLoading: isLoadingActivities } = useGetActivities(purposeId, {
     query: { queryKey: getGetActivitiesQueryKey(purposeId) },
@@ -350,6 +354,55 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       setDisapprovingMessageId(null);
     }
   };
+
+  const completeActivity = async (id: number, completedPhotoDataUrl?: string) => {
+    if (!token) return;
+    setCompletingActivityId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/complete`, {
+        method: "PATCH",
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ completedPhotoDataUrl }),
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
+      toast.success("Activity marked as done!");
+    } catch {
+      toast.error("Failed to mark activity as done");
+    } finally {
+      setCompletingActivityId(null);
+    }
+  };
+
+  const uncompleteActivity = async (id: number) => {
+    if (!token) return;
+    setUncompletingActivityId(id);
+    try {
+      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/uncomplete`, {
+        method: "PATCH",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
+      toast.success("Activity unmarked as done");
+    } catch {
+      toast.error("Failed to unmark activity");
+    } finally {
+      setUncompletingActivityId(null);
+    }
+  };
+
+  const handlePhotoInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !pendingCompleteForActivityId) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      completeActivity(pendingCompleteForActivityId, reader.result as string);
+      setPendingCompleteForActivityId(null);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }, [pendingCompleteForActivityId, token]);
 
   const onActivitySubmit = (data: z.infer<typeof activitySchema>) => {
     const payload = {
@@ -496,61 +549,119 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 {approvedActivities.map((activity: any, i: number) => {
                   const isOpen = openActivities.has(activity.id);
                   const commentsOpen = expandedActivityComments.has(activity.id);
+                  const isDone = !!activity.completedAt;
                   return (
                     <div key={activity.id} className="rounded-2xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2"
-                      style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
-                      <div style={{ height: 3, background: accent }} />
+                      style={{
+                        background: isDone ? accent : cardBg,
+                        border: isDone ? "none" : "1px solid hsl(14 25% 72% / 0.35)",
+                        animationDelay: `${i * 50}ms`,
+                        animationFillMode: "both",
+                      }}>
+
+                      {/* Completion photo */}
+                      {isDone && activity.completedPhotoDataUrl && (
+                        <img src={activity.completedPhotoDataUrl} alt="Activity photo"
+                          className="w-full object-cover" style={{ maxHeight: 200 }} />
+                      )}
+
+                      {/* Top bar — only on non-done cards */}
+                      {!isDone && <div style={{ height: 3, background: accent }} />}
 
                       {/* Title row — always visible */}
                       <button type="button" onClick={() => toggleActivity(activity.id)}
                         className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
-                        <CalendarDays className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
+                        {isDone
+                          ? <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.85)" }} />
+                          : <CalendarDays className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />}
                         <div className="flex-1 min-w-0">
-                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
+                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: isDone ? "rgba(255,255,255,0.97)" : "hsl(14 72% 18%)" }}>
                             {activity.title}
                           </span>
                           {activity.scheduledAt && (
-                            <span className="font-sans text-xs flex items-center gap-1 mt-0.5" style={{ color: "hsl(14 40% 48%)" }}>
+                            <span className="font-sans text-xs flex items-center gap-1 mt-0.5" style={{ color: isDone ? "rgba(255,255,255,0.7)" : "hsl(14 40% 48%)" }}>
                               <CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM, HH:mm")}
                               {activity.place && <><MapPin className="w-3 h-3 ml-1" />{activity.place}</>}
                             </span>
                           )}
                         </div>
-                        {currentUser
-                          ? isOpen ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
-                                   : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
-                          : <Lock className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(14 40% 55%)", opacity: 0.55 }} />}
+                        {isDone
+                          ? <span className="font-sans text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style={{ background: "rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.9)" }}>Done</span>
+                          : currentUser
+                            ? isOpen ? <ChevronUp className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
+                                     : <ChevronDown className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />
+                            : <Lock className="w-3.5 h-3.5 shrink-0" style={{ color: "hsl(14 40% 55%)", opacity: 0.55 }} />}
                       </button>
 
                       {/* Expanded content */}
                       {isOpen && currentUser && (
-                        <div className="px-4 pb-2" style={{ borderTop: "1px solid hsl(14 25% 72% / 0.25)" }}>
-                          <p className="font-sans text-sm leading-relaxed mt-3 mb-2" style={{ color: "hsl(14 50% 28%)" }}>
+                        <div className="px-4 pb-3" style={{ borderTop: `1px solid ${isDone ? "rgba(255,255,255,0.18)" : "hsl(14 25% 72% / 0.25)"}` }}>
+                          <p className="font-sans text-sm leading-relaxed mt-3 mb-2" style={{ color: isDone ? "rgba(255,255,255,0.85)" : "hsl(14 50% 28%)" }}>
                             {activity.description}
                           </p>
                           {activity.minParticipants && (
-                            <div className="flex items-center gap-1 mb-3 font-sans text-xs" style={{ color: "hsl(14 40% 45%)" }}>
+                            <div className="flex items-center gap-1 mb-3 font-sans text-xs" style={{ color: isDone ? "rgba(255,255,255,0.7)" : "hsl(14 40% 45%)" }}>
                               <Users className="w-3 h-3" />
                               {activity.minParticipants} – {activity.maxParticipants ?? "?"} participants
                             </div>
                           )}
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 35% 48%)" }}>
-                              <span className="font-semibold" style={{ color: "hsl(14 45% 38%)" }}>By {activity.authorName}</span>
+                          <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                            <div className="flex items-center gap-3 text-xs" style={{ color: isDone ? "rgba(255,255,255,0.7)" : "hsl(14 35% 48%)" }}>
+                              <span className="font-semibold">By {activity.authorName}</span>
                               <span>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              {currentUser.isAdmin && (
-                                <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
-                                  className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
-                                  style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent" }}>
-                                  {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
-                                  Unpublish
-                                </button>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {currentUser.isAdmin && isDone && (
+                                <>
+                                  <button
+                                    onClick={() => { setPendingCompleteForActivityId(activity.id); photoInputRef.current?.click(); }}
+                                    disabled={completingActivityId === activity.id}
+                                    className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                    style={{ borderColor: "rgba(255,255,255,0.5)", color: "rgba(255,255,255,0.9)", background: "rgba(255,255,255,0.12)" }}>
+                                    <ImagePlus className="w-3 h-3" />
+                                    {activity.completedPhotoDataUrl ? "Update Photo" : "Add Photo"}
+                                  </button>
+                                  <button onClick={() => uncompleteActivity(activity.id)} disabled={uncompletingActivityId === activity.id}
+                                    className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                    style={{ borderColor: "rgba(255,255,255,0.5)", color: "rgba(255,255,255,0.9)", background: "rgba(255,255,255,0.12)" }}>
+                                    {uncompletingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                                    Unmark
+                                  </button>
+                                </>
+                              )}
+                              {currentUser.isAdmin && !isDone && (
+                                <>
+                                  <button
+                                    onClick={() => completeActivity(activity.id)}
+                                    disabled={completingActivityId === activity.id}
+                                    className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+                                    style={{ background: "hsl(150 42% 36%)", color: "white" }}>
+                                    {completingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                                    Mark as Done
+                                  </button>
+                                  <button
+                                    onClick={() => { setPendingCompleteForActivityId(activity.id); photoInputRef.current?.click(); }}
+                                    disabled={completingActivityId === activity.id}
+                                    className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                    style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 42% 42%)", background: "transparent" }}>
+                                    <Camera className="w-3 h-3" />
+                                    Done + Photo
+                                  </button>
+                                  <button onClick={() => disapproveActivity(activity.id)} disabled={disapprovingActivityId === activity.id}
+                                    className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors"
+                                    style={{ borderColor: "hsl(358 48% 50%)", color: "hsl(358 52% 40%)", background: "transparent" }}>
+                                    {disapprovingActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
+                                    Unpublish
+                                  </button>
+                                </>
                               )}
                               <button onClick={() => toggleComments(activity.id, "activity")}
                                 className="inline-flex items-center gap-1 font-sans text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-                                style={{ background: commentsOpen ? "hsl(14 18% 88%)" : "transparent", color: "hsl(14 42% 42%)", border: "1px solid hsl(14 25% 68% / 0.45)" }}>
+                                style={{
+                                  background: isDone ? (commentsOpen ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.12)") : (commentsOpen ? "hsl(14 18% 88%)" : "transparent"),
+                                  color: isDone ? "rgba(255,255,255,0.9)" : "hsl(14 42% 42%)",
+                                  border: isDone ? "1px solid rgba(255,255,255,0.3)" : "1px solid hsl(14 25% 68% / 0.45)",
+                                }}>
                                 <MessageSquare className="w-3 h-3" />
                                 {commentsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                               </button>
@@ -824,6 +935,14 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
           </TabsContent>
         </Tabs>
       </div>
+      {/* Hidden file input for completion photos */}
+      <input
+        ref={photoInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handlePhotoInputChange}
+      />
     </div>
   );
 }
