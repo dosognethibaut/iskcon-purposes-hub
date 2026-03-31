@@ -295,7 +295,7 @@ export default function Home() {
 
       {/* Bottom quote banner */}
       <div
-        className="w-full px-6 pt-6 pb-24 text-center"
+        className="w-full px-6 pt-4 pb-20 text-center"
         style={{ background: "hsl(26 68% 42%)" }}
       >
         <p className="font-serif italic leading-relaxed" style={{ fontSize: "1rem", color: "hsl(40 80% 96%)" }}>
