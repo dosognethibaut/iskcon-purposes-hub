@@ -449,7 +449,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     };
     createActivity.mutate({ purposeId, data: payload as any }, {
       onSuccess: () => {
-        toast.success("Activity proposed! It will appear once validated.", { duration: 5000 });
+        toast.success("Thank you! We've received your activity proposal. It will be visible once validated by our team.", { duration: 6000 });
         activityForm.reset({ title: "", description: "", authorName: currentUser?.fullName ?? "", scheduledAt: "", place: "", minParticipants: 3, maxParticipants: undefined });
         queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       },
@@ -460,7 +460,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const onMessageSubmit = (data: z.infer<typeof messageSchema>) => {
     createMessage.mutate({ purposeId, data }, {
       onSuccess: () => {
-        toast.success("Message sent for validation. It will appear once approved.", { duration: 5000 });
+        toast.success("Thank you! We've received your message. It will be visible once validated by our team.", { duration: 6000 });
         messageForm.reset({ content: "", authorName: currentUser?.fullName ?? "" });
         queryClient.invalidateQueries({ queryKey: getGetMessagesQueryKey(purposeId) });
       },
