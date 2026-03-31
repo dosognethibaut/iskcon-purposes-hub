@@ -64,16 +64,32 @@ Tables in `lib/db/src/schema/purposes.ts`:
 - `activities` — Admin-proposed activities per purpose (id, purposeId, title, description, authorName, createdAt)
 - `messages` — Member messages per purpose (id, purposeId, content, authorName, createdAt)
 
+Tables in `lib/db/src/schema/users.ts`:
+- `users` — Registered members (id, fullName, email, passwordHash, dob, community, deptRoles JSON, photoDataUrl, createdAt)
+- `survey_answers` — Survey responses per user (id, userId, questionIndex, answers JSON, createdAt)
+
+## Auth System
+
+JWT-based authentication stored in `localStorage`.
+- Passwords hashed with bcryptjs (12 rounds)
+- JWT signed with SESSION_SECRET env var, 30-day expiry
+- `AuthContext` provides `currentUser`, `login`, `logout`, `setUserFromRegistration`
+- `setAuthTokenGetter` from `@workspace/api-client-react` attaches Bearer token to all API calls
+- Context located at `artifacts/iskcon-app/src/context/AuthContext.tsx`
+
 ## API Routes
 
 All routes under `/api/`:
+- `POST /auth/register` — Register user + store survey answers
+- `POST /auth/login` — Validate credentials, return JWT
+- `GET /auth/me` — Return current user from Bearer token
 - `GET /purposes` — List all 7 purposes
 - `GET /purposes/:id` — Get a purpose
 - `GET /purposes/:id/activities` — List activities for a purpose
-- `POST /purposes/:id/activities` — Create an activity (admin)
+- `POST /purposes/:id/activities` — Create an activity (requires auth)
 - `DELETE /purposes/:id/activities/:actId` — Delete an activity
 - `GET /purposes/:id/messages` — List messages for a purpose
-- `POST /purposes/:id/messages` — Post a message (member)
+- `POST /purposes/:id/messages` — Post a message (requires auth)
 - `DELETE /purposes/:id/messages/:msgId` — Delete a message
 
 ## Key Scripts

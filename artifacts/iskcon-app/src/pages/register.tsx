@@ -1,79 +1,155 @@
 import { useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, Camera, CheckCircle2, ClipboardList } from "lucide-react";
+import { ArrowLeft, Camera, CheckCircle2, ClipboardList, Eye, EyeOff, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 const COMMUNITIES = ["Domaine de Radhadesh"];
 const RADHADESH_DEPTS = [
-  "HR & Legal Affairs",
-  "Accounting",
-  "Sankirtana",
-  "Boutique",
-  "Govinda's Restaurant",
-  "Communications",
-  "Outreach (Rose)",
-  "Goshala",
-  "Deity Worship",
-  "Vaishnava Festivals",
-  "Landscaping",
-  "Forest",
-  "Retreat Centre",
-  "Community Kitchen",
-  "Maintenance & Construction",
-  "Service Coordinator (ex Temple Commander)",
-  "Permaculture",
-  "Tourism",
-  "Devotee Care",
-  "Education",
-  "Ashram",
-  "Radhadesh Mellows",
-  "Other",
+  "HR & Legal Affairs", "Accounting", "Sankirtana", "Boutique",
+  "Govinda's Restaurant", "Communications", "Outreach (Rose)", "Goshala",
+  "Deity Worship", "Vaishnava Festivals", "Landscaping", "Forest",
+  "Retreat Centre", "Community Kitchen", "Maintenance & Construction",
+  "Service Coordinator (ex Temple Commander)", "Permaculture", "Tourism",
+  "Devotee Care", "Education", "Ashram", "Radhadesh Mellows", "Other",
 ];
+
+const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function Register() {
   const [, navigate] = useLocation();
-  const [tab, setTab] = useState<"register" | "signin">("register");
+  const { currentUser, login, logout, setUserFromRegistration } = useAuth();
+  const [tab, setTab] = useState<"register" | "signin">(currentUser ? "signin" : "register");
   const [photo, setPhoto] = useState<string | null>(null);
   const [surveyDone, setSurveyDone] = useState(() => sessionStorage.getItem("survey_done") === "1");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     fullName: "", email: "", dob: "", community: "", deptRolesOther: "",
+    password: "", confirmPassword: "",
   });
   const [deptRoles, setDeptRoles] = useState<string[]>([]);
 
+  const [signInForm, setSignInForm] = useState({ email: "", password: "" });
+
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const setSI = (k: keyof typeof signInForm) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSignInForm(f => ({ ...f, [k]: e.target.value }));
 
   const toggleDeptRole = (item: string) =>
     setDeptRoles(prev => prev.includes(item) ? prev.filter(x => x !== item) : [...prev, item]);
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = ev => setPhoto(ev.target?.result as string);
-      reader.readAsDataURL(file);
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => setPhoto(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const passwordsMatch = form.password === form.confirmPassword;
+  const canSubmit = form.fullName && form.email && form.dob && form.community && surveyDone
+    && form.password.length >= 6 && passwordsMatch;
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSubmit || submitting) return;
+    setSubmitting(true);
+    try {
+      const surveyAnswers = (() => {
+        try { return JSON.parse(sessionStorage.getItem("survey_answers") ?? "[]"); }
+        catch { return []; }
+      })();
+
+      const finalDeptRoles = deptRoles.includes("Other") && form.deptRolesOther
+        ? [...deptRoles.filter(r => r !== "Other"), form.deptRolesOther]
+        : deptRoles;
+
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          email: form.email,
+          password: form.password,
+          dob: form.dob,
+          community: form.community,
+          deptRoles: finalDeptRoles,
+          photoDataUrl: photo ?? undefined,
+          surveyAnswers,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Registration failed");
+      setUserFromRegistration(data.user, data.token);
+      sessionStorage.removeItem("survey_done");
+      sessionStorage.removeItem("survey_answers");
+      toast.success(`Welcome, ${data.user.fullName.split(" ")[0]}!`);
+      navigate("/");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Registration failed");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const canSubmit = form.fullName && form.email && form.dob && form.community && surveyDone;
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) return;
-    setSubmitted(true);
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await login(signInForm.email, signInForm.password);
+      toast.success("Welcome back!");
+      navigate("/");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sign in failed");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  if (submitted) {
+  const inputCls = "w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40";
+  const inputStyle = { borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" };
+
+  if (currentUser) {
     return (
-      <div className="min-h-[100dvh] bg-background flex flex-col items-center justify-center px-6 gap-4">
-        <CheckCircle2 className="w-16 h-16" style={{ color: "hsl(26 68% 42%)" }} />
-        <h2 className="font-serif font-bold text-2xl text-foreground text-center">Welcome, {form.fullName.split(" ")[0]}!</h2>
-        <p className="font-sans text-muted-foreground text-center text-sm">Your profile has been created. You are now part of the Radhadesh community.</p>
-        <Link href="/" className="mt-4 px-6 py-3 rounded-full font-sans font-semibold text-sm" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
-          Back to home
-        </Link>
+      <div className="min-h-[100dvh] bg-background pb-16">
+        <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}>
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
+            <ArrowLeft className="w-4 h-4" /> Back
+          </Link>
+          <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>Your Profile</h1>
+        </div>
+        <div className="max-w-lg mx-auto px-5 py-8 flex flex-col items-center gap-5">
+          {currentUser.photoDataUrl
+            ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 96, height: 96 }} />
+            : <div className="rounded-full flex items-center justify-center font-serif font-bold text-3xl" style={{ width: 96, height: 96, background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>{currentUser.fullName[0]}</div>
+          }
+          <div className="text-center">
+            <h2 className="font-serif font-bold text-2xl" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</h2>
+            <p className="font-sans text-sm mt-1" style={{ color: "hsl(14 40% 42%)" }}>{currentUser.email}</p>
+            <p className="font-sans text-sm mt-0.5" style={{ color: "hsl(14 40% 42%)" }}>{currentUser.community}</p>
+          </div>
+          {currentUser.deptRoles.length > 0 && (
+            <div className="flex flex-wrap gap-2 justify-center">
+              {currentUser.deptRoles.map(r => (
+                <span key={r} className="px-3 py-1 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42% / 0.12)", color: "hsl(26 55% 28%)", border: "1px solid hsl(26 68% 42% / 0.3)" }}>{r}</span>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={logout}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold text-sm mt-4 border"
+            style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}
+          >
+            <LogOut className="w-4 h-4" /> Sign out
+          </button>
+        </div>
       </div>
     );
   }
@@ -81,7 +157,6 @@ export default function Register() {
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
 
-      {/* Header */}
       <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}>
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
           <ArrowLeft className="w-4 h-4" /> Back
@@ -89,18 +164,10 @@ export default function Register() {
         <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>Your Profile</h1>
         <p className="font-sans mt-1" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>Your profile in the community</p>
 
-        {/* Tab switcher */}
         <div className="flex gap-1 mt-5 p-1 rounded-full" style={{ background: "hsl(14 30% 70% / 0.2)", width: "fit-content" }}>
           {(["register", "signin"] as const).map(t => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className="px-5 py-1.5 rounded-full font-sans font-semibold text-sm transition-all"
-              style={{
-                background: tab === t ? "hsl(26 68% 42%)" : "transparent",
-                color: tab === t ? "hsl(40 80% 96%)" : "hsl(14 55% 28%)",
-              }}
-            >
+            <button key={t} onClick={() => setTab(t)} className="px-5 py-1.5 rounded-full font-sans font-semibold text-sm transition-all"
+              style={{ background: tab === t ? "hsl(26 68% 42%)" : "transparent", color: tab === t ? "hsl(40 80% 96%)" : "hsl(14 55% 28%)" }}>
               {t === "register" ? "Register" : "Sign in"}
             </button>
           ))}
@@ -110,25 +177,29 @@ export default function Register() {
       <div className="max-w-lg mx-auto px-5 py-6">
 
         {tab === "signin" ? (
-          /* ── SIGN IN ─────────────────────────── */
-          <form className="space-y-4" onSubmit={e => { e.preventDefault(); setSubmitted(true); }}>
-            <div>
-              <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>Email</label>
-              <input type="email" required placeholder="your@email.com" className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }} />
-            </div>
-            <div>
-              <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>Password</label>
-              <input type="password" required placeholder="••••••••" className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }} />
-            </div>
-            <button type="submit" className="w-full py-3 rounded-full font-sans font-semibold text-sm mt-2" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
-              Sign in
+          <form className="space-y-4" onSubmit={handleSignIn}>
+            <Field label="Email" required>
+              <input type="email" required placeholder="your@email.com" value={signInForm.email} onChange={setSI("email")} className={inputCls} style={inputStyle} />
+            </Field>
+            <Field label="Password" required>
+              <div className="relative">
+                <input type={showPass ? "text" : "password"} required placeholder="••••••••" value={signInForm.password} onChange={setSI("password")} className={inputCls + " pr-12"} style={inputStyle} />
+                <button type="button" onClick={() => setShowPass(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100" style={{ color: "hsl(14 40% 40%)" }}>
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </Field>
+            <button type="submit" disabled={submitting} className="w-full py-3 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", opacity: submitting ? 0.6 : 1 }}>
+              {submitting ? "Signing in…" : "Sign in"}
             </button>
+            <p className="text-center font-sans text-xs" style={{ color: "hsl(14 40% 50%)" }}>
+              No account yet?{" "}
+              <button type="button" onClick={() => setTab("register")} className="underline font-semibold" style={{ color: "hsl(26 68% 38%)" }}>Register here</button>
+            </p>
           </form>
         ) : (
-          /* ── REGISTER ────────────────────────── */
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleRegister} className="space-y-5">
 
-            {/* Profile photo */}
             <div className="flex flex-col items-center gap-3 pb-2">
               <button type="button" onClick={() => fileRef.current?.click()} className="relative rounded-full overflow-hidden border-2 flex items-center justify-center" style={{ width: 88, height: 88, borderColor: "hsl(26 68% 42% / 0.4)", background: "hsl(40 40% 88%)" }}>
                 {photo
@@ -142,30 +213,46 @@ export default function Register() {
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
             </div>
 
-            {/* Full name */}
             <Field label="Full name" required>
-              <input type="text" required placeholder="Hari das" value={form.fullName} onChange={set("fullName")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }} />
+              <input type="text" required placeholder="Hari das" value={form.fullName} onChange={set("fullName")} className={inputCls} style={inputStyle} />
             </Field>
 
-            {/* Email */}
             <Field label="Email" required>
-              <input type="email" required placeholder="your@email.com" value={form.email} onChange={set("email")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }} />
+              <input type="email" required placeholder="your@email.com" value={form.email} onChange={set("email")} className={inputCls} style={inputStyle} />
             </Field>
 
-            {/* Date of birth */}
             <Field label="Date of birth" required>
-              <input type="date" required value={form.dob} onChange={set("dob")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }} />
+              <input type="date" required value={form.dob} onChange={set("dob")} className={inputCls} style={inputStyle} />
             </Field>
 
-            {/* Community */}
+            <Field label="Password" required>
+              <div className="relative">
+                <input type={showPass ? "text" : "password"} required minLength={6} placeholder="At least 6 characters" value={form.password} onChange={set("password")} className={inputCls + " pr-12"} style={inputStyle} />
+                <button type="button" onClick={() => setShowPass(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100" style={{ color: "hsl(14 40% 40%)" }}>
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </Field>
+
+            <Field label="Repeat password" required>
+              <div className="relative">
+                <input type={showConfirm ? "text" : "password"} required placeholder="Repeat your password" value={form.confirmPassword} onChange={set("confirmPassword")} className={inputCls + " pr-12"} style={{ ...inputStyle, borderColor: form.confirmPassword && !passwordsMatch ? "hsl(0 70% 55%)" : "hsl(14 30% 70% / 0.4)" }} />
+                <button type="button" onClick={() => setShowConfirm(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100" style={{ color: "hsl(14 40% 40%)" }}>
+                  {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              {form.confirmPassword && !passwordsMatch && (
+                <p className="font-sans text-xs mt-1" style={{ color: "hsl(0 70% 50%)" }}>Passwords do not match</p>
+              )}
+            </Field>
+
             <Field label="Community" required>
-              <select required value={form.community} onChange={set("community")} className="w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40" style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: form.community ? "hsl(14 72% 18%)" : "hsl(14 30% 55%)" }}>
+              <select required value={form.community} onChange={set("community")} className={inputCls} style={{ ...inputStyle, color: form.community ? "hsl(14 72% 18%)" : "hsl(14 30% 55%)" }}>
                 <option value="" disabled>Select your community</option>
                 {COMMUNITIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </Field>
 
-            {/* Department / Role — shown once community is selected */}
             {form.community && (
               <div>
                 <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>
@@ -176,36 +263,19 @@ export default function Register() {
                   {RADHADESH_DEPTS.map(item => {
                     const active = deptRoles.includes(item);
                     return (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => toggleDeptRole(item)}
-                        className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
-                        style={{
-                          background: active ? "hsl(26 68% 42%)" : "hsl(40 40% 88%)",
-                          color: active ? "hsl(40 80% 96%)" : "hsl(14 45% 38%)",
-                          border: active ? "1.5px solid hsl(26 68% 42%)" : "1.5px solid hsl(14 25% 72%)",
-                        }}
-                      >
+                      <button key={item} type="button" onClick={() => toggleDeptRole(item)} className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
+                        style={{ background: active ? "hsl(26 68% 42%)" : "hsl(40 40% 88%)", color: active ? "hsl(40 80% 96%)" : "hsl(14 45% 38%)", border: active ? "1.5px solid hsl(26 68% 42%)" : "1.5px solid hsl(14 25% 72%)" }}>
                         {item}
                       </button>
                     );
                   })}
                 </div>
                 {deptRoles.includes("Other") && (
-                  <input
-                    type="text"
-                    placeholder="Please specify…"
-                    value={form.deptRolesOther}
-                    onChange={set("deptRolesOther")}
-                    className="mt-3 w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" }}
-                  />
+                  <input type="text" placeholder="Please specify…" value={form.deptRolesOther} onChange={set("deptRolesOther")} className={"mt-3 " + inputCls} style={inputStyle} />
                 )}
               </div>
             )}
 
-            {/* Survey — mandatory */}
             <div>
               <label className="block font-sans text-sm font-semibold mb-1.5" style={{ color: "hsl(14 55% 28%)" }}>
                 Survey <span style={{ color: "hsl(14 72% 38%)" }}>*</span>
@@ -217,11 +287,7 @@ export default function Register() {
                   <span className="font-sans text-sm" style={{ color: "hsl(145 45% 25%)" }}>Survey completed — thank you!</span>
                 </div>
               ) : (
-                <Link
-                  href="/survey"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl font-sans font-semibold text-sm border transition-colors"
-                  style={{ borderColor: "hsl(26 68% 42% / 0.5)", color: "hsl(26 68% 32%)", background: "hsl(26 68% 42% / 0.06)" }}
-                >
+                <Link href="/survey" className="flex items-center gap-3 px-4 py-3 rounded-xl font-sans font-semibold text-sm border transition-colors" style={{ borderColor: "hsl(26 68% 42% / 0.5)", color: "hsl(26 68% 32%)", background: "hsl(26 68% 42% / 0.06)" }}>
                   <ClipboardList className="w-5 h-5" />
                   Take the survey
                   <span className="ml-auto text-xs font-normal" style={{ color: "hsl(14 40% 50%)" }}>required →</span>
@@ -229,18 +295,9 @@ export default function Register() {
               )}
             </div>
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={!canSubmit}
-              className="w-full py-3.5 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity"
-              style={{
-                background: canSubmit ? "hsl(26 68% 42%)" : "hsl(14 20% 70%)",
-                color: canSubmit ? "hsl(40 80% 96%)" : "hsl(14 20% 50%)",
-                cursor: canSubmit ? "pointer" : "not-allowed",
-              }}
-            >
-              {canSubmit ? "Create my profile" : "Complete all fields + survey"}
+            <button type="submit" disabled={!canSubmit || submitting} className="w-full py-3.5 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity"
+              style={{ background: canSubmit && !submitting ? "hsl(26 68% 42%)" : "hsl(14 20% 70%)", color: canSubmit ? "hsl(40 80% 96%)" : "hsl(14 20% 50%)", cursor: canSubmit ? "pointer" : "not-allowed" }}>
+              {submitting ? "Creating profile…" : canSubmit ? "Create my profile" : "Complete all fields + survey"}
             </button>
           </form>
         )}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import PurposePanel from "./PurposePanel";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import radhadeshLogo from "@assets/image_1774938925316.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
@@ -103,6 +104,7 @@ const purposes = [
 ];
 
 export default function Home() {
+  const { currentUser } = useAuth();
   const [current, setCurrent] = useState(0);
   const [fading, setFading] = useState(false);
   const [activePurpose, setActivePurpose] = useState<number | null>(null);
@@ -186,7 +188,14 @@ export default function Home() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none"
                 style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}
               >
-                <UserCircle className="w-4 h-4" /> You
+                {currentUser ? (
+                  currentUser.photoDataUrl
+                    ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 22, height: 22 }} />
+                    : <div className="rounded-full flex items-center justify-center font-serif font-bold" style={{ width: 22, height: 22, background: "hsl(26 68% 52%)", color: "hsl(40 80% 96%)", fontSize: "0.65rem" }}>{currentUser.fullName[0]}</div>
+                ) : (
+                  <UserCircle className="w-4 h-4" />
+                )}
+                {currentUser ? `Welcome, ${currentUser.fullName.split(" ")[0]}` : "You"}
               </Link>
             </div>
           </div>

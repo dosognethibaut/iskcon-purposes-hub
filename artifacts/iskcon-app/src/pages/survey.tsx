@@ -148,6 +148,9 @@ export default function Survey() {
   const handleSubmit = () => {
     if (!allAnswered) return;
     sessionStorage.setItem("survey_done", "1");
+    sessionStorage.setItem("survey_answers", JSON.stringify(
+      Object.entries(answers).map(([qi, ans]) => ({ questionIndex: Number(qi), answers: ans }))
+    ));
     setSubmitted(true);
   };
 

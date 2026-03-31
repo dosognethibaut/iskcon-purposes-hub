@@ -7,7 +7,9 @@ import {
   getGetActivitiesQueryKey,
   getGetMessagesQueryKey,
 } from "@workspace/api-client-react";
-import { CalendarDays, MessageCircle, Loader2 } from "lucide-react";
+import { CalendarDays, MessageCircle, Loader2, Lock } from "lucide-react";
+import { Link } from "wouter";
+import { useAuth } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -49,6 +51,7 @@ interface PurposePanelProps {
 
 export default function PurposePanel({ purposeId, title, officialText, description }: PurposePanelProps) {
   const queryClient = useQueryClient();
+  const { currentUser } = useAuth();
   const accent = accentByTitle[title] ?? "hsl(26 68% 42%)";
 
   const { data: activities, isLoading: isLoadingActivities } = useGetActivities(purposeId, {
@@ -64,12 +67,12 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
   const activityForm = useForm<z.infer<typeof activitySchema>>({
     resolver: zodResolver(activitySchema),
-    defaultValues: { title: "", description: "", authorName: "" },
+    defaultValues: { title: "", description: "", authorName: currentUser?.fullName ?? "" },
   });
 
   const messageForm = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
-    defaultValues: { content: "", authorName: "" },
+    defaultValues: { content: "", authorName: currentUser?.fullName ?? "" },
   });
 
   const onActivitySubmit = (data: z.infer<typeof activitySchema>) => {
@@ -189,45 +192,41 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}40` }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
-                <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans" style={{ background: `${accent}22`, color: accent }}>Admin</span>
-              </div>
-              <Form {...activityForm}>
-                <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-4">
-                  <FormField control={activityForm.control} name="title" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Activity Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="E.g., Sunday Feast Program" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={activityForm.control} name="description" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Description</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="What will happen during this activity?" className="resize-none min-h-[90px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={activityForm.control} name="authorName" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your name" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
-                    {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    Propose Activity
-                  </Button>
-                </form>
-              </Form>
+              <h3 className="font-serif text-lg font-bold mb-4" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
+              {!currentUser ? (
+                <SignInPrompt />
+              ) : (
+                <Form {...activityForm}>
+                  <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-4">
+                    <FormField control={activityForm.control} name="title" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Activity Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="E.g., Sunday Feast Program" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={activityForm.control} name="description" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="What will happen during this activity?" className="resize-none min-h-[90px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
+                      <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
+                      <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
+                    </div>
+                    <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
+                      {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                      Propose Activity
+                    </Button>
+                  </form>
+                </Form>
+              )}
             </div>
           </TabsContent>
 
@@ -267,40 +266,52 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
             <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.25)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: "hsl(14 45% 40%)" }} />
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
-                <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans" style={{ background: "hsl(14 30% 60% / 0.15)", color: "hsl(14 55% 32%)" }}>Member</span>
-              </div>
-              <Form {...messageForm}>
-                <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
-                  <FormField control={messageForm.control} name="content" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Message</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Share your realizations or thoughts..." className="resize-none min-h-[110px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <FormField control={messageForm.control} name="authorName" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your name" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                  <Button type="submit" variant="outline" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide" disabled={createMessage.isPending} style={{ borderColor: "hsl(14 30% 55% / 0.4)", color: "hsl(14 60% 28%)" }}>
-                    {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                    Post Message
-                  </Button>
-                </form>
-              </Form>
+              <h3 className="font-serif text-lg font-bold mb-4" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
+              {!currentUser ? (
+                <SignInPrompt />
+              ) : (
+                <Form {...messageForm}>
+                  <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
+                    <FormField control={messageForm.control} name="content" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Message</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Share your realizations or thoughts..." className="resize-none min-h-[110px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
+                      <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
+                      <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
+                    </div>
+                    <Button type="submit" variant="outline" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide" disabled={createMessage.isPending} style={{ borderColor: "hsl(14 30% 55% / 0.4)", color: "hsl(14 60% 28%)" }}>
+                      {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                      Post Message
+                    </Button>
+                  </form>
+                </Form>
+              )}
             </div>
           </TabsContent>
         </Tabs>
       </div>
+    </div>
+  );
+}
+
+function SignInPrompt() {
+  return (
+    <div className="flex flex-col items-center gap-3 py-5 text-center">
+      <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "hsl(26 68% 42% / 0.12)" }}>
+        <Lock className="w-5 h-5" style={{ color: "hsl(26 68% 42%)" }} />
+      </div>
+      <p className="font-sans text-sm" style={{ color: "hsl(14 40% 42%)" }}>
+        Sign in to participate in the community
+      </p>
+      <Link href="/register" className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-sans font-semibold text-sm" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
+        Sign in / Register
+      </Link>
     </div>
   );
 }
