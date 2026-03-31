@@ -180,6 +180,42 @@ router.get("/auth/me", async (req, res) => {
   }
 });
 
+router.patch("/auth/profile", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) { res.status(401).json({ error: "Not authenticated" }); return; }
+    const token = authHeader.slice(7);
+    const payload = jwt.verify(token, JWT_SECRET) as { sub: number };
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, Number(payload.sub)));
+    if (!user) { res.status(401).json({ error: "User not found" }); return; }
+    const body = z.object({
+      fullName: z.string().min(1),
+      dob: z.string().min(1),
+      community: z.string().min(1),
+      deptRoles: z.array(z.string()),
+    }).parse(req.body);
+    const [updated] = await db.update(usersTable).set({
+      fullName: body.fullName,
+      dob: body.dob,
+      community: body.community,
+      deptRoles: JSON.stringify(body.deptRoles),
+    }).where(eq(usersTable.id, user.id)).returning();
+    res.json({
+      id: updated.id,
+      fullName: updated.fullName,
+      email: updated.email,
+      dob: updated.dob,
+      community: updated.community,
+      deptRoles: JSON.parse(updated.deptRoles || "[]"),
+      photoDataUrl: updated.photoDataUrl ?? null,
+      isAdmin: updated.isAdmin,
+    });
+  } catch (err) {
+    req.log.error({ err }, "Profile update failed");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.patch("/auth/photo", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;

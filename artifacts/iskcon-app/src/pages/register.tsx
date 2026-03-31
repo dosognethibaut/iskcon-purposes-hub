@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import {
   ArrowLeft, Camera, Eye, EyeOff, LogOut,
   CalendarDays, MapPin, Briefcase, Mail, ShieldCheck, ChevronRight, CheckCircle2,
+  Pencil, X, Check,
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
@@ -103,6 +104,60 @@ export default function Register() {
   const [surveyAnswers, setSurveyAnswers] = useState<Record<number, string[]>>(
     () => Object.fromEntries(Array.from({ length: totalQuestions }, (_, i) => [i, []]))
   );
+
+  const [editing, setEditing] = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editForm, setEditForm] = useState({ fullName: "", dob: "", community: "", deptRolesOther: "" });
+  const [editDeptRoles, setEditDeptRoles] = useState<string[]>([]);
+
+  const startEditing = () => {
+    if (!currentUser) return;
+    setEditForm({
+      fullName: currentUser.fullName,
+      dob: currentUser.dob,
+      community: currentUser.community,
+      deptRolesOther: "",
+    });
+    setEditDeptRoles(currentUser.deptRoles.filter(r => RADHADESH_DEPTS.includes(r)));
+    setEditing(true);
+  };
+
+  const cancelEditing = () => setEditing(false);
+
+  const saveProfile = async () => {
+    if (!token || editSaving) return;
+    setEditSaving(true);
+    try {
+      const finalDeptRoles = editDeptRoles.includes("Other") && editForm.deptRolesOther
+        ? [...editDeptRoles.filter(r => r !== "Other"), editForm.deptRolesOther]
+        : editDeptRoles;
+      const res = await fetch(`${API_BASE}/api/auth/profile`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify({
+          fullName: editForm.fullName,
+          dob: editForm.dob,
+          community: editForm.community,
+          deptRoles: finalDeptRoles,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to save");
+      updateCurrentUser(data);
+      setEditing(false);
+      toast.success("Profile updated");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save profile");
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
+  const setEdit = (k: keyof typeof editForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    setEditForm(f => ({ ...f, [k]: e.target.value }));
+
+  const toggleEditDeptRole = (item: string) =>
+    setEditDeptRoles(prev => prev.includes(item) ? prev.filter(x => x !== item) : [...prev, item]);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }));
@@ -247,12 +302,24 @@ export default function Register() {
       catch { return currentUser.dob; }
     })();
 
+    const iCls = "w-full px-4 py-3 rounded-xl font-sans text-sm border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40";
+    const iSty = { borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" };
+
     return (
       <div className="min-h-[100dvh] bg-background pb-16">
+        {/* Header */}
         <div className="px-5 pt-10 pb-8 relative overflow-hidden" style={{ background: "linear-gradient(130deg, hsl(40 58% 84%) 0%, hsl(26 55% 78%) 100%)" }}>
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-6 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
-            <ArrowLeft className="w-4 h-4" /> Home
-          </Link>
+          <div className="flex items-center justify-between mb-6">
+            <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
+              <ArrowLeft className="w-4 h-4" /> Home
+            </Link>
+            {!editing && (
+              <button onClick={startEditing} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-colors"
+                style={{ background: "hsl(26 68% 42% / 0.15)", color: "hsl(26 55% 28%)", border: "1px solid hsl(26 68% 42% / 0.3)" }}>
+                <Pencil className="w-3 h-3" /> Edit profile
+              </button>
+            )}
+          </div>
           <div className="flex flex-col items-center gap-3">
             <button type="button" onClick={() => profilePhotoRef.current?.click()} className="relative rounded-full overflow-hidden group" style={{ width: 100, height: 100, flexShrink: 0 }} title="Change photo">
               {currentUser.photoDataUrl
@@ -274,27 +341,90 @@ export default function Register() {
             </div>
           </div>
         </div>
+
         <div className="max-w-lg mx-auto px-5 py-6 space-y-3">
+          {/* Email — always read-only */}
           <ProfileRow icon={<Mail className="w-4 h-4" />} label="Email" value={currentUser.email} />
-          <ProfileRow icon={<CalendarDays className="w-4 h-4" />} label="Date of birth" value={formattedDob} />
-          <ProfileRow icon={<MapPin className="w-4 h-4" />} label="Community" value={currentUser.community} />
-          {currentUser.deptRoles.length > 0 && (
-            <div className="rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
-              <div className="flex items-center gap-2 mb-2.5">
-                <Briefcase className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
-                <span className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Department / Role</span>
+
+          {editing ? (
+            <>
+              {/* Full name */}
+              <div className="rounded-2xl px-4 py-3.5 space-y-1.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+                <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Full name</label>
+                <input value={editForm.fullName} onChange={setEdit("fullName")} className={iCls} style={iSty} placeholder="Your full name" />
               </div>
-              <div className="flex flex-wrap gap-2">
-                {currentUser.deptRoles.map(r => (
-                  <span key={r} className="px-3 py-1 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42% / 0.12)", color: "hsl(26 55% 28%)", border: "1px solid hsl(26 68% 42% / 0.3)" }}>{r}</span>
-                ))}
+
+              {/* Date of birth */}
+              <div className="rounded-2xl px-4 py-3.5 space-y-1.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+                <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Date of birth</label>
+                <input type="date" value={editForm.dob} onChange={setEdit("dob")} className={iCls} style={iSty} />
               </div>
-            </div>
+
+              {/* Community */}
+              <div className="rounded-2xl px-4 py-3.5 space-y-1.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+                <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Community</label>
+                <select value={editForm.community} onChange={setEdit("community")} className={iCls} style={iSty}>
+                  {COMMUNITIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+
+              {/* Departments */}
+              <div className="rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <Briefcase className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
+                  <span className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Department / Role</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {RADHADESH_DEPTS.map(dept => {
+                    const active = editDeptRoles.includes(dept);
+                    return (
+                      <button key={dept} type="button" onClick={() => toggleEditDeptRole(dept)}
+                        className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
+                        style={{ background: active ? "hsl(26 68% 42%)" : "hsl(26 68% 42% / 0.08)", color: active ? "hsl(40 80% 96%)" : "hsl(26 55% 32%)", border: `1px solid ${active ? "hsl(26 68% 42%)" : "hsl(26 68% 42% / 0.25)"}` }}>
+                        {active && <Check className="w-3 h-3 inline mr-1" />}{dept}
+                      </button>
+                    );
+                  })}
+                </div>
+                {editDeptRoles.includes("Other") && (
+                  <input value={editForm.deptRolesOther} onChange={setEdit("deptRolesOther")} className={`${iCls} mt-3`} style={iSty} placeholder="Specify your department / role" />
+                )}
+              </div>
+
+              {/* Save / Cancel */}
+              <button onClick={saveProfile} disabled={!editForm.fullName || editSaving}
+                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm transition-opacity"
+                style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", opacity: editSaving ? 0.6 : 1 }}>
+                {editSaving ? "Saving…" : <><Check className="w-4 h-4" /> Save changes</>}
+              </button>
+              <button onClick={cancelEditing} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm border transition-colors"
+                style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}>
+                <X className="w-4 h-4" /> Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <ProfileRow icon={<CalendarDays className="w-4 h-4" />} label="Date of birth" value={formattedDob} />
+              <ProfileRow icon={<MapPin className="w-4 h-4" />} label="Community" value={currentUser.community} />
+              {currentUser.deptRoles.length > 0 && (
+                <div className="rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <Briefcase className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
+                    <span className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Department / Role</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {currentUser.deptRoles.map(r => (
+                      <span key={r} className="px-3 py-1 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42% / 0.12)", color: "hsl(26 55% 28%)", border: "1px solid hsl(26 68% 42% / 0.3)" }}>{r}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <button onClick={logout} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm mt-2 border transition-colors"
+                style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}>
+                <LogOut className="w-4 h-4" /> Sign out
+              </button>
+            </>
           )}
-          <button onClick={logout} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm mt-2 border transition-colors"
-            style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}>
-            <LogOut className="w-4 h-4" /> Sign out
-          </button>
         </div>
       </div>
     );
