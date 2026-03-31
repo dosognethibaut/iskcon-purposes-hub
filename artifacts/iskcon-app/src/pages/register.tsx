@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, Camera, CheckCircle2, ClipboardList, Eye, EyeOff, LogOut } from "lucide-react";
+import { ArrowLeft, Camera, CheckCircle2, ClipboardList, Eye, EyeOff, LogOut, CalendarDays, MapPin, Briefcase, Mail, ShieldCheck } from "lucide-react";
+import { format, parseISO } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
@@ -90,7 +91,7 @@ export default function Register() {
       sessionStorage.removeItem("survey_done");
       sessionStorage.removeItem("survey_answers");
       toast.success(`Welcome, ${data.user.fullName.split(" ")[0]}!`);
-      navigate("/");
+      navigate("/register");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -117,34 +118,60 @@ export default function Register() {
   const inputStyle = { borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 72% 18%)" };
 
   if (currentUser) {
+    const formattedDob = (() => {
+      try { return format(parseISO(currentUser.dob), "d MMMM yyyy"); }
+      catch { return currentUser.dob; }
+    })();
+
     return (
       <div className="min-h-[100dvh] bg-background pb-16">
-        <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}>
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
-            <ArrowLeft className="w-4 h-4" /> Back
+        {/* Header */}
+        <div className="px-5 pt-10 pb-8 relative overflow-hidden" style={{ background: "linear-gradient(130deg, hsl(40 58% 84%) 0%, hsl(26 55% 78%) 100%)" }}>
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-6 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
+            <ArrowLeft className="w-4 h-4" /> Home
           </Link>
-          <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>Your Profile</h1>
-        </div>
-        <div className="max-w-lg mx-auto px-5 py-8 flex flex-col items-center gap-5">
-          {currentUser.photoDataUrl
-            ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover" style={{ width: 96, height: 96 }} />
-            : <div className="rounded-full flex items-center justify-center font-serif font-bold text-3xl" style={{ width: 96, height: 96, background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>{currentUser.fullName[0]}</div>
-          }
-          <div className="text-center">
-            <h2 className="font-serif font-bold text-2xl" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</h2>
-            <p className="font-sans text-sm mt-1" style={{ color: "hsl(14 40% 42%)" }}>{currentUser.email}</p>
-            <p className="font-sans text-sm mt-0.5" style={{ color: "hsl(14 40% 42%)" }}>{currentUser.community}</p>
+
+          {/* Avatar */}
+          <div className="flex flex-col items-center gap-3">
+            {currentUser.photoDataUrl
+              ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover shadow-lg" style={{ width: 100, height: 100, border: "3px solid hsl(26 68% 42% / 0.4)" }} />
+              : <div className="rounded-full flex items-center justify-center font-serif font-bold shadow-lg" style={{ width: 100, height: 100, fontSize: "2.2rem", background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", border: "3px solid hsl(40 80% 96% / 0.5)" }}>{currentUser.fullName[0]}</div>
+            }
+            <div className="text-center">
+              <h1 className="font-serif font-bold" style={{ fontSize: "1.7rem", color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</h1>
+              {currentUser.isAdmin && (
+                <span className="inline-flex items-center gap-1 mt-1 px-3 py-0.5 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
+                  <ShieldCheck className="w-3 h-3" /> Admin
+                </span>
+              )}
+            </div>
           </div>
+        </div>
+
+        {/* Info cards */}
+        <div className="max-w-lg mx-auto px-5 py-6 space-y-3">
+
+          <ProfileRow icon={<Mail className="w-4 h-4" />} label="Email" value={currentUser.email} />
+          <ProfileRow icon={<CalendarDays className="w-4 h-4" />} label="Date of birth" value={formattedDob} />
+          <ProfileRow icon={<MapPin className="w-4 h-4" />} label="Community" value={currentUser.community} />
+
           {currentUser.deptRoles.length > 0 && (
-            <div className="flex flex-wrap gap-2 justify-center">
-              {currentUser.deptRoles.map(r => (
-                <span key={r} className="px-3 py-1 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42% / 0.12)", color: "hsl(26 55% 28%)", border: "1px solid hsl(26 68% 42% / 0.3)" }}>{r}</span>
-              ))}
+            <div className="rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+              <div className="flex items-center gap-2 mb-2.5">
+                <Briefcase className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
+                <span className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Department / Role</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {currentUser.deptRoles.map(r => (
+                  <span key={r} className="px-3 py-1 rounded-full font-sans text-xs font-semibold" style={{ background: "hsl(26 68% 42% / 0.12)", color: "hsl(26 55% 28%)", border: "1px solid hsl(26 68% 42% / 0.3)" }}>{r}</span>
+                ))}
+              </div>
             </div>
           )}
+
           <button
             onClick={logout}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold text-sm mt-4 border"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm mt-2 border transition-colors"
             style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}
           >
             <LogOut className="w-4 h-4" /> Sign out
@@ -301,6 +328,18 @@ export default function Register() {
             </button>
           </form>
         )}
+      </div>
+    </div>
+  );
+}
+
+function ProfileRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
+      <span style={{ color: "hsl(26 68% 42%)" }}>{icon}</span>
+      <div className="flex-1 min-w-0">
+        <p className="font-sans text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: "hsl(14 40% 48%)" }}>{label}</p>
+        <p className="font-sans text-sm font-medium truncate" style={{ color: "hsl(14 72% 18%)" }}>{value}</p>
       </div>
     </div>
   );

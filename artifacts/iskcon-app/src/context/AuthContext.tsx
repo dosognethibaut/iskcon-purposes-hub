@@ -5,6 +5,7 @@ export interface CurrentUser {
   id: number;
   fullName: string;
   email: string;
+  dob: string;
   community: string;
   deptRoles: string[];
   photoDataUrl: string | null;
