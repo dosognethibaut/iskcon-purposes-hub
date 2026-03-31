@@ -17,49 +17,49 @@ const quotes = [
   {
     text: "The Krishna consciousness movement is meant to teach people how to love God. This is the sum and substance of all our purposes.",
     context: "On ISKCON's essence",
-    ref: "Srila Prabhupada · Letter to Hamsaduta, 1969",
+    ref: "Śrīla Prabhupāda · Letter to Hamsaduta, New York, 16 September 1969",
     vanipedia: "https://vanipedia.org/wiki/The_Purpose_of_ISKCON",
   },
   {
     text: "Simple living and high thinking is the solution to economic problems. We only need to produce food and live peacefully.",
     context: "On Simple Living",
-    ref: "Srila Prabhupada · Lecture, Los Angeles, 1970",
+    ref: "Śrīla Prabhupāda · Lecture on SB 1.2.6, Los Angeles, 17 August 1972",
     vanipedia: "https://vanipedia.org/wiki/Simple_Living_High_Thinking",
   },
   {
     text: "We want to create a community of devotees who live together, work together, and worship together. This is the ideal of Krishna consciousness.",
     context: "On Community",
-    ref: "Srila Prabhupada · Letter to Kirtanananda, 1968",
+    ref: "Śrīla Prabhupāda · Letter to Kirtanananda, New York, 20 June 1968",
     vanipedia: "https://vanipedia.org/wiki/Community",
   },
   {
     text: "Every town and every village should have a temple where people can come to learn the science of God. This is our mission.",
     context: "On Holy Place",
-    ref: "Srila Prabhupada · Bhāgavatam lecture, 1972",
+    ref: "Śrīla Prabhupāda · Lecture on SB 1.7.6, Vṛndāvana, 5 September 1976",
     vanipedia: "https://vanipedia.org/wiki/Temple",
   },
   {
     text: "We are distributing this knowledge freely. Anyone who reads our books, who hears our philosophy, will be benefited.",
     context: "On Accessing",
-    ref: "Srila Prabhupada · Press interview, 1975",
+    ref: "Śrīla Prabhupāda · Press conference, Miami, 28 February 1975",
     vanipedia: "https://vanipedia.org/wiki/Book_Distribution",
   },
   {
     text: "You must learn the Bhagavad-gītā thoroughly. This is not ordinary knowledge — it is transcendental knowledge that liberates the soul.",
     context: "On Learning",
-    ref: "Srila Prabhupada · Introduction to Bhagavad-gītā As It Is",
+    ref: "Śrīla Prabhupāda · Introduction to Bhagavad-gītā As It Is, 1st edition, 1968",
     vanipedia: "https://vanipedia.org/wiki/Bhagavad-gita_As_It_Is",
   },
   {
     text: "Whatever you do, do it for Krishna. When everything is applied in Krishna's service, that is perfection.",
     context: "On Applying",
-    ref: "Srila Prabhupada · Lecture on BG 9.27, New York, 1966",
+    ref: "Śrīla Prabhupāda · Lecture on BG 9.27, New York, 25 November 1966",
     vanipedia: "https://vanipedia.org/wiki/Everything_for_Krishna",
   },
   {
     text: "Go and preach. The greatest act of compassion is to share Krishna consciousness with those who are suffering in ignorance.",
     context: "On Sharing",
-    ref: "Srila Prabhupada · Śrīmad-Bhāgavatam lecture, 1974",
+    ref: "Śrīla Prabhupāda · Lecture on SB 5.5.2, Hyderabad, 12 April 1975",
     vanipedia: "https://vanipedia.org/wiki/Preaching_is_the_Essence",
   },
 ];
@@ -252,7 +252,7 @@ export default function Home() {
                 key={p.id}
                 type="button"
                 onClick={() => setActivePurpose(active ? null : i)}
-                className="flex flex-col items-center gap-1 focus:outline-none"
+                className="flex flex-col items-center gap-0 focus:outline-none"
                 style={{
                   opacity: activePurpose !== null && !active ? 0.3 : 1,
                   transition: "opacity 0.2s, transform 0.2s",
@@ -260,6 +260,19 @@ export default function Home() {
                   width: 80,
                 }}
               >
+                <span
+                  style={{
+                    fontFamily: "'Lora', Georgia, serif",
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                    color: active ? "hsl(26 68% 38%)" : "hsl(14 45% 42%)",
+                    lineHeight: 1,
+                    marginBottom: "0.2rem",
+                    transition: "color 0.2s",
+                  }}
+                >
+                  {p.id}
+                </span>
                 <img
                   src={p.logo}
                   alt={p.title}
@@ -292,7 +305,7 @@ export default function Home() {
           "Your love for me will be shown by how much you cooperate with each other after I am gone."
         </p>
         <p className="font-sans mt-2 text-xs tracking-wide" style={{ color: "hsl(14 35% 50%)" }}>
-          Srila Prabhupada · 1977
+          Śrīla Prabhupāda · Conversation with disciples, Vṛndāvana, October 1977
         </p>
       </div>
     </div>
