@@ -85,7 +85,7 @@ export default function Register() {
   const profilePhotoRef = useRef<HTMLInputElement>(null);
   const [photoUpdating, setPhotoUpdating] = useState(false);
 
-  const [tab, setTab] = useState<"register" | "signin">("register");
+  const [tab, setTab] = useState<"register" | "signin">("signin");
   const [registrationStep, setRegistrationStep] = useState<1 | 2>(1);
 
   const [photo, setPhoto] = useState<string | null>(null);
