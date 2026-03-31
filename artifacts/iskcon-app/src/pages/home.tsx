@@ -116,18 +116,18 @@ export default function Home() {
           }}
         />
 
-        {/* Radhadesh logo — crisp, displayed well below natural size */}
+        {/* Radhadesh logo */}
         <a
           href="https://www.radhadesh.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute top-3 right-3 z-20 rounded-lg overflow-hidden"
-          style={{ boxShadow: "0 1px 8px hsl(14 35% 6% / 0.4)" }}
+          className="absolute top-3 right-3 z-20 rounded-full overflow-hidden"
+          style={{ width: 40, height: 40, boxShadow: "0 1px 8px hsl(14 35% 6% / 0.4)" }}
         >
           <img
             src={radhadeshLogo}
             alt="Domaine de Radhadesh"
-            style={{ height: 36, width: "auto", display: "block", imageRendering: "auto" }}
+            style={{ width: 40, height: 40, objectFit: "cover", display: "block" }}
           />
         </a>
 
