@@ -579,12 +579,14 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             )}
 
             {/* Propose an Activity — all signed-in users */}
-            {currentUser ? (
-              <div className="rounded-2xl p-5 shadow relative overflow-hidden"
-                style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
-                <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
-                <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
-                <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your proposal will appear once validated</p>
+            <div className="rounded-2xl p-5 shadow relative overflow-hidden"
+              style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
+              <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
+              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
+              <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your proposal will appear once validated</p>
+              {!currentUser ? (
+                <SignInPrompt action="propose an activity" />
+              ) : (
                 <Form {...activityForm}>
                   <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-4">
                     <FormField control={activityForm.control} name="title" render={({ field }) => (
@@ -678,10 +680,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     </Button>
                   </form>
                 </Form>
-              </div>
-            ) : (
-              <SignInPrompt action="propose an activity" />
-            )}
+              )}
+            </div>
           </TabsContent>
 
           {/* ── MESSAGES TAB ── */}
