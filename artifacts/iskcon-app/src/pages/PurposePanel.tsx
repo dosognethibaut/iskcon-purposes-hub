@@ -42,13 +42,13 @@ const messageSchema = z.object({
 });
 
 const accentById: Record<number, string> = {
-  1: "hsl(150 42% 36%)",
-  2: "hsl(213 55% 42%)",
-  3: "hsl(265 38% 44%)",
-  4: "hsl(26 68% 42%)",
-  5: "hsl(40 62% 38%)",
-  6: "hsl(178 48% 34%)",
-  7: "hsl(358 52% 42%)",
+  1: "hsl(150 42% 36%)",   // Simple Living — teal green
+  2: "hsl(220 62% 42%)",   // Community — cobalt blue
+  3: "hsl(0 0% 14%)",      // Holy Place — near-black (dark half of logo)
+  4: "hsl(10 48% 36%)",    // Accessing — dark terra cotta
+  5: "hsl(10 48% 36%)",    // Learning — dark terra cotta
+  6: "hsl(10 48% 36%)",    // Applying — dark terra cotta
+  7: "hsl(10 48% 36%)",    // Sharing — dark terra cotta
 };
 
 
