@@ -30,7 +30,7 @@ const RADHADESH_DEPTS = [
   "Deity Worship", "Vaishnava Festivals", "Landscaping", "Forest",
   "Retreat Centre", "Community Kitchen", "Maintenance & Construction",
   "Service Coordinator (ex Temple Commander)", "Permaculture", "Tourism",
-  "Devotee Care", "Education", "Ashram", "Radhadesh Mellows", "Other",
+  "Devotee Care", "Education", "Ashram", "Radhadesh Mellows", "RAC", "Other",
 ];
 
 const surveyPurposes = [
