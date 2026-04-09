@@ -29,7 +29,7 @@ const RADHADESH_DEPTS = [
   "Govinda's Restaurant", "Communications", "Outreach (Rose)", "Goshala",
   "Deity Worship", "Vaishnava Festivals", "Landscaping", "Forest",
   "Retreat Centre", "Community Kitchen", "Maintenance & Construction",
-  "Service Coordinator (ex Temple Commander)", "Permaculture", "Tourism",
+  "Service Coordinator (ex Temple Commander)", "Premaculture", "Tourism",
   "Devotee Care", "Education", "Ashram", "Radhadesh Mellows", "RAC", "Other",
 ];
 
