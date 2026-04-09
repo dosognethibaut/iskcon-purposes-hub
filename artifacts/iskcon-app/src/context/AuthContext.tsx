@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
-import { setAuthTokenGetter } from "@workspace/api-client-react";
+import {
+  getCurrentUserFromStorage,
+  loginUser,
+  logoutUser,
+  subscribeToLocalData,
+} from "@/lib/local-data";
 
 export interface CurrentUser {
   id: number;
@@ -24,15 +29,6 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-async function apiFetch(path: string, options?: RequestInit) {
-  const res = await fetch(`${API_BASE}${path}`, options);
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error ?? "Request failed");
-  return data;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("auth_token"));
@@ -43,41 +39,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(tok);
     localStorage.setItem("auth_token", tok);
     localStorage.setItem("auth_user", JSON.stringify(user));
-    setAuthTokenGetter(() => tok);
   }, []);
 
   const logout = useCallback(() => {
     setCurrentUser(null);
     setToken(null);
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
-    setAuthTokenGetter(null);
+    logoutUser();
   }, []);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("auth_token");
-    const savedUser = localStorage.getItem("auth_user");
-    if (savedToken && savedUser) {
-      try {
-        const user = JSON.parse(savedUser) as CurrentUser;
-        setCurrentUser(user);
-        setToken(savedToken);
-        setAuthTokenGetter(() => savedToken);
-      } catch {
-        localStorage.removeItem("auth_token");
-        localStorage.removeItem("auth_user");
-      }
-    }
+    const sync = () => {
+      const savedToken = localStorage.getItem("auth_token");
+      const user = getCurrentUserFromStorage();
+      setCurrentUser(user);
+      setToken(savedToken);
+    };
+    sync();
     setIsLoading(false);
+    return subscribeToLocalData(sync);
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const data = await apiFetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    storeAuth(data.user, data.token);
+    const user = loginUser(email, password);
+    storeAuth(user, String(user.id));
   }, [storeAuth]);
 
   const setUserFromRegistration = useCallback((user: CurrentUser, tok: string) => {

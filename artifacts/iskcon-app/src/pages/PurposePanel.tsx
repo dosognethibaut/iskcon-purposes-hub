@@ -7,7 +7,7 @@ import {
   useCreateMessage,
   getGetActivitiesQueryKey,
   getGetMessagesQueryKey,
-} from "@workspace/api-client-react";
+} from "@/lib/local-api";
 import {
   CalendarDays, MessageCircle, Loader2, Lock,
   ChevronDown, ChevronUp, CheckCircle2, Clock, MessageSquare, Send,
@@ -25,6 +25,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import {
+  addComment,
+  approveActivity as approveActivityLocal,
+  approveMessage as approveMessageLocal,
+  completeActivity as completeActivityLocal,
+  deleteActivity as deleteActivityLocal,
+  deleteMessage as deleteMessageLocal,
+  disapproveActivity as disapproveActivityLocal,
+  disapproveMessage as disapproveMessageLocal,
+  getComments,
+  getStats,
+  joinActivity as joinActivityLocal,
+  leaveActivity as leaveActivityLocal,
+  subscribeToLocalData,
+  uncompleteActivity as uncompleteActivityLocal,
+} from "@/lib/local-data";
 
 const activitySchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -81,8 +97,6 @@ interface PurposePanelProps {
   description: string;
 }
 
-const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
 function PendingBanner({ count, label }: { count: number; label: string }) {
   return (
     <div className="flex items-center gap-2 px-1 mb-1">
@@ -122,23 +136,17 @@ function CommentSection({
   const [input, setInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const endpoint = itemType === "activity"
-    ? `${API_BASE}/api/purposes/${purposeId}/activities/${itemId}/comments`
-    : `${API_BASE}/api/purposes/${purposeId}/messages/${itemId}/comments`;
-
   const load = useCallback(async () => {
     if (loaded) return;
     try {
-      const res = await fetch(endpoint);
-      if (res.ok) setComments(await res.json());
+      setComments(getComments(itemType, itemId));
     } catch { /* silent */ }
     setLoaded(true);
-  }, [endpoint, loaded]);
+  }, [itemId, itemType, loaded]);
 
   const refresh = async () => {
     try {
-      const res = await fetch(endpoint);
-      if (res.ok) setComments(await res.json());
+      setComments(getComments(itemType, itemId));
     } catch { /* silent */ }
   };
 
@@ -146,12 +154,7 @@ function CommentSection({
     if (!input.trim() || !token) return;
     setSubmitting(true);
     try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ content: input.trim() }),
-      });
-      if (!res.ok) throw new Error();
+      addComment(itemType, itemId, input.trim());
       setInput("");
       await refresh();
       toast.success("Comment added");
@@ -162,8 +165,10 @@ function CommentSection({
     }
   };
 
-  // Load comments when this component mounts
-  useState(() => { load(); });
+  useEffect(() => {
+    void load();
+  }, [load]);
+  useEffect(() => subscribeToLocalData(refresh), [refresh]);
 
   return (
     <div className="px-4 pb-4 pt-2" style={{ borderTop: "1px solid hsl(14 25% 72% / 0.2)" }}>
@@ -244,17 +249,14 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {
-    fetch(`${API_BASE}/api/stats`)
-      .then(r => r.ok ? r.json() : null)
-      .then(d => d && setStats(d))
-      .catch(() => {});
+    const refresh = () => setStats(getStats());
+    refresh();
+    return subscribeToLocalData(refresh);
   }, []);
 
   const [openActivities, setOpenActivities] = useState<Set<number>>(new Set());
   const [expandedActivityComments, setExpandedActivityComments] = useState<Set<number>>(new Set());
   const [expandedMessageComments, setExpandedMessageComments] = useState<Set<number>>(new Set());
-  const [activityCommentCounts, setActivityCommentCounts] = useState<Record<number, number>>({});
-  const [messageCommentCounts, setMessageCommentCounts] = useState<Record<number, number>>({});
   const [approvingActivityId, setApprovingActivityId] = useState<number | null>(null);
   const [approvingMessageId, setApprovingMessageId] = useState<number | null>(null);
   const [disapprovingActivityId, setDisapprovingActivityId] = useState<number | null>(null);
@@ -340,11 +342,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setApprovingActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/approve`, {
-        method: "PATCH",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      approveActivityLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       toast.success("Activity approved and published");
     } catch {
@@ -358,11 +356,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setDisapprovingActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/disapprove`, {
-        method: "PATCH",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      disapproveActivityLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       toast.success("Activity moved back to pending");
     } catch {
@@ -376,11 +370,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setApprovingMessageId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/messages/${id}/approve`, {
-        method: "PATCH",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      approveMessageLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetMessagesQueryKey(purposeId) });
       toast.success("Message approved and published");
     } catch {
@@ -394,11 +384,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setDisapprovingMessageId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/messages/${id}/disapprove`, {
-        method: "PATCH",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      disapproveMessageLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetMessagesQueryKey(purposeId) });
       toast.success("Message moved back to pending");
     } catch {
@@ -412,12 +398,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setCompletingActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/complete`, {
-        method: "PATCH",
-        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ completedPhotoDataUrl }),
-      });
-      if (!res.ok) throw new Error();
+      completeActivityLocal(id, completedPhotoDataUrl);
       queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       toast.success("Activity marked as done!");
     } catch {
@@ -431,11 +412,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setUncompletingActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/uncomplete`, {
-        method: "PATCH",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      uncompleteActivityLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       toast.success("Activity unmarked as done");
     } catch {
@@ -449,16 +426,15 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setJoiningActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/join`, {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (res.status === 409) { toast.error("Activity is full"); return; }
-      if (!res.ok) throw new Error();
+      joinActivityLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       toast.success("You joined this activity!");
-    } catch {
-      toast.error("Failed to join activity");
+    } catch (error) {
+      if (error instanceof Error && error.message === "Activity is full") {
+        toast.error("Activity is full");
+      } else {
+        toast.error("Failed to join activity");
+      }
     } finally {
       setJoiningActivityId(null);
     }
@@ -468,11 +444,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setJoiningActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}/join`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      leaveActivityLocal(id);
       queryClient.invalidateQueries({ queryKey: getGetActivitiesQueryKey(purposeId) });
       toast.success("You left this activity");
     } catch {
@@ -524,11 +496,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setDeletingActivityId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/activities/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      deleteActivityLocal(id);
       queryClient.invalidateQueries({ queryKey: [...getGetActivitiesQueryKey(purposeId), currentUser?.id ?? "anon"] });
       toast.success("Activity deleted");
     } catch {
@@ -542,11 +510,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
     if (!token) return;
     setDeletingMessageId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/purposes/${purposeId}/messages/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error();
+      deleteMessageLocal(id);
       queryClient.invalidateQueries({ queryKey: [...getGetMessagesQueryKey(purposeId), currentUser?.id ?? "anon"] });
       toast.success("Message deleted");
     } catch {

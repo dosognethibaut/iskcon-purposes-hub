@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { ArrowLeft, ChevronLeft, ChevronRight, CalendarDays, MapPin, Users, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { getCalendarActivities, subscribeToLocalData } from "@/lib/local-data";
 import { format } from "date-fns";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -31,8 +32,6 @@ const purposeNames: Record<number, string> = {
   7: "Sharing",
 };
 
-const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
@@ -46,21 +45,23 @@ export default function When() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
-  const { token } = useAuth();
+  const { currentUser } = useAuth();
 
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    const headers: Record<string, string> = {};
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-    fetch(`${API_BASE}/api/activities`, { headers })
-      .then(r => r.ok ? r.json() : [])
-      .then(data => setActivities(Array.isArray(data) ? data : []))
-      .catch(() => setActivities([]))
-      .finally(() => setLoading(false));
-  }, [token]);
+    const refresh = () => {
+      setLoading(true);
+      try {
+        setActivities(getCalendarActivities(currentUser));
+      } finally {
+        setLoading(false);
+      }
+    };
+    refresh();
+    return subscribeToLocalData(refresh);
+  }, [currentUser]);
 
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);

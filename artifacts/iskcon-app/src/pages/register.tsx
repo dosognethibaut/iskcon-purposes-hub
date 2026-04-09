@@ -8,6 +8,12 @@ import {
 import { format, parseISO } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import {
+  registerUser,
+  submitSurveyAnswers,
+  updateCurrentUserPhoto,
+  updateCurrentUserProfile,
+} from "@/lib/local-data";
 
 import logoAccessing    from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
 import logoLearning     from "@assets/7p_LogoNoTitle_Learning_1774931916883.png";
@@ -77,8 +83,6 @@ function surveyHint(q: SurveyQuestion, count: number): string {
 
 function isAnswered(q: SurveyQuestion, count: number) { return count >= q.min; }
 
-const API_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
 export default function Register() {
   const [, navigate] = useLocation();
   const { currentUser, token, login, logout, setUserFromRegistration, updateCurrentUser } = useAuth();
@@ -131,18 +135,12 @@ export default function Register() {
       const finalDeptRoles = editDeptRoles.includes("Other") && editForm.deptRolesOther
         ? [...editDeptRoles.filter(r => r !== "Other"), editForm.deptRolesOther]
         : editDeptRoles;
-      const res = await fetch(`${API_BASE}/api/auth/profile`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({
-          fullName: editForm.fullName,
-          dob: editForm.dob,
-          community: editForm.community,
-          deptRoles: finalDeptRoles,
-        }),
+      const data = updateCurrentUserProfile({
+        fullName: editForm.fullName,
+        dob: editForm.dob,
+        community: editForm.community,
+        deptRoles: finalDeptRoles,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed to save");
       updateCurrentUser(data);
       setEditing(false);
       toast.success("Profile updated");
@@ -200,23 +198,16 @@ export default function Register() {
       const finalDeptRoles = deptRoles.includes("Other") && form.deptRolesOther
         ? [...deptRoles.filter(r => r !== "Other"), form.deptRolesOther]
         : deptRoles;
-
-      const res = await fetch(`${API_BASE}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: form.fullName,
-          email: form.email,
-          password: form.password,
-          dob: form.dob,
-          community: form.community,
-          deptRoles: finalDeptRoles,
-          photoDataUrl: photo ?? undefined,
-          surveyAnswers: [],
-        }),
+      const data = registerUser({
+        fullName: form.fullName,
+        email: form.email,
+        password: form.password,
+        dob: form.dob,
+        community: form.community,
+        deptRoles: finalDeptRoles,
+        photoDataUrl: photo ?? undefined,
+        surveyAnswers: [],
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Registration failed");
       setUserFromRegistration(data.user, data.token);
       toast.success(`Welcome, ${data.user.fullName.split(" ")[0]}! Now complete the survey.`);
       setRegistrationStep(2);
@@ -231,19 +222,11 @@ export default function Register() {
     if (!allSurveyAnswered || submitting || !token) return;
     setSubmitting(true);
     try {
-      const res = await fetch(`${API_BASE}/api/auth/survey`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          answers: Object.entries(surveyAnswers).map(([qi, ans]) => ({
-            questionIndex: Number(qi), answers: ans,
-          })),
-        }),
-      });
-      if (!res.ok) throw new Error("Survey submission failed");
+      submitSurveyAnswers(
+        Object.entries(surveyAnswers).map(([qi, ans]) => ({
+          questionIndex: Number(qi), answers: ans,
+        })),
+      );
       toast.success("Registration complete! Hare Krishna 🙏");
       setRegistrationStep(1);
     } catch {
@@ -279,12 +262,7 @@ export default function Register() {
     reader.onload = async (ev) => {
       const dataUrl = ev.target?.result as string;
       try {
-        const res = await fetch(`${API_BASE}/api/auth/photo`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-          body: JSON.stringify({ photoDataUrl: dataUrl }),
-        });
-        if (!res.ok) throw new Error("Upload failed");
+        updateCurrentUserPhoto(dataUrl);
         updateCurrentUser({ photoDataUrl: dataUrl });
         toast.success("Profile photo updated");
       } catch {

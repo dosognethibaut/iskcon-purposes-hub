@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import PurposePanel from "./PurposePanel";
 import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, Eye, Bell } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { getBadges, getNotifications, markNotificationsReadAll, subscribeToLocalData } from "@/lib/local-data";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import sevenPLogo from "@assets/7p_Colours_1774938784527.png";
 import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774940060432.png";
@@ -102,8 +103,6 @@ const purposes = [
   },
 ];
 
-const HOME_API = import.meta.env.BASE_URL.replace(/\/$/, "");
-
 function getSeenIds(key: string): Set<number> {
   try { return new Set(JSON.parse(localStorage.getItem(key) ?? "[]") as number[]); }
   catch { return new Set(); }
@@ -141,53 +140,38 @@ export default function Home() {
   // Fetch badge data every 4s — re-run when user changes role (login/logout)
   useEffect(() => {
     let lastData: Record<number, { activityIds: number[]; messageIds: number[] }> | null = null;
-    const fetchBadges = () => {
-      const tok = localStorage.getItem("auth_token");
-      const headers: Record<string, string> = {};
-      if (tok) headers["Authorization"] = `Bearer ${tok}`;
-      fetch(`${HOME_API}/api/badges`, { headers })
-        .then(r => r.ok ? r.json() : null)
-        .then(d => { if (d) { lastData = d; computeBadges(d, isAdmin); } })
-        .catch(() => {});
+    const refresh = () => {
+      lastData = getBadges(currentUser);
+      computeBadges(lastData, isAdmin);
     };
-    fetchBadges();
-    const interval = setInterval(fetchBadges, 4000);
+    refresh();
     // Re-compute when PurposePanel marks items as seen
     const onStorage = () => { if (lastData) computeBadges(lastData, isAdmin); };
     window.addEventListener("storage", onStorage);
-    return () => { clearInterval(interval); window.removeEventListener("storage", onStorage); };
-  }, [computeBadges, currentUser?.id]); // restart when user logs in/out
+    const unsubscribe = subscribeToLocalData(refresh);
+    return () => {
+      unsubscribe();
+      window.removeEventListener("storage", onStorage);
+    };
+  }, [computeBadges, currentUser?.id, isAdmin]);
 
   // Notification polling — only when logged in
   useEffect(() => {
     if (!currentUser) { setNotifCount(0); setNotifications([]); return; }
-    const token = localStorage.getItem("iskcon_jwt");
-    if (!token) return;
-    const fetchNotifs = () => {
-      fetch(`${HOME_API}/api/notifications`, { headers: { Authorization: `Bearer ${token}` } })
-        .then(r => r.ok ? r.json() : null)
-        .then(d => {
-          if (d) {
-            lastNotifData.current = d;
-            setNotifCount(d.unreadCount);
-            setNotifications(d.notifications);
-          }
-        })
-        .catch(() => {});
+    const refresh = () => {
+      const data = getNotifications();
+      lastNotifData.current = data;
+      setNotifCount(data.unreadCount);
+      setNotifications(data.notifications);
     };
-    fetchNotifs();
-    const interval = setInterval(fetchNotifs, 4000);
-    return () => clearInterval(interval);
+    refresh();
+    return subscribeToLocalData(refresh);
   }, [currentUser]);
 
   const openNotifs = () => {
     setShowNotifs(true);
     if (notifCount > 0) {
-      const token = localStorage.getItem("iskcon_jwt");
-      fetch(`${HOME_API}/api/notifications/read-all`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token ?? ""}` },
-      }).catch(() => {});
+      markNotificationsReadAll();
       setNotifCount(0);
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     }

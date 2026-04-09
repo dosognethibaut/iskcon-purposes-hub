@@ -7,7 +7,7 @@ import {
   useCreateMessage,
   getGetActivitiesQueryKey,
   getGetMessagesQueryKey,
-} from "@workspace/api-client-react";
+} from "@/lib/local-api";
 import { ArrowLeft, MessageCircle, CalendarDays, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
