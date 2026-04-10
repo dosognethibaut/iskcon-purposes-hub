@@ -227,7 +227,7 @@ export default function Register() {
         Object.entries(surveyAnswers).map(([qi, ans]) => ({
           questionIndex: Number(qi), answers: ans,
         })),
-      );await fetch("/api/send-registration", {
+await fetch("https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/send-registration", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
