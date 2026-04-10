@@ -12,7 +12,8 @@ import {
   registerUser,
   submitSurveyAnswers,
   updateCurrentUserPhoto,
-  updateCurrentUserProfile,
+deleteCurrentUserProfile,
+ updateCurrentUserProfile,
 } from "@/lib/local-data";
 
 import logoAccessing    from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
@@ -396,16 +397,14 @@ export default function Register() {
   onClick={() => {
     const confirmed = window.confirm("Are you sure you want to delete your profile? This cannot be undone.");
     if (!confirmed) return;
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
-    toast.success("Profile deleted.");
+deleteCurrentUserProfile();    
+toast.success("Profile deleted.");
     window.location.href = "/";
   }}
   className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans text-lg font-semibold"
   style={{
-    border: "1px solid hsl(0 70% 55% / 0.35)",
-    color: "hsl(0 65% 45%)",
-    background: "hsl(0 80% 98%)",
+  background: "black",
+  color: "white",
   }}
 >
   Delete profile

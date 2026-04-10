@@ -371,6 +371,21 @@ export function logoutUser() {
   emitChange();
 }
 
+export function deleteCurrentUserProfile() {
+  const userId = getAuthUserId();
+  if (!userId) throw new Error("Not authenticated");
+
+  writeDb((db) => {
+    db.users = db.users.filter((user) => user.id !== userId);
+    db.activities = db.activities.filter((activity) => activity.userId !== userId);
+    db.messages = db.messages.filter((message) => message.userId !== userId);
+    return db;
+  });
+
+  clearAuth();
+  emitChange();
+}
+
 export function updateCurrentUserProfile(input: {
   fullName: string;
   dob: string;
