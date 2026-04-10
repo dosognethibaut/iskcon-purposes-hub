@@ -226,7 +226,23 @@ export default function Register() {
         Object.entries(surveyAnswers).map(([qi, ans]) => ({
           questionIndex: Number(qi), answers: ans,
         })),
-      );
+      );await fetch("/api/send-registration", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    fullName: form.fullName,
+    email: form.email,
+    dob: form.dob,
+    community: form.community,
+    deptRoles: form.deptRoles.includes("Other") && form.deptRolesOther
+      ? [...form.deptRoles.filter((r) => r !== "Other"), form.deptRolesOther]
+      : form.deptRoles,
+    surveyAnswers: Object.entries(surveyAnswers).map(([qi, ans]) => ({
+      questionIndex: Number(qi),
+      answers: ans,
+    })),
+  }),
+});
       toast.success("Registration complete! Hare Krishna 🙏");
       setRegistrationStep(1);
     } catch {
