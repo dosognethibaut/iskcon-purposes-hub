@@ -390,7 +390,25 @@ export default function Register() {
                 className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm transition-opacity"
                 style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", opacity: editSaving ? 0.6 : 1 }}>
                 {editSaving ? "Saving…" : <><Check className="w-4 h-4" /> Save changes</>}
-              </button>
+              
+<button
+  onClick={() => {
+    const confirmed = window.confirm("Are you sure you want to delete your profile? This cannot be undone.");
+    if (!confirmed) return;
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("auth_user");
+    toast.success("Profile deleted.");
+    window.location.href = "/";
+  }}
+  className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans text-lg font-semibold"
+  style={{
+    border: "1px solid hsl(0 70% 55% / 0.35)",
+    color: "hsl(0 65% 45%)",
+    background: "hsl(0 80% 98%)",
+  }}
+>
+  Delete profile
+</button>
               <button onClick={cancelEditing} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm border transition-colors"
                 style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}>
                 <X className="w-4 h-4" /> Cancel
