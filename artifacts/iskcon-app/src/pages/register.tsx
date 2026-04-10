@@ -228,7 +228,7 @@ export default function Register() {
           questionIndex: Number(qi), answers: ans,
         })),
 );
-await fetch("https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/send-registration", {
+await fetch("https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/api/send-registration", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
