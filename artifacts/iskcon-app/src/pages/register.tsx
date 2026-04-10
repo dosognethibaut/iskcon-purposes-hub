@@ -391,6 +391,7 @@ export default function Register() {
                 style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", opacity: editSaving ? 0.6 : 1 }}>
                 {editSaving ? "Saving…" : <><Check className="w-4 h-4" /> Save changes</>}
               
+</button>
 <button
   onClick={() => {
     const confirmed = window.confirm("Are you sure you want to delete your profile? This cannot be undone.");
