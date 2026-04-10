@@ -515,7 +515,7 @@ toast.success("Profile deleted.");
             </div>
           ))}
 
-          <button onClick={handleStep2} disabled={!allSurveyAnswered || submitting}
+<button type="button" onClick={handleStep2} disabled={!allSurveyAnswered || submitting}
             className="w-full py-3.5 rounded-full font-sans font-semibold text-sm transition-all"
             style={{ background: allSurveyAnswered && !submitting ? "hsl(26 68% 42%)" : "hsl(14 20% 75%)", color: allSurveyAnswered ? "hsl(40 80% 96%)" : "hsl(14 20% 52%)", cursor: allSurveyAnswered ? "pointer" : "not-allowed" }}>
             {submitting ? "Saving…" : allSurveyAnswered ? "Complete Registration →" : `${totalQuestions - surveyAnswered} question${totalQuestions - surveyAnswered > 1 ? "s" : ""} remaining`}
