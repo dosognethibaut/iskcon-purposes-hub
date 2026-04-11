@@ -1,5 +1,5 @@
 import { Router } from "express";
-import nodemailer from "nodemailer";
+import { emailRegistrationDigest } from "./utils/email";
 
 const router = Router();
 
@@ -9,58 +9,35 @@ router.get("/health", (_req, res) => {
 
 router.post("/send-registration", async (req, res) => {
   try {
-    const {
-      fullName,
-      email,
-      dob,
-      community,
-      deptRoles,
-      surveyAnswers,
-    } = req.body ?? {};
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
+    const body = req.body ?? {};
+    const result = await emailRegistrationDigest({
+      fullName: typeof body.fullName === "string" ? body.fullName : "Unknown user",
+      email: typeof body.email === "string" ? body.email : "",
+      dob: typeof body.dob === "string" ? body.dob : "",
+      community: typeof body.community === "string" ? body.community : "",
+      deptRoles: Array.isArray(body.deptRoles) ? body.deptRoles.filter((role): role is string => typeof role === "string") : [],
+      surveyAnswers: Array.isArray(body.surveyAnswers)
+        ? body.surveyAnswers
+            .filter((item): item is { questionIndex: number; answers: string[] } =>
+              typeof item?.questionIndex === "number" && Array.isArray(item?.answers),
+            )
+            .map((item) => ({
+              questionIndex: item.questionIndex,
+              answers: item.answers.filter((answer): answer is string => typeof answer === "string"),
+            }))
+        : [],
     });
 
-    const surveyText = Array.isArray(surveyAnswers)
-      ? surveyAnswers
-          .map(
-            (item: { questionIndex: number; answers: string[] }) =>
-              `Question ${item.questionIndex + 1}: ${(item.answers || []).join(", ")}`
-          )
-          .join("\n")
-      : "No survey answers";
-
-    const deptText = Array.isArray(deptRoles) ? deptRoles.join(", ") : "";
-
-    const text = `
-New registration received
-
-Full name: ${fullName || ""}
-Email: ${email || ""}
-Date of birth: ${dob || ""}
-Community: ${community || ""}
-Department / Role: ${deptText}
-
-Survey answers:
-${surveyText}
-    `.trim();
-
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: "iskcon.7purposes@gmail.com",
-      subject: `New registration: ${fullName || "Unknown user"}`,
-      text,
-    });
+    if (!result) {
+      console.error("[Registration email] Delivery failed or was skipped");
+      res.status(500).json({ ok: false, error: "Failed to send registration email" });
+      return;
+    }
 
     res.json({ ok: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false, error: "Failed to send email" });
+    console.error("[Registration email] Unexpected error:", error);
+    res.status(500).json({ ok: false, error: "Failed to send registration email" });
   }
 });
 

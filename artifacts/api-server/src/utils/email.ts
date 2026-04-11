@@ -32,6 +32,8 @@ const PURPOSE_LABELS: Record<string, string> = {
   sharing: "Sharing",
 };
 
+type SurveyAnswer = { questionIndex: number; answers: string[] };
+
 function getTransporter() {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
@@ -67,7 +69,7 @@ async function send(subject: string, html: string) {
   const transporter = getTransporter();
   if (!transporter) {
     console.log(`[Email] Credentials not configured — skipping: ${subject}`);
-    return;
+    return false;
   }
   try {
     await transporter.sendMail({
@@ -76,8 +78,71 @@ async function send(subject: string, html: string) {
       subject,
       html,
     });
+    console.log(`[Email] Sent: ${subject}`);
+    return true;
   } catch (err) {
     console.error("[Email] Failed to send:", err);
+    return false;
+  }
+}
+
+async function sendRegistrationDigestMail(payload: {
+  fullName: string;
+  email: string;
+  dob: string;
+  community: string;
+  deptRoles: string[];
+  surveyAnswers: SurveyAnswer[];
+}) {
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.log("[Email] Registration digest skipped: missing GMAIL_USER or GMAIL_APP_PASSWORD");
+    return false;
+  }
+
+  const surveyBlocks = payload.surveyAnswers.length
+    ? payload.surveyAnswers.map((answer) => {
+        const question = SURVEY_QUESTIONS[answer.questionIndex] ?? `Question ${answer.questionIndex + 1}`;
+        const answerLabels = answer.answers.map((id, index) => {
+          const label = PURPOSE_LABELS[id] ?? id;
+          return answer.answers.length > 1 ? `${index + 1}. ${label}` : label;
+        }).join(", ");
+
+        return `
+          <div style="margin-bottom: 16px; padding: 12px; background: #fff8ef; border-radius: 8px; border-left: 3px solid #c87941;">
+            <p style="margin: 0 0 6px; font-weight: bold; font-size: 0.85rem; color: #7a3e1a;">${question}</p>
+            <p style="margin: 0; font-size: 0.9rem;">${answerLabels || "—"}</p>
+          </div>`;
+      }).join("")
+    : `<p style="margin: 0; font-size: 0.9rem;">No survey answers submitted.</p>`;
+
+  const html = wrap("New Registration Completed", `
+    <table style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
+      ${row("Name", payload.fullName)}
+      ${row("Email", payload.email)}
+      ${row("Date of birth", payload.dob)}
+      ${row("Community", payload.community)}
+      ${row("Departments", payload.deptRoles.length ? payload.deptRoles.join(", ") : "None selected")}
+    </table>
+    <div>
+      <h3 style="margin: 0 0 12px; font-size: 1rem; color: #7a3e1a;">Survey answers</h3>
+      ${surveyBlocks}
+    </div>
+  `);
+
+  try {
+    await transporter.sendMail({
+      from: `"ISKCON 7 Purposes" <${process.env.GMAIL_USER}>`,
+      to: ADMIN_EMAIL,
+      replyTo: payload.email,
+      subject: `🙏 New registration completed: ${payload.fullName}`,
+      html,
+    });
+    console.log(`[Email] Registration digest sent for ${payload.email}`);
+    return true;
+  } catch (err) {
+    console.error("[Email] Registration digest failed:", err);
+    return false;
   }
 }
 
@@ -102,7 +167,7 @@ export async function emailNewRegistration(user: {
 export async function emailSurveyAnswers(user: {
   fullName: string;
   email: string;
-}, answers: { questionIndex: number; answers: string[] }[]) {
+}, answers: SurveyAnswer[]) {
   const rows = answers.map(a => {
     const question = SURVEY_QUESTIONS[a.questionIndex] ?? `Question ${a.questionIndex + 1}`;
     const answerLabels = a.answers.map((id, i) => {
@@ -120,6 +185,17 @@ export async function emailSurveyAnswers(user: {
     <p style="margin-bottom: 20px;"><strong>${user.fullName}</strong> (${user.email}) just submitted their survey.</p>
     ${rows}`;
   await send(`📋 Survey: ${user.fullName}`, wrap("Survey Results", body));
+}
+
+export async function emailRegistrationDigest(payload: {
+  fullName: string;
+  email: string;
+  dob: string;
+  community: string;
+  deptRoles: string[];
+  surveyAnswers: SurveyAnswer[];
+}) {
+  return sendRegistrationDigestMail(payload);
 }
 
 export async function emailNewActivity(activity: {
