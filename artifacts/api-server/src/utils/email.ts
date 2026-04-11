@@ -38,8 +38,15 @@ function getTransporter() {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
   if (!user || !pass) return null;
+
+  const host = process.env.SMTP_HOST ?? "smtp.gmail.com";
+  const port = Number(process.env.SMTP_PORT ?? 465);
+  const secure = String(process.env.SMTP_SECURE ?? "true") !== "false";
+
   return nodemailer.createTransport({
-    service: "gmail",
+    host,
+    port,
+    secure,
     auth: { user, pass },
   });
 }
@@ -72,6 +79,7 @@ async function send(subject: string, html: string) {
     return false;
   }
   try {
+    await transporter.verify();
     await transporter.sendMail({
       from: `"ISKCON 7 Purposes" <${process.env.GMAIL_USER}>`,
       to: ADMIN_EMAIL,
@@ -131,12 +139,34 @@ async function sendRegistrationDigestMail(payload: {
   `);
 
   try {
+    await transporter.verify();
     await transporter.sendMail({
       from: `"ISKCON 7 Purposes" <${process.env.GMAIL_USER}>`,
       to: ADMIN_EMAIL,
       replyTo: payload.email,
       subject: `🙏 New registration completed: ${payload.fullName}`,
       html,
+      text: [
+        "New Registration Completed",
+        "",
+        `Name: ${payload.fullName}`,
+        `Email: ${payload.email}`,
+        `Date of birth: ${payload.dob}`,
+        `Community: ${payload.community}`,
+        `Departments: ${payload.deptRoles.length ? payload.deptRoles.join(", ") : "None selected"}`,
+        "",
+        "Survey answers:",
+        ...(payload.surveyAnswers.length
+          ? payload.surveyAnswers.map((answer) => {
+              const question = SURVEY_QUESTIONS[answer.questionIndex] ?? `Question ${answer.questionIndex + 1}`;
+              const labels = answer.answers.map((id, index) => {
+                const label = PURPOSE_LABELS[id] ?? id;
+                return answer.answers.length > 1 ? `${index + 1}. ${label}` : label;
+              }).join(", ");
+              return `${question}: ${labels || "—"}`;
+            })
+          : ["No survey answers submitted."]),
+      ].join("\n"),
     });
     console.log(`[Email] Registration digest sent for ${payload.email}`);
     return true;
