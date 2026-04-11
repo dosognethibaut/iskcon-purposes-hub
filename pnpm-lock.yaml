@@ -7,7 +7,14 @@ settings:
 importers:
 
   .:
+    dependencies:
+      nodemailer:
+        specifier: ^8.0.4
+        version: 8.0.4
     devDependencies:
+      '@types/nodemailer':
+        specifier: ^7.0.11
+        version: 7.0.11
       prettier:
         specifier: ^3.8.1
         version: 3.8.1

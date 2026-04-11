@@ -14,6 +14,15 @@ type RegistrationBody = {
   surveyAnswers?: unknown;
 };
 
+declare const process: {
+  env: Record<string, string | undefined>;
+};
+
+declare const console: {
+  info: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+};
+
 const ADMIN_EMAIL = "iskcon.7purposes@gmail.com";
 
 const SURVEY_QUESTIONS = [
