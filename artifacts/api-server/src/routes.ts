@@ -3,6 +3,14 @@ import { emailRegistrationDigest } from "./utils/email";
 
 const router = Router();
 
+type RawSurveyAnswer = { questionIndex: number; answers: unknown[] };
+
+function isRawSurveyAnswer(item: unknown): item is RawSurveyAnswer {
+  if (typeof item !== "object" || item === null) return false;
+  const candidate = item as { questionIndex?: unknown; answers?: unknown };
+  return typeof candidate.questionIndex === "number" && Array.isArray(candidate.answers);
+}
+
 router.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
@@ -25,10 +33,8 @@ router.post("/send-registration", async (req, res) => {
       deptRoles: Array.isArray(body.deptRoles) ? body.deptRoles.filter((role: unknown): role is string => typeof role === "string") : [],
       surveyAnswers: Array.isArray(body.surveyAnswers)
         ? body.surveyAnswers
-            .filter((item: unknown): item is { questionIndex: number; answers: unknown[] } =>
-              typeof item?.questionIndex === "number" && Array.isArray(item?.answers),
-            )
-            .map((item: { questionIndex: number; answers: unknown[] }) => ({
+            .filter(isRawSurveyAnswer)
+            .map((item) => ({
               questionIndex: item.questionIndex,
               answers: item.answers.filter((answer: unknown): answer is string => typeof answer === "string"),
             }))
