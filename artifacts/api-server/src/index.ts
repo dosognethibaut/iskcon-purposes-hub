@@ -1,6 +1,5 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedPurposes } from "./utils/seed";
 
 const rawPort = process.env["PORT"];
 if (rawPort) {
@@ -17,6 +16,7 @@ if (rawPort) {
     }
 
     logger.info({ port }, "Server listening");
+    const { seedPurposes } = await import("./utils/seed");
     await seedPurposes();
   });
 } else {
