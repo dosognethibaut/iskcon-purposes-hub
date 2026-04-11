@@ -12,8 +12,8 @@ import {
   registerUser,
   submitSurveyAnswers,
   updateCurrentUserPhoto,
-deleteCurrentUserProfile,
- updateCurrentUserProfile,
+  deleteCurrentUserProfile,
+  updateCurrentUserProfile,
 } from "@/lib/local-data";
 
 import logoAccessing    from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
@@ -220,59 +220,54 @@ export default function Register() {
   };
 
   const handleStep2 = async () => {
-  if (!allSurveyAnswered || submitting || !token) return;
-  setSubmitting(true);
+    if (!allSurveyAnswered || submitting) return;
 
-  try {
+    const finalDeptRoles = deptRoles.includes("Other") && form.deptRolesOther
+      ? [...deptRoles.filter((role) => role !== "Other"), form.deptRolesOther]
+      : deptRoles;
+    const answersPayload = Object.entries(surveyAnswers).map(([qi, answers]) => ({
+      questionIndex: Number(qi),
+      answers,
+    }));
+
+    setSubmitting(true);
     try {
-      submitSurveyAnswers(
-        Object.entries(surveyAnswers).map(([qi, ans]) => ({
-          questionIndex: Number(qi),
-          answers: ans,
-        })),
-      );
-    } catch (err) {
-      console.error("Local survey save failed:", err);
+      try {
+        submitSurveyAnswers(answersPayload);
+      } catch (error) {
+        console.error("Local survey save failed:", error);
+      }
+
+      try {
+        const response = await fetch(
+          "https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/api/send-registration",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fullName: form.fullName,
+              email: form.email,
+              dob: form.dob,
+              community: form.community,
+              deptRoles: finalDeptRoles,
+              surveyAnswers: answersPayload,
+            }),
+          },
+        );
+
+        if (!response.ok) {
+          console.error(`Registration API failed: ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Registration API request failed:", error);
+      }
+
+      toast.success("Registration complete! Hare Krishna 🙏");
+      setRegistrationStep(1);
+    } finally {
+      setSubmitting(false);
     }
-
-    const response = await fetch(
-      "https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/api/send-registration",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: form.fullName,
-          email: form.email,
-          dob: form.dob,
-          community: form.community,
-          deptRoles:
-            form.deptRoles.includes("Other") && form.deptRolesOther
-              ? [
-                  ...form.deptRoles.filter((r) => r !== "Other"),
-                  form.deptRolesOther,
-                ]
-              : form.deptRoles,
-          surveyAnswers: Object.entries(surveyAnswers).map(([qi, ans]) => ({
-            questionIndex: Number(qi),
-            answers: ans,
-          })),
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`Registration API failed: ${response.status}`);
-    }
-
-    toast.success("Registration complete! Hare Krishna 🙏");
-    setRegistrationStep(1);
-  } catch (err) {
-    console.error(err);
-    toast.error("Failed to submit survey. Please try again.");
-  } finally {
-    setSubmitting(false);
-  }
-};
+  };
 
 const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -412,24 +407,20 @@ const handleSignIn = async (e: React.FormEvent) => {
                 className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm transition-opacity"
                 style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", opacity: editSaving ? 0.6 : 1 }}>
                 {editSaving ? "Saving…" : <><Check className="w-4 h-4" /> Save changes</>}
-              
-</button>
-<button
-  onClick={() => {
-    const confirmed = window.confirm("Are you sure you want to delete your profile? This cannot be undone.");
-    if (!confirmed) return;
-deleteCurrentUserProfile();    
-toast.success("Profile deleted.");
-    window.location.href = "/";
-  }}
-  className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans text-lg font-semibold"
-  style={{
-  background: "black",
-  color: "white",
-  }}
->
-  Delete profile
-</button>
+              </button>
+              <button
+                onClick={() => {
+                  const confirmed = window.confirm("Are you sure you want to delete your profile? This cannot be undone.");
+                  if (!confirmed) return;
+                  deleteCurrentUserProfile();
+                  toast.success("Profile deleted.");
+                  window.location.href = "/";
+                }}
+                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm transition-opacity"
+                style={{ background: "black", color: "white" }}
+              >
+                Delete profile
+              </button>
               <button onClick={cancelEditing} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm border transition-colors"
                 style={{ borderColor: "hsl(14 30% 70% / 0.4)", color: "hsl(14 55% 28%)", background: "transparent" }}>
                 <X className="w-4 h-4" /> Cancel
