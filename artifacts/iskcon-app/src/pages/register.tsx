@@ -240,7 +240,7 @@ export default function Register() {
 
       try {
         const response = await fetch(
-          "https://iskcon-purposes-hub-api-server-d68k-premaculture.vercel.app/api/send-registration",
+          "/api/send-registration",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
