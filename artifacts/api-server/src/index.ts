@@ -1,5 +1,4 @@
 import app from "./app";
-import { logger } from "./lib/logger";
 
 const rawPort = process.env["PORT"];
 if (rawPort) {
@@ -11,16 +10,16 @@ if (rawPort) {
 
   app.listen(port, async (err) => {
     if (err) {
-      logger.error({ err }, "Error listening on port");
+      console.error("Error listening on port", err);
       process.exit(1);
     }
 
-    logger.info({ port }, "Server listening");
+    console.info("Server listening", { port });
     const { seedPurposes } = await import("./utils/seed");
     await seedPurposes();
   });
 } else {
-  logger.info("PORT not set; exporting app for serverless runtime");
+  console.info("PORT not set; exporting app for serverless runtime");
 }
 
 export default app;
