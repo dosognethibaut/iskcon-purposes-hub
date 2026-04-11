@@ -9,21 +9,28 @@ router.get("/health", (_req, res) => {
 
 router.post("/send-registration", async (req, res) => {
   try {
-    const body = req.body ?? {};
+    const body = (req.body ?? {}) as {
+      fullName?: unknown;
+      email?: unknown;
+      dob?: unknown;
+      community?: unknown;
+      deptRoles?: unknown;
+      surveyAnswers?: unknown;
+    };
     const result = await emailRegistrationDigest({
       fullName: typeof body.fullName === "string" ? body.fullName : "Unknown user",
       email: typeof body.email === "string" ? body.email : "",
       dob: typeof body.dob === "string" ? body.dob : "",
       community: typeof body.community === "string" ? body.community : "",
-      deptRoles: Array.isArray(body.deptRoles) ? body.deptRoles.filter((role): role is string => typeof role === "string") : [],
+      deptRoles: Array.isArray(body.deptRoles) ? body.deptRoles.filter((role: unknown): role is string => typeof role === "string") : [],
       surveyAnswers: Array.isArray(body.surveyAnswers)
         ? body.surveyAnswers
-            .filter((item): item is { questionIndex: number; answers: string[] } =>
+            .filter((item: unknown): item is { questionIndex: number; answers: unknown[] } =>
               typeof item?.questionIndex === "number" && Array.isArray(item?.answers),
             )
-            .map((item) => ({
+            .map((item: { questionIndex: number; answers: unknown[] }) => ({
               questionIndex: item.questionIndex,
-              answers: item.answers.filter((answer): answer is string => typeof answer === "string"),
+              answers: item.answers.filter((answer: unknown): answer is string => typeof answer === "string"),
             }))
         : [],
     });
