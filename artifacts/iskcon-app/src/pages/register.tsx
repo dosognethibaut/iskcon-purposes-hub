@@ -220,41 +220,61 @@ export default function Register() {
   };
 
   const handleStep2 = async () => {
-    if (!allSurveyAnswered || submitting || !token) return;
-    setSubmitting(true);
+  if (!allSurveyAnswered || submitting || !token) return;
+  setSubmitting(true);
+
+  try {
     try {
       submitSurveyAnswers(
         Object.entries(surveyAnswers).map(([qi, ans]) => ({
-          questionIndex: Number(qi), answers: ans,
+          questionIndex: Number(qi),
+          answers: ans,
         })),
-);
-await fetch("https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/api/send-registration", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    fullName: form.fullName,
-    email: form.email,
-    dob: form.dob,
-    community: form.community,
-    deptRoles: form.deptRoles.includes("Other") && form.deptRolesOther
-      ? [...form.deptRoles.filter((r) => r !== "Other"), form.deptRolesOther]
-      : form.deptRoles,
-    surveyAnswers: Object.entries(surveyAnswers).map(([qi, ans]) => ({
-      questionIndex: Number(qi),
-      answers: ans,
-    })),
-  }),
-});
-      toast.success("Registration complete! Hare Krishna 🙏");
-      setRegistrationStep(1);
-    } catch {
-      toast.error("Failed to submit survey. Please try again.");
-    } finally {
-      setSubmitting(false);
+      );
+    } catch (err) {
+      console.error("Local survey save failed:", err);
     }
-  };
 
-  const handleSignIn = async (e: React.FormEvent) => {
+    const response = await fetch(
+      "https://7purposesiskcon-git-api-server-only-premaculture.vercel.app/api/send-registration",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          email: form.email,
+          dob: form.dob,
+          community: form.community,
+          deptRoles:
+            form.deptRoles.includes("Other") && form.deptRolesOther
+              ? [
+                  ...form.deptRoles.filter((r) => r !== "Other"),
+                  form.deptRolesOther,
+                ]
+              : form.deptRoles,
+          surveyAnswers: Object.entries(surveyAnswers).map(([qi, ans]) => ({
+            questionIndex: Number(qi),
+            answers: ans,
+          })),
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Registration API failed: ${response.status}`);
+    }
+
+    toast.success("Registration complete! Hare Krishna 🙏");
+    setRegistrationStep(1);
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to submit survey. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
