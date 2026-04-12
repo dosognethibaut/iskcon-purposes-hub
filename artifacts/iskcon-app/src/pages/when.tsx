@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getCalendarActivities, subscribeToLocalData } from "@/lib/local-data";
 import { format } from "date-fns";
+import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
+import logoCommunity from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
+import logoHolyPlace from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
+import logoAccessing from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
+import logoLearning from "@assets/7p_LogoNoTitle_Learning_1774931916883.png";
+import logoApplying from "@assets/7p_LogoNoTitle_Applying_1774931916883.png";
+import logoSharing from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -31,6 +38,58 @@ const purposeNames: Record<number, string> = {
   6: "Applying",
   7: "Sharing",
 };
+
+const purposeDetails = [
+  {
+    id: 4,
+    title: "Accessing",
+    logo: logoAccessing,
+    accent: "hsl(14 52% 38%)",
+    brief: "A month to widen the doorway: making Krishna conscious wisdom easier to encounter, easier to approach, and easier to receive.",
+  },
+  {
+    id: 5,
+    title: "Learning",
+    logo: logoLearning,
+    accent: "hsl(17 44% 35%)",
+    brief: "A month to deepen hearing and study, so reflection becomes understanding and understanding becomes conviction.",
+  },
+  {
+    id: 2,
+    title: "Community",
+    logo: logoCommunity,
+    accent: "hsl(220 60% 44%)",
+    brief: "A month to strengthen relationships in service, remembering that spiritual culture grows through shared care and cooperation.",
+  },
+  {
+    id: 6,
+    title: "Applying",
+    logo: logoApplying,
+    accent: "hsl(14 18% 33%)",
+    brief: "A month to bring realization into practice, letting devotion shape habits, service, and daily choices.",
+  },
+  {
+    id: 3,
+    title: "Holy Place",
+    logo: logoHolyPlace,
+    accent: "hsl(0 0% 10%)",
+    brief: "A month to honor sacred space and sacred atmosphere, where remembrance, beauty, and worship help nourish the heart.",
+  },
+  {
+    id: 1,
+    title: "Simple Living",
+    logo: logoSimpleLiving,
+    accent: "hsl(163 40% 36%)",
+    brief: "A month to simplify, reconnect with essentials, and create more room for peaceful service and high thinking.",
+  },
+  {
+    id: 7,
+    title: "Sharing",
+    logo: logoSharing,
+    accent: "hsl(14 40% 30%)",
+    brief: "A month to offer what we have received, with generosity, encouragement, and a genuine wish to uplift others.",
+  },
+];
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -97,6 +156,7 @@ export default function When() {
 
   const isToday = (d: number | null) =>
     d !== null && d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+  const monthlyPurpose = purposeDetails[((month % purposeDetails.length) + purposeDetails.length) % purposeDetails.length];
 
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
@@ -123,6 +183,45 @@ export default function When() {
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-5">
+        <Link href={`/?purpose=${monthlyPurpose.id}&tab=activities`} className="block mb-5">
+          <div
+            className="rounded-3xl p-5 shadow-sm transition-transform"
+            style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+          >
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <div>
+                <p className="font-sans text-xs uppercase tracking-[0.18em]" style={{ color: "hsl(14 35% 50%)" }}>
+                  Purpose of the month
+                </p>
+                <h2 className="font-serif font-bold mt-1" style={{ fontSize: "1.45rem", color: "hsl(14 72% 18%)" }}>
+                  {monthlyPurpose.title}
+                </h2>
+              </div>
+              <img
+                src={monthlyPurpose.logo}
+                alt={monthlyPurpose.title}
+                className="shrink-0"
+                style={{ width: 64, height: 64, objectFit: "contain" }}
+              />
+            </div>
+
+            <p className="font-sans leading-relaxed mb-4" style={{ color: "hsl(14 40% 35%)", fontSize: "0.92rem" }}>
+              {monthlyPurpose.brief}
+            </p>
+
+            <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+              <span
+                className="inline-flex items-center rounded-full px-3 py-1 font-sans text-xs font-semibold"
+                style={{ background: `${monthlyPurpose.accent}18`, color: monthlyPurpose.accent }}
+              >
+                {MONTH_NAMES[month]} focus
+              </span>
+              <span className="font-sans text-sm font-semibold" style={{ color: monthlyPurpose.accent }}>
+                Open activities
+              </span>
+            </div>
+          </div>
+        </Link>
 
         {/* Month navigation */}
         <div className="flex items-center justify-between mb-4">

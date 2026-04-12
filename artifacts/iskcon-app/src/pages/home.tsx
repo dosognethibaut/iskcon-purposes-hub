@@ -122,6 +122,8 @@ export default function Home() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifs, setShowNotifs] = useState(false);
   const lastNotifData = useRef<any>(null);
+  const purposeSectionRef = useRef<HTMLDivElement>(null);
+  const [initialPurposeTab, setInitialPurposeTab] = useState<"activities" | "messages">("activities");
 
   const isAdmin = !!currentUser?.isAdmin;
 
@@ -189,6 +191,25 @@ export default function Home() {
     const timer = setInterval(() => goTo(current + 1), 7000);
     return () => clearInterval(timer);
   }, [current]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const purposeId = Number(params.get("purpose"));
+    const tabParam = params.get("tab");
+
+    if (!purposeId) return;
+
+    const purposeIndex = purposes.findIndex((purpose) => purpose.id === purposeId);
+    if (purposeIndex === -1) return;
+
+    const nextTab = tabParam === "messages" ? "messages" : "activities";
+    setInitialPurposeTab(nextTab);
+    setActivePurpose(purposeIndex);
+
+    window.setTimeout(() => {
+      purposeSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+  }, []);
 
   return (
     <div className="bg-background">
@@ -333,7 +354,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════════════
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
-      <div className="pb-20">
+      <div className="pb-20" ref={purposeSectionRef}>
         <div className="pt-8" />
 
         {/* Logo grid — wrapped, big, centered */}
@@ -384,6 +405,7 @@ export default function Home() {
             title={purposes[activePurpose].title}
             officialText={purposes[activePurpose].officialText}
             description={purposes[activePurpose].description}
+            initialTab={initialPurposeTab}
           />
         )}
 

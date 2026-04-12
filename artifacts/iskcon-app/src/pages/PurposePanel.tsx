@@ -95,6 +95,7 @@ interface PurposePanelProps {
   title: string;
   officialText: string;
   description: string;
+  initialTab?: "activities" | "messages";
 }
 
 function PendingBanner({ count, label }: { count: number; label: string }) {
@@ -241,7 +242,7 @@ function CommentSection({
   );
 }
 
-export default function PurposePanel({ purposeId, title, officialText, description }: PurposePanelProps) {
+export default function PurposePanel({ purposeId, title, officialText, description, initialTab = "activities" }: PurposePanelProps) {
   const queryClient = useQueryClient();
   const { currentUser, token } = useAuth();
   const accent = accentById[purposeId] ?? "hsl(26 68% 42%)";
@@ -266,7 +267,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const [pendingCompleteForActivityId, setPendingCompleteForActivityId] = useState<number | null>(null);
   const [deletingActivityId, setDeletingActivityId] = useState<number | null>(null);
   const [deletingMessageId, setDeletingMessageId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState("activities");
+  const [activeTab, setActiveTab] = useState<"activities" | "messages">(initialTab);
   const [newActivitiesCount, setNewActivitiesCount] = useState(0);
   const [newMessagesCount, setNewMessagesCount] = useState(0);
   const [joiningActivityId, setJoiningActivityId] = useState<number | null>(null);
@@ -563,7 +564,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   }, [JSON.stringify(trackedMessageIds), activeTab]);
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value);
+    setActiveTab(value as "activities" | "messages");
     if (value === "activities") {
       markAllSeen(seenActsKey, trackedActivityIds);
       setNewActivitiesCount(0);
@@ -572,6 +573,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       setNewMessagesCount(0);
     }
   };
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab, purposeId]);
 
   return (
     <div className="mt-2">
