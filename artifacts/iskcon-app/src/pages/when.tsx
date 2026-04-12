@@ -39,57 +39,72 @@ const purposeNames: Record<number, string> = {
   7: "Sharing",
 };
 
-const purposeDetails = [
-  {
-    id: 4,
-    title: "Accessing",
-    logo: logoAccessing,
-    accent: "hsl(14 52% 38%)",
-    brief: "A month to widen the doorway: making Krishna conscious wisdom easier to encounter, easier to approach, and easier to receive.",
-  },
-  {
-    id: 5,
-    title: "Learning",
-    logo: logoLearning,
-    accent: "hsl(17 44% 35%)",
-    brief: "A month to deepen hearing and study, so reflection becomes understanding and understanding becomes conviction.",
-  },
-  {
+const monthlyPurposeByKey: Record<string, { id: number; title: string; logo: string; accent: string; brief: string } | null> = {
+  "2026-03": {
     id: 2,
     title: "Community",
     logo: logoCommunity,
     accent: "hsl(220 60% 44%)",
-    brief: "A month to strengthen relationships in service, remembering that spiritual culture grows through shared care and cooperation.",
+    brief: "A month to strengthen relationships in service and grow a shared spirit of care, support, and cooperation.",
   },
-  {
-    id: 6,
-    title: "Applying",
-    logo: logoApplying,
-    accent: "hsl(14 18% 33%)",
-    brief: "A month to bring realization into practice, letting devotion shape habits, service, and daily choices.",
-  },
-  {
-    id: 3,
-    title: "Holy Place",
-    logo: logoHolyPlace,
-    accent: "hsl(0 0% 10%)",
-    brief: "A month to honor sacred space and sacred atmosphere, where remembrance, beauty, and worship help nourish the heart.",
-  },
-  {
+  "2026-04": null,
+  "2026-05": null,
+  "2026-06": null,
+  "2026-07": {
     id: 1,
     title: "Simple Living",
     logo: logoSimpleLiving,
     accent: "hsl(163 40% 36%)",
     brief: "A month to simplify, reconnect with essentials, and create more room for peaceful service and high thinking.",
   },
-  {
+  "2026-08": {
+    id: 4,
+    title: "Accessing",
+    logo: logoAccessing,
+    accent: "hsl(14 52% 38%)",
+    brief: "A month to make Krishna conscious wisdom easier to approach, easier to encounter, and easier to receive.",
+  },
+  "2026-09": {
+    id: 6,
+    title: "Applying",
+    logo: logoApplying,
+    accent: "hsl(14 18% 33%)",
+    brief: "A month to bring realization into practice and let devotion shape habits, service, and daily choices.",
+  },
+  "2026-10": {
+    id: 5,
+    title: "Education",
+    logo: logoLearning,
+    accent: "hsl(17 44% 35%)",
+    brief: "A month to deepen learning, study carefully, and help spiritual understanding become clear, steady, and practical.",
+  },
+  "2026-11": {
+    id: 3,
+    title: "Holy Place",
+    logo: logoHolyPlace,
+    accent: "hsl(0 0% 10%)",
+    brief: "A month to honor sacred space and sacred atmosphere, where remembrance, beauty, and worship nourish the heart.",
+  },
+  "2026-12": {
     id: 7,
     title: "Sharing",
     logo: logoSharing,
     accent: "hsl(14 40% 30%)",
     brief: "A month to offer what we have received, with generosity, encouragement, and a genuine wish to uplift others.",
   },
-];
+  "2027-01": {
+    id: 2,
+    title: "Community",
+    logo: logoCommunity,
+    accent: "hsl(220 60% 44%)",
+    brief: "A month to begin the year by strengthening connection, cooperation, and a shared spirit of devotional service.",
+  },
+};
+
+function getMonthlyPurpose(year: number, month: number) {
+  const key = `${year}-${String(month + 1).padStart(2, "0")}`;
+  return monthlyPurposeByKey[key] ?? null;
+}
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -156,7 +171,7 @@ export default function When() {
 
   const isToday = (d: number | null) =>
     d !== null && d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-  const monthlyPurpose = purposeDetails[((month % purposeDetails.length) + purposeDetails.length) % purposeDetails.length];
+  const monthlyPurpose = getMonthlyPurpose(year, month);
 
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
@@ -183,45 +198,47 @@ export default function When() {
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-5">
-        <Link href={`/?purpose=${monthlyPurpose.id}&tab=activities`} className="block mb-5">
-          <div
-            className="rounded-3xl p-5 shadow-sm transition-transform"
-            style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
-          >
-            <div className="flex items-center justify-between gap-4 mb-4">
-              <div>
-                <p className="font-sans text-xs uppercase tracking-[0.18em]" style={{ color: "hsl(14 35% 50%)" }}>
-                  Purpose of the month
-                </p>
-                <h2 className="font-serif font-bold mt-1" style={{ fontSize: "1.45rem", color: "hsl(14 72% 18%)" }}>
-                  {monthlyPurpose.title}
-                </h2>
+        {monthlyPurpose && (
+          <Link href={`/?purpose=${monthlyPurpose.id}&tab=activities`} className="block mb-5">
+            <div
+              className="rounded-3xl p-5 shadow-sm transition-transform"
+              style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+            >
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div>
+                  <p className="font-sans text-xs uppercase tracking-[0.18em]" style={{ color: "hsl(14 35% 50%)" }}>
+                    Purpose of the month
+                  </p>
+                  <h2 className="font-serif font-bold mt-1" style={{ fontSize: "1.45rem", color: "hsl(14 72% 18%)" }}>
+                    {monthlyPurpose.title}
+                  </h2>
+                </div>
+                <img
+                  src={monthlyPurpose.logo}
+                  alt={monthlyPurpose.title}
+                  className="shrink-0"
+                  style={{ width: 64, height: 64, objectFit: "contain" }}
+                />
               </div>
-              <img
-                src={monthlyPurpose.logo}
-                alt={monthlyPurpose.title}
-                className="shrink-0"
-                style={{ width: 64, height: 64, objectFit: "contain" }}
-              />
-            </div>
 
-            <p className="font-sans leading-relaxed mb-4" style={{ color: "hsl(14 40% 35%)", fontSize: "0.92rem" }}>
-              {monthlyPurpose.brief}
-            </p>
+              <p className="font-sans leading-relaxed mb-4" style={{ color: "hsl(14 40% 35%)", fontSize: "0.92rem" }}>
+                {monthlyPurpose.brief}
+              </p>
 
-            <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
-              <span
-                className="inline-flex items-center rounded-full px-3 py-1 font-sans text-xs font-semibold"
-                style={{ background: `${monthlyPurpose.accent}18`, color: monthlyPurpose.accent }}
-              >
-                {MONTH_NAMES[month]} focus
-              </span>
-              <span className="font-sans text-sm font-semibold" style={{ color: monthlyPurpose.accent }}>
-                Open activities
-              </span>
+              <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                <span
+                  className="inline-flex items-center rounded-full px-3 py-1 font-sans text-xs font-semibold"
+                  style={{ background: `${monthlyPurpose.accent}18`, color: monthlyPurpose.accent }}
+                >
+                  {MONTH_NAMES[month]} focus
+                </span>
+                <span className="font-sans text-sm font-semibold" style={{ color: monthlyPurpose.accent }}>
+                  Open activities
+                </span>
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        )}
 
         {/* Month navigation */}
         <div className="flex items-center justify-between mb-4">
