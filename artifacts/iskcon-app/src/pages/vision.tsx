@@ -1,49 +1,56 @@
 import { Link } from "wouter";
-import { ArrowLeft, Eye, Heart, Globe, Sprout, BookOpen, Star } from "lucide-react";
+import { ArrowLeft, Eye, HeartHandshake, Leaf, BookOpen, Target } from "lucide-react";
+import visionDiagram from "@assets/7p_Vision_Deploy.png";
 
-const VISION_PILLARS = [
+const visionNotes = [
   {
-    icon: Heart,
-    title: "A Sanctuary of Bhakti",
-    accent: "hsl(26 68% 42%)",
-    softAccent: "hsl(26 68% 42% / 0.12)",
-    text: "Radhadesh aspires to be a living example of a Vaishnava community where devotion to Radha and Krishna permeates every aspect of daily life — from morning ārati to evening kirtan, from the kitchen to the fields.",
-  },
-  {
-    icon: Sprout,
-    title: "Simple, Sustainable Living",
-    accent: "hsl(168 42% 33%)",
-    softAccent: "hsl(168 42% 33% / 0.12)",
-    text: "Inspired by Śrīla Prabhupāda's vision, we cultivate a lifestyle rooted in the land, producing our own food, reducing our footprint, and demonstrating that happiness does not depend on material complexity.",
+    icon: Leaf,
+    title: "Foundation",
+    accent: "hsl(163 40% 36%)",
+    softAccent: "hsl(163 40% 36% / 0.12)",
+    text: "Simple Living, Community, and Holy Place create the environment in which spiritual life can be practiced with steadiness, support, and sacred atmosphere.",
   },
   {
     icon: BookOpen,
-    title: "Wisdom for the World",
+    title: "Cultivation",
+    accent: "hsl(26 68% 42%)",
+    softAccent: "hsl(26 68% 42% / 0.12)",
+    text: "Accessing, Learning, Applying, and Sharing help form the right adhikaris by opening the path, deepening understanding, and turning realization into service.",
+  },
+  {
+    icon: Target,
+    title: "Duty",
     accent: "hsl(220 60% 44%)",
     softAccent: "hsl(220 60% 44% / 0.12)",
-    text: "We are committed to making the timeless teachings of the Bhagavad-gītā and Śrīmad-Bhāgavatam accessible to all — through courses, books, retreats, and personal guidance — bridging the ancient and the contemporary.",
+    text: "Like Arjuna, we are called to engage both sva-dharma and sanatana-dharma: offering our contribution in the world while always remembering Krishna.",
   },
   {
-    icon: Globe,
-    title: "A European Hub of Inspiration",
-    accent: "hsl(14 52% 38%)",
-    softAccent: "hsl(14 52% 38% / 0.12)",
-    text: "Located in the heart of Europe, Radhadesh serves as a beacon for seekers from across the continent and beyond — welcoming pilgrims, practitioners, and curious souls into an environment of beauty, peace, and spiritual depth.",
-  },
-  {
-    icon: Star,
-    title: "Community as Spiritual Practice",
+    icon: HeartHandshake,
+    title: "Direction",
     accent: "hsl(14 40% 30%)",
     softAccent: "hsl(14 40% 30% / 0.12)",
-    text: "We envision a community where relationships are purified through service, cooperation, and shared devotion — where each person's gifts are offered in the spirit of the 7 Purposes, building something greater than any individual.",
+    text: "All these movements support bhakti-yoga. Together they help each person and each community revive their eternal relationship with the Lord.",
   },
 ];
 
 export default function Vision() {
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
+      <style>{`
+        @keyframes visionRiseReveal {
+          0% {
+            opacity: 0;
+            clip-path: inset(100% 0 0 0 round 28px);
+            transform: translateY(32px);
+          }
+          100% {
+            opacity: 1;
+            clip-path: inset(0 0 0 0 round 28px);
+            transform: translateY(0);
+          }
+        }
+      `}</style>
 
-      {/* Header */}
       <div
         className="px-5 pt-10 pb-8"
         style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}
@@ -62,63 +69,75 @@ export default function Vision() {
             Vision
           </h1>
         </div>
-        <p className="font-sans" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>
-          Where we are going — together
+        <p className="font-sans max-w-2xl" style={{ color: "hsl(14 55% 28%)", fontSize: "0.92rem" }}>
+          A map of how the 7 Purposes support the individual, strengthen the community, and guide us toward deeper bhakti-yoga.
         </p>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-5 space-y-4">
-
-        {/* Opening statement */}
-        <div className="rounded-3xl px-5 py-5 shadow-sm" style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}>
-          <p className="font-serif italic leading-relaxed" style={{ fontSize: "1.05rem", color: "hsl(14 62% 22%)" }}>
-            "Make this world a better place to live, and prepare all people for going back to Godhead."
-          </p>
-          <p className="font-sans text-xs mt-2 tracking-wide" style={{ color: "hsl(14 40% 48%)" }}>
-            — ŚRĪLA PRABHUPĀDA
+      <div className="max-w-6xl mx-auto px-4 py-5">
+        <div
+          className="rounded-3xl px-5 py-5 shadow-sm mb-5"
+          style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+        >
+          <p className="font-serif italic leading-relaxed" style={{ fontSize: "1.02rem", color: "hsl(14 58% 24%)" }}>
+            The vision is not a set of separate themes. It is one living movement in which every purpose supports the others,
+            every person has a place, and every sincere contribution can be offered in service to Krishna.
           </p>
         </div>
 
-        {/* Vision pillars */}
-        {VISION_PILLARS.map(({ icon: Icon, title, text, accent, softAccent }, i) => (
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)] items-start">
           <div
-            key={i}
-            className="rounded-3xl p-5 shadow-sm"
-            style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+            className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
+            style={{
+              background: "hsl(40 30% 96%)",
+              border: "1px solid hsl(14 25% 72% / 0.35)",
+              animation: "visionRiseReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) both",
+              transformOrigin: "bottom center",
+            }}
           >
-            <div className="flex items-start gap-3">
+            <img
+              src={visionDiagram}
+              alt="Vision diagram showing the 7 Purposes supporting identity, duty, community contribution, and spiritual development"
+              className="w-full h-auto block rounded-[1.4rem]"
+            />
+          </div>
+
+          <div className="space-y-4 lg:sticky lg:top-5">
+            {visionNotes.map(({ icon: Icon, title, text, accent, softAccent }) => (
               <div
-                className="shrink-0 rounded-2xl flex items-center justify-center mt-0.5"
-                style={{ width: 44, height: 44, background: softAccent }}
+                key={title}
+                className="rounded-3xl p-5 shadow-sm"
+                style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
               >
-                <Icon className="w-4 h-4" style={{ color: accent }} />
+                <div className="flex items-start gap-3">
+                  <div
+                    className="shrink-0 rounded-2xl flex items-center justify-center mt-0.5"
+                    style={{ width: 44, height: 44, background: softAccent }}
+                  >
+                    <Icon className="w-4 h-4" style={{ color: accent }} />
+                  </div>
+                  <div>
+                    <h3 className="font-serif font-bold mb-1.5" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                      {title}
+                    </h3>
+                    <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                      {text}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h3 className="font-serif font-bold mb-1.5" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                  {title}
-                </h3>
-                <p className="font-sans leading-relaxed" style={{ fontSize: "0.88rem", color: "hsl(14 40% 35%)" }}>
-                  {text}
-                </p>
-              </div>
+            ))}
+
+            <div
+              className="rounded-3xl px-5 py-5 shadow-sm"
+              style={{ background: "hsl(26 68% 42% / 0.08)", border: "1px solid hsl(26 68% 42% / 0.2)" }}
+            >
+              <p className="font-serif font-semibold leading-relaxed" style={{ fontSize: "1rem", color: "hsl(14 62% 22%)" }}>
+                The 7 Purposes are part of each of us, part of each community, and part of the path that helps us remember Krishna while offering our lives in service.
+              </p>
             </div>
           </div>
-        ))}
-
-        {/* Closing CTA */}
-        <div className="rounded-3xl px-5 py-5 text-center shadow-sm" style={{ background: "hsl(26 68% 42% / 0.08)", border: "1px solid hsl(26 68% 42% / 0.2)" }}>
-          <p className="font-serif font-semibold mb-3" style={{ fontSize: "1rem", color: "hsl(14 62% 22%)" }}>
-            This vision is built one purpose at a time — by each of us.
-          </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-sans font-semibold text-sm"
-            style={{ background: "hsl(26 68% 42%)", color: "white" }}
-          >
-            Explore the 7 Purposes
-          </Link>
         </div>
-
       </div>
     </div>
   );
