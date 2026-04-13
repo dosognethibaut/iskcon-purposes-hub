@@ -1,95 +1,279 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Eye, CircleDot, ArrowUpRight, HeartHandshake, Sparkles } from "lucide-react";
+import { ArrowLeft, Eye, ArrowUpRight, Sparkles } from "lucide-react";
 import visionDiagram from "@assets/7p_Vision_Deploy.png";
 
-const stages = [
+type VisionStage = {
+  id: string;
+  buttonLabel: string;
+  stageTitle: string;
+  color: string;
+  softColor: string;
+  lineIntro: string;
+  lineMeaning: string;
+  reference?: string;
+  purposes?: Array<{ label: string; color: string }>;
+  steps: Array<{
+    id: string;
+    label: string;
+    title: string;
+    text: string;
+  }>;
+};
+
+const stages: VisionStage[] = [
   {
     id: "living-being",
-    title: "Living-being",
+    buttonLabel: "I'm a living being",
+    stageTitle: "Living-being",
     color: "hsl(0 0% 62%)",
     softColor: "hsl(0 0% 62% / 0.12)",
-    keywords: ["Eating", "Defending", "Mating"],
-    description:
-      "This is where many people begin. Life is mostly shaped by basic needs, conditioning, fear, and survival patterns. The grey point reminds us that spiritual life often starts from an ordinary human situation.",
-    purposeLink:
-      "The 7 Purposes do not reject this stage. They help lift life from mere survival toward meaning, responsibility, and service.",
+    lineIntro:
+      "At this level we all carry the universal condition of embodied life: limitation, confusion, and vulnerability.",
+    lineMeaning:
+      "Our senses are imperfect, that creates illusion, then mistakes appear, and cheating comes as an attempt to hide those mistakes. Cheating is the part we can consciously refuse, and that choice becomes spiritually important.",
+    reference: "Reference: Śrīla Prabhupāda often explains the four defects of conditioned life: imperfect senses, illusion, mistakes, and cheating propensity.",
+    steps: [
+      {
+        id: "senses",
+        label: "Senses / Illusion",
+        title: "Imperfect senses create illusion",
+        text: "We do not see reality fully. Because our senses are limited, our understanding becomes covered and we mistake the temporary for the real.",
+      },
+      {
+        id: "mistakes",
+        label: "Mistakes",
+        title: "Illusion leads to mistakes",
+        text: "When our perception is incomplete, wrong judgment follows easily. This is not rare or exceptional; it is part of conditioned existence.",
+      },
+      {
+        id: "cheating",
+        label: "Cheating",
+        title: "Cheating is where responsibility begins",
+        text: "The impulse to pretend, hide, or act as if we know more than we do is the one part we can challenge directly. Truthfulness begins when we stop protecting illusion.",
+      },
+    ],
+  },
+  {
+    id: "animal",
+    buttonLabel: "I'm an animal",
+    stageTitle: "Animal propensities",
+    color: "hsl(0 0% 50%)",
+    softColor: "hsl(0 0% 50% / 0.12)",
+    lineIntro:
+      "Eating, sleeping, defending, and mating are present in both humans and animals. They are natural, but they are not the full purpose of human life.",
+    lineMeaning:
+      "Human life becomes special when these propensities are regulated, purified, and offered in a higher purpose. Otherwise we remain bound to the same cycle as the animals.",
+    reference: "Reference: Hitopadeśa 25; Bhagavad-gītā 6.17; Śrīla Prabhupāda repeatedly cites āhāra-nidrā-bhaya-maithuna as the common platform of animal and human life.",
+    steps: [
+      {
+        id: "eating-sleeping",
+        label: "Eating / Sleeping",
+        title: "Basic maintenance",
+        text: "Food and rest are necessary, but when life revolves only around comfort and consumption, consciousness stays on a lower platform.",
+      },
+      {
+        id: "defending",
+        label: "Defending",
+        title: "Fear and protection",
+        text: "The urge to protect body, position, and identity is natural. Spiritual growth begins when fear no longer controls all our choices.",
+      },
+      {
+        id: "mating",
+        label: "Mating",
+        title: "Attraction and attachment",
+        text: "This force is powerful in embodied life. Without guidance it binds us more deeply to material identity; with purification it can be placed in dharmic order.",
+      },
+    ],
   },
   {
     id: "self-satisfaction",
-    title: "Self-satisfaction",
+    buttonLabel: "I'm looking for satisfaction",
+    stageTitle: "Self-satisfaction",
     color: "hsl(162 31% 49%)",
     softColor: "hsl(162 31% 49% / 0.12)",
-    keywords: ["Specializing", "Practising", "Accomplishment"],
-    description:
-      "Here a person begins to organize life with more intention. Skills, discipline, and contribution start to take shape, and life becomes more purposeful.",
-    purposeLink:
-      "Simple Living especially supports this movement by helping us live with clarity, steadiness, and less distraction.",
+    lineIntro:
+      "At this stage a person starts to seek a more meaningful and coherent life instead of only reacting to instinct.",
+    lineMeaning:
+      "Simple Living is especially powerful here. It helps us simplify, specialize, practice, and build a life that is not scattered in too many directions.",
+    purposes: [
+      { label: "Simple Living", color: "hsl(163 40% 36%)" },
+    ],
+    steps: [
+      {
+        id: "specializing",
+        label: "Specializing",
+        title: "Discovering a real place",
+        text: "One begins to identify gifts, tendencies, and areas of meaningful service rather than living in a vague or fragmented way.",
+      },
+      {
+        id: "practising",
+        label: "Practising",
+        title: "Growth through repetition",
+        text: "Steady practice creates character. It is through repeated effort that values start becoming embodied.",
+      },
+      {
+        id: "accomplishment",
+        label: "Accomplishment",
+        title: "Completion with purpose",
+        text: "True accomplishment is not only success, but maturity: finishing things in a way that supports dharma, steadiness, and offering.",
+      },
+    ],
   },
   {
     id: "self-sufficiency",
-    title: "Self-sufficiency",
+    buttonLabel: "I'm learning to sustain life",
+    stageTitle: "Self-sufficiency",
     color: "hsl(46 89% 67%)",
     softColor: "hsl(46 89% 67% / 0.16)",
-    keywords: ["Supplying", "Processing", "Trading"],
-    description:
-      "This stage is about responsibility, contribution, and practical competence. One learns how to sustain life, offer value, and stand in a healthy relationship with the world.",
-    purposeLink:
-      "Our sva-dharma grows here. What we do in the world can become part of our offering when it is aligned with Krishna conscious purpose.",
+    lineIntro:
+      "Here the person learns how to contribute responsibly and help maintain life in a practical way.",
+    lineMeaning:
+      "This prepares the ground for sva-dharma. We learn how to produce, process, exchange, and take responsibility for the world we live in.",
+    purposes: [
+      { label: "Simple Living", color: "hsl(163 40% 36%)" },
+    ],
+    steps: [
+      {
+        id: "supplying",
+        label: "Supplying",
+        title: "Learning to provide",
+        text: "Supplying means supporting life with something concrete, useful, and nourishing.",
+      },
+      {
+        id: "processing",
+        label: "Processing",
+        title: "Transforming raw potential",
+        text: "Things rarely arrive complete. Human responsibility includes cultivation, organization, refinement, and thoughtful transformation.",
+      },
+      {
+        id: "trading",
+        label: "Trading",
+        title: "Exchanging responsibly",
+        text: "Exchange becomes healthy when it is fair, transparent, and directed toward mutual upliftment rather than exploitation.",
+      },
+    ],
   },
   {
     id: "self-management",
-    title: "Self-management",
+    buttonLabel: "I'm learning to relate well",
+    stageTitle: "Self-management",
     color: "hsl(226 59% 44%)",
     softColor: "hsl(226 59% 44% / 0.12)",
-    keywords: ["Wellbeing", "Engaging", "Caring"],
-    description:
-      "This is the stage of healthier relationships, emotional maturity, and cooperative life. A person becomes more able to care, collaborate, and remain steady in practice.",
-    purposeLink:
-      "Community is especially strong here. It teaches us how to support one another and build a life where spiritual culture can breathe.",
+    lineIntro:
+      "This line is about inner balance, healthier relationships, and a more stable participation in collective life.",
+    lineMeaning:
+      "Community becomes essential here. Wellbeing, engaging, and caring all help us become fit to live and serve with others in a sustainable way.",
+    purposes: [
+      { label: "Community", color: "hsl(220 60% 44%)" },
+    ],
+    steps: [
+      {
+        id: "wellbeing",
+        label: "Wellbeing",
+        title: "Stability within",
+        text: "A person becomes more capable of practice when body, mind, and habits are brought into healthier balance.",
+      },
+      {
+        id: "engaging",
+        label: "Engaging",
+        title: "Entering shared life",
+        text: "To engage well means to participate actively, responsibly, and with a spirit of contribution.",
+      },
+      {
+        id: "caring",
+        label: "Caring",
+        title: "The heart of community",
+        text: "Caring moves us beyond self-centeredness and teaches us how to uphold others while growing together.",
+      },
+    ],
   },
   {
     id: "self-development",
-    title: "Self-development",
+    buttonLabel: "I'm growing in understanding",
+    stageTitle: "Self-development",
     color: "hsl(15 43% 60%)",
     softColor: "hsl(15 43% 60% / 0.14)",
-    keywords: ["Learning", "Applying", "Sharing"],
-    description:
-      "Here the person becomes more conscious, intentional, and teachable. Knowledge is received, practiced, and then offered outward for the benefit of others.",
-    purposeLink:
-      "Accessing, Learning, Applying, and Sharing cultivate the adhikaris needed for spiritual life to become stable and fruitful.",
+    lineIntro:
+      "This line shows the movement from receiving knowledge to embodying it and finally offering it for the benefit of others.",
+    lineMeaning:
+      "Accessing, Learning, Applying, and Sharing cultivate the adhikaris needed for spiritual life. They help us grow from interest to realization.",
+    purposes: [
+      { label: "Accessing", color: "hsl(26 68% 42%)" },
+      { label: "Learning", color: "hsl(17 44% 35%)" },
+      { label: "Applying", color: "hsl(14 18% 33%)" },
+      { label: "Sharing", color: "hsl(14 40% 30%)" },
+    ],
+    steps: [
+      {
+        id: "learning",
+        label: "Learning",
+        title: "Receiving proper knowledge",
+        text: "Learning begins by hearing carefully and taking in teachings that are higher than our conditioned habits.",
+      },
+      {
+        id: "applying",
+        label: "Applying",
+        title: "Turning knowledge into life",
+        text: "Application is where ideas start becoming character, discipline, and transformation.",
+      },
+      {
+        id: "sharing",
+        label: "Sharing",
+        title: "Giving what has been received",
+        text: "What has touched us deeply naturally seeks expression. Sharing becomes an act of compassion and service.",
+      },
+    ],
   },
   {
     id: "self-realization",
-    title: "Self-realization",
+    buttonLabel: "I want to engage in bhakti-yoga",
+    stageTitle: "Self-realization",
     color: "hsl(0 0% 9%)",
-    softColor: "hsl(0 0% 9% / 0.12)",
-    keywords: ["Submissively surrender", "Sincerely inquire", "Selflessly serve"],
-    description:
-      "This stage opens the doorway to real spiritual depth. The person is no longer only improving life, but consciously orienting life toward transcendence and relationship with Krishna.",
-    purposeLink:
-      "Holy Place, Community, and the whole supportive ecology of the 7 Purposes create the right environment for this stage to deepen.",
-  },
-];
-
-const sideThemes = [
-  {
-    title: "Identity",
-    text: "The left axis shows growth from living-being to devotee. The journey is not denial of life, but purification and redirection.",
-  },
-  {
-    title: "Duty",
-    text: "The right axis holds both sva-dharma and sanatana-dharma. Like Arjuna, we are called to do our duty while remembering Krishna.",
-  },
-  {
-    title: "Bhakti-yoga",
-    text: "The black line is the life of devotion. Some souls can begin there very quickly, but for most of us the lower stages need to be purified and integrated first.",
+    softColor: "hsl(0 0% 9% / 0.1)",
+    lineIntro:
+      "This is the black line: the path of bhakti-yoga, where one’s life becomes consciously oriented toward Krishna.",
+    lineMeaning:
+      "Some are very fortunate and can begin close to this black dot. But for most people, the earlier lines help prepare the consciousness, conduct, and relationships needed for steady devotional life.",
+    purposes: [
+      { label: "Holy Place", color: "hsl(0 0% 10%)" },
+      { label: "Community", color: "hsl(220 60% 44%)" },
+      { label: "All 7 Purposes", color: "hsl(26 68% 42%)" },
+    ],
+    steps: [
+      {
+        id: "surrender",
+        label: "Submissively surrender",
+        title: "Opening the heart",
+        text: "Bhakti begins with humility and the willingness to come under higher guidance.",
+      },
+      {
+        id: "inquire",
+        label: "Sincerely inquire",
+        title: "Seeking truth deeply",
+        text: "Real inquiry is not curiosity alone. It is the sincere desire to understand and live by truth.",
+      },
+      {
+        id: "serve",
+        label: "Selflessly serve",
+        title: "Service as the natural expression of love",
+        text: "Service matures devotion. Through service, the whole journey is brought back into relationship with Krishna.",
+      },
+    ],
   },
 ];
 
 export default function Vision() {
   const [activeStage, setActiveStage] = useState(stages[0].id);
-  const selectedStage = stages.find((stage) => stage.id === activeStage) ?? stages[0];
+  const [activeStepByStage, setActiveStepByStage] = useState<Record<string, string>>(
+    Object.fromEntries(stages.map((stage) => [stage.id, stage.steps[0].id])),
+  );
+
+  const selectedStage = useMemo(
+    () => stages.find((stage) => stage.id === activeStage) ?? stages[0],
+    [activeStage],
+  );
+  const selectedStep = selectedStage.steps.find((step) => step.id === activeStepByStage[selectedStage.id]) ?? selectedStage.steps[0];
 
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
@@ -127,8 +311,7 @@ export default function Vision() {
           </h1>
         </div>
         <p className="font-sans max-w-3xl" style={{ color: "hsl(14 55% 28%)", fontSize: "0.92rem" }}>
-          An interactive map of the journey: from the grey human starting point, through the different stages of life,
-          toward the black line of bhakti-yoga and sankirtan.
+          A step-by-step journey through the lines of the diagram: from the grey human starting point toward the black line of bhakti-yoga.
         </p>
       </div>
 
@@ -138,12 +321,12 @@ export default function Vision() {
           style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
         >
           <p className="font-serif italic leading-relaxed" style={{ fontSize: "1.02rem", color: "hsl(14 58% 24%)" }}>
-            The 7 Purposes live both in the individual and in the community. They support each other, strengthen our duty,
-            and help us engage more deeply in bhakti-yoga and revive our eternal relationship with the Lord.
+            Most of us begin where there is a grey spot. We grow through different layers of life, and the 7 Purposes help purify, support,
+            and organize that journey so we can engage more properly in bhakti-yoga.
           </p>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(330px,0.95fr)] items-start">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)] items-start">
           <div className="space-y-5">
             <div
               className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
@@ -156,7 +339,7 @@ export default function Vision() {
             >
               <img
                 src={visionDiagram}
-                alt="Interactive vision reference diagram showing stages of life, the 7 Purposes, duty, identity, and the black line of bhakti-yoga"
+                alt="Vision journey diagram showing the movement from living-being to self-realization and bhakti-yoga"
                 className="w-full h-auto block rounded-[1.4rem]"
               />
             </div>
@@ -168,41 +351,77 @@ export default function Vision() {
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
                 <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
-                  Explore the stages
+                  Journey through the lines
                 </h2>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="space-y-3">
                 {stages.map((stage) => {
                   const isActive = stage.id === activeStage;
+                  const activeStepId = activeStepByStage[stage.id] ?? stage.steps[0].id;
 
                   return (
-                    <button
+                    <div
                       key={stage.id}
-                      type="button"
-                      onClick={() => setActiveStage(stage.id)}
-                      className="text-left rounded-3xl p-4 transition-all"
+                      className="rounded-3xl p-4 transition-all"
                       style={{
                         background: isActive ? stage.softColor : "hsl(40 40% 93%)",
                         border: `1.5px solid ${isActive ? stage.color : "hsl(14 25% 72% / 0.35)"}`,
-                        boxShadow: isActive ? `0 10px 24px ${stage.color}22` : "none",
-                        transform: isActive ? "translateY(-1px)" : "translateY(0)",
+                        boxShadow: isActive ? `0 12px 30px ${stage.color}20` : "none",
                       }}
                     >
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span
-                          className="inline-flex items-center justify-center rounded-full"
-                          style={{ width: 12, height: 12, background: stage.color }}
-                        />
-                        {isActive && <ArrowUpRight className="w-4 h-4" style={{ color: stage.color }} />}
-                      </div>
-                      <div className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                        {stage.title}
-                      </div>
-                      <p className="font-sans mt-2" style={{ fontSize: "0.8rem", color: "hsl(14 38% 38%)" }}>
-                        {stage.keywords.join(" · ")}
-                      </p>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveStage(stage.id)}
+                        className="w-full text-left flex items-center justify-between gap-3"
+                      >
+                        <div>
+                          <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                            {stage.buttonLabel}
+                          </p>
+                          <p className="font-sans mt-1" style={{ fontSize: "0.82rem", color: "hsl(14 38% 38%)" }}>
+                            {stage.stageTitle}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span
+                            className="inline-flex items-center justify-center rounded-full"
+                            style={{ width: 14, height: 14, background: stage.color }}
+                          />
+                          {isActive && <ArrowUpRight className="w-4 h-4" style={{ color: stage.color }} />}
+                        </div>
+                      </button>
+
+                      {isActive && (
+                        <div className="mt-4 pt-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                          <div className="flex flex-wrap gap-2">
+                            {stage.steps.map((step) => {
+                              const isStepActive = step.id === activeStepId;
+                              return (
+                                <button
+                                  key={step.id}
+                                  type="button"
+                                  onClick={() =>
+                                    setActiveStepByStage((prev) => ({
+                                      ...prev,
+                                      [stage.id]: step.id,
+                                    }))
+                                  }
+                                  className="rounded-full px-3 py-2 font-sans text-sm font-semibold transition-all"
+                                  style={{
+                                    background: isStepActive ? stage.color : "hsl(40 40% 92%)",
+                                    color: isStepActive ? "white" : "hsl(14 45% 34%)",
+                                    border: isStepActive ? `1px solid ${stage.color}` : "1px solid hsl(14 25% 72% / 0.35)",
+                                  }}
+                                >
+                                  {step.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -214,98 +433,72 @@ export default function Vision() {
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(40 30% 96%)", border: `1.5px solid ${selectedStage.color}` }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <CircleDot className="w-4 h-4" style={{ color: selectedStage.color }} />
-                <p className="font-sans text-xs uppercase tracking-[0.18em]" style={{ color: "hsl(14 35% 50%)" }}>
-                  Selected stage
-                </p>
-              </div>
-
-              <h2 className="font-serif font-bold mb-2" style={{ fontSize: "1.5rem", color: "hsl(14 72% 18%)" }}>
-                {selectedStage.title}
+              <p className="font-sans text-xs uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(14 35% 50%)" }}>
+                Active line
+              </p>
+              <h2 className="font-serif font-bold mb-2" style={{ fontSize: "1.45rem", color: "hsl(14 72% 18%)" }}>
+                {selectedStage.stageTitle}
               </h2>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {selectedStage.keywords.map((keyword) => (
-                  <span
-                    key={keyword}
-                    className="rounded-full px-3 py-1 font-sans text-xs font-semibold"
-                    style={{ background: selectedStage.softColor, color: selectedStage.color }}
-                  >
-                    {keyword}
-                  </span>
-                ))}
-              </div>
-
               <p className="font-sans leading-relaxed mb-3" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                {selectedStage.description}
+                {selectedStage.lineIntro}
               </p>
               <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 58% 24%)" }}>
-                {selectedStage.purposeLink}
+                {selectedStage.lineMeaning}
               </p>
+              {selectedStage.reference && (
+                <p className="font-sans mt-3" style={{ fontSize: "0.78rem", color: "hsl(14 34% 46%)" }}>
+                  {selectedStage.reference}
+                </p>
+              )}
             </div>
 
             <div
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
-              <div className="flex items-start gap-3">
-                <div
-                  className="rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ width: 42, height: 42, background: "hsl(0 0% 62% / 0.12)" }}
-                >
-                  <CircleDot className="w-4 h-4" style={{ color: "hsl(0 0% 40%)" }} />
-                </div>
-                <div>
-                  <h3 className="font-serif font-bold mb-1.5" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                    Most people begin at the grey spot
-                  </h3>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    The majority of us begin in the lower human condition. We grow gradually through formation, responsibility,
-                    relationship, and self-development before we can remain properly established in the black line of bhakti-yoga.
-                  </p>
+              <p className="font-sans text-xs uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(14 35% 50%)" }}>
+                Selected box
+              </p>
+              <h3 className="font-serif font-bold mb-2" style={{ fontSize: "1.15rem", color: "hsl(14 72% 18%)" }}>
+                {selectedStep.title}
+              </h3>
+              <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                {selectedStep.text}
+              </p>
+            </div>
+
+            {selectedStage.purposes && (
+              <div
+                className="rounded-3xl p-5 shadow-sm"
+                style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+              >
+                <p className="font-sans text-xs uppercase tracking-[0.18em] mb-3" style={{ color: "hsl(14 35% 50%)" }}>
+                  Related purposes
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedStage.purposes.map((purpose) => (
+                    <span
+                      key={purpose.label}
+                      className="rounded-full px-3 py-1.5 font-sans text-xs font-semibold"
+                      style={{ background: `${purpose.color}18`, color: purpose.color, border: `1px solid ${purpose.color}33` }}
+                    >
+                      {purpose.label}
+                    </span>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             <div
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(0 0% 9% / 0.05)", border: "1px solid hsl(0 0% 9% / 0.18)" }}
             >
-              <div className="flex items-start gap-3">
-                <div
-                  className="rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ width: 42, height: 42, background: "hsl(0 0% 9% / 0.12)" }}
-                >
-                  <CircleDot className="w-4 h-4" style={{ color: "hsl(0 0% 9%)" }} />
-                </div>
-                <div>
-                  <h3 className="font-serif font-bold mb-1.5" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                    Some souls can begin near the black dot
-                  </h3>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    Some are especially fortunate and can engage very quickly in the higher current of bhakti. Even then, the
-                    supporting purposes remain essential because they help that devotion flourish in a healthy and sustainable way.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {sideThemes.map((theme) => (
-                <div
-                  key={theme.title}
-                  className="rounded-3xl p-5 shadow-sm"
-                  style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
-                >
-                  <h3 className="font-serif font-bold mb-1.5" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                    {theme.title}
-                  </h3>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    {theme.text}
-                  </p>
-                </div>
-              ))}
+              <p className="font-serif font-semibold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                The black line is bhakti-yoga
+              </p>
+              <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                Some very fortunate souls can begin near the black dot. Most of us, however, need the earlier lines to be purified and organized so devotional life can become deep, stable, and genuine.
+              </p>
             </div>
 
             <div
@@ -313,8 +506,7 @@ export default function Vision() {
               style={{ background: "hsl(26 68% 42% / 0.08)", border: "1px solid hsl(26 68% 42% / 0.2)" }}
             >
               <p className="font-serif font-semibold leading-relaxed" style={{ fontSize: "1rem", color: "hsl(14 62% 22%)" }}>
-                The whole movement is meant to support a person in doing one’s duty, remembering Krishna, engaging in bhakti-yoga,
-                and gradually moving toward sankirtan with maturity, clarity, and devotion.
+                The goal is not to deny the stages of life, but to bring them into harmony so our identity, duty, and contribution all support remembrance of Krishna.
               </p>
             </div>
           </div>
