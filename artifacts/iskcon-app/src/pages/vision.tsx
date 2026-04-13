@@ -161,31 +161,32 @@ const humanLevels: HumanLevel[] = [
       },
     ],
   },
-  {
-    id: "self-realization",
-    title: "Self-realization level",
-    color: "hsl(0 0% 9%)",
-    softColor: "hsl(0 0% 9% / 0.08)",
-    text: "This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.",
-    steps: [
-      {
-        id: "surrender",
-        label: "Submissively surrender",
-        text: "Bhakti begins with humility and the willingness to come under higher guidance.",
-      },
-      {
-        id: "inquire",
-        label: "Sincerely inquire",
-        text: "Real inquiry is not curiosity alone. It is the sincere desire to understand and live by truth.",
-      },
-      {
-        id: "serve",
-        label: "Selflessly serve",
-        text: "Service matures devotion. Through service, the whole journey is brought back into relationship with Krishna.",
-      },
-    ],
-  },
 ];
+
+const devoteeLevel: HumanLevel = {
+  id: "self-realization",
+  title: "Self-realization level",
+  color: "hsl(0 0% 9%)",
+  softColor: "hsl(0 0% 9% / 0.08)",
+  text: "This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.",
+  steps: [
+    {
+      id: "surrender",
+      label: "Submissively surrender",
+      text: "Bhakti begins with humility and the willingness to come under higher guidance.",
+    },
+    {
+      id: "inquire",
+      label: "Sincerely inquire",
+      text: "Real inquiry is not curiosity alone. It is the sincere desire to understand and live by truth.",
+    },
+    {
+      id: "serve",
+      label: "Selflessly serve",
+      text: "Service matures devotion. Through service, the whole journey is brought back into relationship with Krishna.",
+    },
+  ],
+};
 
 function StepButtons({
   steps,
@@ -225,19 +226,21 @@ function StepButtons({
 }
 
 export default function Vision() {
-  const [activeStage, setActiveStage] = useState<"living-being" | "animal" | "human">("living-being");
+  const [activeStage, setActiveStage] = useState<"living-being" | "animal" | "human" | "devotee">("living-being");
   const [livingStep, setLivingStep] = useState(livingBeingSteps[0].id);
   const [animalStep, setAnimalStep] = useState(animalSteps[0].id);
   const [activeHumanLevel, setActiveHumanLevel] = useState(humanLevels[0].id);
   const [humanStepByLevel, setHumanStepByLevel] = useState<Record<string, string>>(
     Object.fromEntries(humanLevels.map((level) => [level.id, level.steps[0].id])),
   );
+  const [devoteeStep, setDevoteeStep] = useState(devoteeLevel.steps[0].id);
 
   const selectedLivingStep = livingBeingSteps.find((step) => step.id === livingStep) ?? livingBeingSteps[0];
   const selectedAnimalStep = animalSteps.find((step) => step.id === animalStep) ?? animalSteps[0];
   const selectedHumanLevel = humanLevels.find((level) => level.id === activeHumanLevel) ?? humanLevels[0];
   const selectedHumanStep =
     selectedHumanLevel.steps.find((step) => step.id === humanStepByLevel[selectedHumanLevel.id]) ?? selectedHumanLevel.steps[0];
+  const selectedDevoteeStep = devoteeLevel.steps.find((step) => step.id === devoteeStep) ?? devoteeLevel.steps[0];
 
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
@@ -402,7 +405,7 @@ export default function Vision() {
                     <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
-                          Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, development, and self-realization.
+                          Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, and development.
                         </p>
                       </div>
 
@@ -456,6 +459,39 @@ export default function Vision() {
                             </div>
                           );
                         })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "devotee" ? "hsl(0 0% 9% / 0.08)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "devotee" ? "hsl(0 0% 9%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("devotee")} className="w-full text-left">
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm a devotee
+                    </p>
+                  </button>
+
+                  {activeStage === "devotee" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.
+                        </p>
+                      </div>
+                      <StepButtons steps={devoteeLevel.steps} accent={devoteeLevel.color} activeStep={devoteeStep} onSelect={setDevoteeStep} />
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                          {selectedDevoteeStep.label}
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          {selectedDevoteeStep.text}
+                        </p>
                       </div>
                     </div>
                   )}
