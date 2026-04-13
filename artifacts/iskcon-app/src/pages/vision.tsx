@@ -1,181 +1,243 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Eye, ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowLeft, Eye, ChevronRight, Sparkles } from "lucide-react";
 import visionDiagram from "@assets/7p_Vision_Deploy.png";
 
-type VisionStep = {
+type Step = {
   id: string;
   label: string;
-  title: string;
   text: string;
-  color?: string;
 };
 
-type VisionStage = {
+type HumanLevel = {
   id: string;
-  buttonLabel: string;
-  stageTitle: string;
+  title: string;
   color: string;
   softColor: string;
-  lineIntro: string;
-  lineMeaning: string;
-  reference?: string;
-  purposes?: Array<{ label: string; color: string }>;
-  steps: VisionStep[];
+  text: string;
+  steps: Step[];
 };
 
-const stages: VisionStage[] = [
+const livingBeingSteps: Step[] = [
   {
-    id: "living-being",
-    buttonLabel: "I'm a living being",
-    stageTitle: "Living Being",
-    color: "hsl(0 0% 62%)",
-    softColor: "hsl(0 0% 62% / 0.12)",
-    lineIntro:
-      "At this level we all share the universal condition of embodied life: limitation, confusion, and vulnerability.",
-    lineMeaning:
-      "Our senses are imperfect, that creates illusion, then mistakes appear, and cheating comes as an attempt to hide those mistakes. Cheating is the one part we can consciously challenge and refuse.",
-    reference: "Reference: Śrīla Prabhupāda repeatedly explains the four defects of conditioned life: imperfect senses, illusion, mistakes, and cheating propensity.",
+    id: "imperfect-senses",
+    label: "Imperfect senses",
+    text: "Our senses cannot grasp reality fully. Because perception is limited, what we know is always partial and vulnerable to error.",
+  },
+  {
+    id: "illusion",
+    label: "Illusion",
+    text: "When perception is incomplete, illusion appears. We take the temporary as permanent and mistake appearances for truth.",
+  },
+  {
+    id: "mistakes",
+    label: "Mistakes",
+    text: "Illusion naturally produces mistakes. Wrong judgment and wrong action are part of conditioned life.",
+  },
+  {
+    id: "cheating",
+    label: "Cheating",
+    text: "Cheating means pretending, hiding, or acting as if we know more than we do. This is the part we can consciously challenge by choosing honesty.",
+  },
+];
+
+const animalSteps: Step[] = [
+  {
+    id: "eating",
+    label: "Eating",
+    text: "Eating is necessary for survival, but when life revolves only around consumption, consciousness stays on a lower platform.",
+  },
+  {
+    id: "sleeping",
+    label: "Sleeping",
+    text: "Rest is natural, yet a life centered only on comfort and bodily maintenance cannot awaken higher purpose.",
+  },
+  {
+    id: "defending",
+    label: "Defending",
+    text: "The urge to protect body, territory, and identity is natural. Human maturity begins when fear no longer rules every choice.",
+  },
+  {
+    id: "mating",
+    label: "Mating",
+    text: "Attraction is powerful in embodied life. Without purification it deepens material attachment; with dharmic guidance it can be regulated.",
+  },
+];
+
+const humanLevels: HumanLevel[] = [
+  {
+    id: "self-satisfaction",
+    title: "Self-satisfaction level",
+    color: "hsl(162 31% 49%)",
+    softColor: "hsl(162 31% 49% / 0.12)",
+    text: "This is where a person begins to search for a more coherent and meaningful life instead of living only by reaction.",
     steps: [
       {
-        id: "senses",
-        label: "Senses / Illusion",
-        title: "Imperfect senses create illusion",
-        text: "We do not perceive reality fully. Because our senses are limited, our understanding becomes covered and illusion naturally appears.",
+        id: "specializing",
+        label: "Specializing",
+        text: "A person starts discovering real gifts, direction, and a more specific place in life.",
       },
       {
-        id: "mistakes",
-        label: "Mistakes",
-        title: "Illusion leads to mistakes",
-        text: "Once perception is incomplete, mistakes follow. This is part of conditioned life, not something unusual.",
+        id: "practising",
+        label: "Practising",
+        text: "Practice builds steadiness. Through repetition, values and aspirations begin to take real shape.",
       },
       {
-        id: "cheating",
-        label: "Cheating",
-        title: "Cheating is where responsibility begins",
-        text: "Cheating means pretending, hiding, or acting as if we know more than we do. This is the part we can consciously control by choosing honesty.",
+        id: "accomplishment",
+        label: "Accomplishment",
+        text: "Accomplishment here means not just success, but meaningful completion that gives confidence and direction.",
       },
     ],
   },
   {
-    id: "animal",
-    buttonLabel: "I'm an animal",
-    stageTitle: "Animal",
-    color: "hsl(0 0% 50%)",
-    softColor: "hsl(0 0% 50% / 0.12)",
-    lineIntro:
-      "Eating, sleeping, defending, and mating are common to both humans and animals. They are natural, but they are not the goal of human life.",
-    lineMeaning:
-      "Human life becomes meaningful when these propensities are regulated and purified. Otherwise we remain bound to the same cycle as the animals.",
-    reference: "Reference: Hitopadeśa 25; Bhagavad-gītā 6.17; Śrīla Prabhupāda often cites āhāra-nidrā-bhaya-maithuna as the common basis of animal and human life.",
+    id: "self-sufficiency",
+    title: "Self-sufficiency level",
+    color: "hsl(46 89% 67%)",
+    softColor: "hsl(46 89% 67% / 0.16)",
+    text: "This level develops practical responsibility. One learns how to contribute, provide, and take care of life in a stable way.",
     steps: [
       {
-        id: "eating-sleeping",
-        label: "Eating / Sleeping",
-        title: "Basic maintenance",
-        text: "Food and rest are necessary, but when life revolves only around comfort and consumption, consciousness remains on a lower platform.",
+        id: "supplying",
+        label: "Supplying",
+        text: "Supplying means helping sustain life with something concrete, useful, and nourishing.",
       },
       {
-        id: "defending",
-        label: "Defending",
-        title: "Fear and protection",
-        text: "The urge to defend body, possessions, and identity is natural. Spiritual growth begins when fear no longer governs all our choices.",
+        id: "processing",
+        label: "Processing",
+        text: "Human life involves cultivation, refinement, and transformation. We learn how to shape raw potential into serviceable value.",
       },
       {
-        id: "mating",
-        label: "Mating",
-        title: "Attraction and attachment",
-        text: "This force is powerful in embodied life. Without guidance it binds us more deeply to material identity; with dharmic order it can be purified.",
+        id: "trading",
+        label: "Trading",
+        text: "Exchange becomes healthy when it is fair, transparent, and directed toward mutual upliftment rather than exploitation.",
       },
     ],
   },
   {
-    id: "human",
-    buttonLabel: "I'm a human",
-    stageTitle: "Human",
-    color: "hsl(26 68% 42%)",
-    softColor: "hsl(26 68% 42% / 0.08)",
-    lineIntro:
-      "Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, and conscious development.",
-    lineMeaning:
-      "The 7 Purposes support these layers. They help human life become mature enough to support real spiritual practice and meaningful contribution.",
-    purposes: [
-      { label: "Simple Living", color: "hsl(163 40% 36%)" },
-      { label: "Community", color: "hsl(220 60% 44%)" },
-      { label: "Holy Place", color: "hsl(0 0% 10%)" },
-      { label: "Accessing", color: "hsl(26 68% 42%)" },
-      { label: "Learning", color: "hsl(17 44% 35%)" },
-      { label: "Applying", color: "hsl(14 18% 33%)" },
-      { label: "Sharing", color: "hsl(14 40% 30%)" },
-    ],
+    id: "self-management",
+    title: "Self-management level",
+    color: "hsl(226 59% 44%)",
+    softColor: "hsl(226 59% 44% / 0.12)",
+    text: "This level develops balance, healthier relationships, and the ability to live and serve with others in a stable way.",
     steps: [
       {
-        id: "self-satisfaction",
-        label: "Self-satisfaction",
-        title: "Self-satisfaction",
-        color: "hsl(162 31% 49%)",
-        text: "This stage begins the search for a more coherent life. One starts to specialize, practice, and find real direction instead of living only by reaction.",
+        id: "wellbeing",
+        label: "Wellbeing",
+        text: "A person becomes more capable of growth when body, mind, and habits move toward healthier balance.",
       },
       {
-        id: "self-sufficiency",
-        label: "Self-sufficiency",
-        title: "Self-sufficiency",
-        color: "hsl(46 89% 67%)",
-        text: "Here we learn responsibility, contribution, and practical competence. It prepares the ground for healthy sva-dharma and meaningful offering.",
+        id: "engaging",
+        label: "Engaging",
+        text: "To engage well means participating actively, responsibly, and with a spirit of contribution.",
       },
       {
-        id: "self-management",
-        label: "Self-management",
-        title: "Self-management",
-        color: "hsl(226 59% 44%)",
-        text: "This stage develops wellbeing, engagement, and care. It helps a person become stable enough to live and serve with others in a healthy way.",
-      },
-      {
-        id: "self-development",
-        label: "Self-development",
-        title: "Self-development",
-        color: "hsl(15 43% 60%)",
-        text: "This line matures through learning, applying, and sharing. It is where consciousness becomes more teachable, purposeful, and fit for spiritual growth.",
+        id: "caring",
+        label: "Caring",
+        text: "Caring moves us beyond self-centeredness and teaches us how to uphold others while growing together.",
       },
     ],
   },
   {
-    id: "devotee",
-    buttonLabel: "I'm a devotee",
-    stageTitle: "Devotee",
+    id: "self-development",
+    title: "Self-development level",
+    color: "hsl(15 43% 60%)",
+    softColor: "hsl(15 43% 60% / 0.14)",
+    text: "This level matures consciousness through real formation, reflection, and application.",
+    steps: [
+      {
+        id: "learning",
+        label: "Learning",
+        text: "Learning begins by hearing carefully and taking in teachings that are higher than conditioned habits.",
+      },
+      {
+        id: "applying",
+        label: "Applying",
+        text: "Application is where knowledge starts becoming character, discipline, and transformation.",
+      },
+      {
+        id: "sharing",
+        label: "Sharing",
+        text: "What has touched us deeply naturally seeks expression. Sharing becomes an act of compassion and service.",
+      },
+    ],
+  },
+  {
+    id: "self-realization",
+    title: "Self-realization level",
     color: "hsl(0 0% 9%)",
-    softColor: "hsl(0 0% 9% / 0.1)",
-    lineIntro:
-      "This is the black line: the path of bhakti-yoga, where one’s life becomes consciously oriented toward Krishna.",
-    lineMeaning:
-      "Some are very fortunate and can begin close to the black dot. For most people, the earlier lines help prepare the consciousness and conduct needed for steady devotional life.",
-    purposes: [
-      { label: "Holy Place", color: "hsl(0 0% 10%)" },
-      { label: "Community", color: "hsl(220 60% 44%)" },
-      { label: "All 7 Purposes", color: "hsl(26 68% 42%)" },
-    ],
+    softColor: "hsl(0 0% 9% / 0.08)",
+    text: "This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.",
     steps: [
       {
-        id: "self-realization",
-        label: "Self-realization",
-        title: "Self-realization",
-        text: "Here the person consciously enters the black line of bhakti-yoga through surrender, sincere inquiry, and selfless service, moving toward sankirtan and remembrance of Krishna.",
+        id: "surrender",
+        label: "Submissively surrender",
+        text: "Bhakti begins with humility and the willingness to come under higher guidance.",
+      },
+      {
+        id: "inquire",
+        label: "Sincerely inquire",
+        text: "Real inquiry is not curiosity alone. It is the sincere desire to understand and live by truth.",
+      },
+      {
+        id: "serve",
+        label: "Selflessly serve",
+        text: "Service matures devotion. Through service, the whole journey is brought back into relationship with Krishna.",
       },
     ],
   },
 ];
 
+function StepButtons({
+  steps,
+  accent,
+  activeStep,
+  onSelect,
+}: {
+  steps: Step[];
+  accent: string;
+  activeStep: string;
+  onSelect: (stepId: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {steps.map((step, index) => {
+        const isActive = step.id === activeStep;
+        return (
+          <div key={step.id} className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onSelect(step.id)}
+              className="rounded-2xl px-3 py-2 font-sans text-sm font-semibold transition-all"
+              style={{
+                background: isActive ? accent : "hsl(40 40% 92%)",
+                color: isActive ? "white" : "hsl(14 45% 34%)",
+                border: isActive ? `1px solid ${accent}` : "1px solid hsl(14 25% 72% / 0.35)",
+              }}
+            >
+              {step.label}
+            </button>
+            {index < steps.length - 1 && <ChevronRight className="w-4 h-4" style={{ color: "hsl(14 25% 58%)" }} />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Vision() {
-  const [activeStage, setActiveStage] = useState(stages[0].id);
-  const [activeStepByStage, setActiveStepByStage] = useState<Record<string, string>>(
-    Object.fromEntries(stages.map((stage) => [stage.id, stage.steps[0].id])),
+  const [activeStage, setActiveStage] = useState<"living-being" | "animal" | "human">("living-being");
+  const [livingStep, setLivingStep] = useState(livingBeingSteps[0].id);
+  const [animalStep, setAnimalStep] = useState(animalSteps[0].id);
+  const [activeHumanLevel, setActiveHumanLevel] = useState(humanLevels[0].id);
+  const [humanStepByLevel, setHumanStepByLevel] = useState<Record<string, string>>(
+    Object.fromEntries(humanLevels.map((level) => [level.id, level.steps[0].id])),
   );
 
-  const selectedStage = useMemo(
-    () => stages.find((stage) => stage.id === activeStage) ?? stages[0],
-    [activeStage],
-  );
-  const selectedStep = selectedStage.steps.find((step) => step.id === activeStepByStage[selectedStage.id]) ?? selectedStage.steps[0];
+  const selectedLivingStep = livingBeingSteps.find((step) => step.id === livingStep) ?? livingBeingSteps[0];
+  const selectedAnimalStep = animalSteps.find((step) => step.id === animalStep) ?? animalSteps[0];
+  const selectedHumanLevel = humanLevels.find((level) => level.id === activeHumanLevel) ?? humanLevels[0];
+  const selectedHumanStep =
+    selectedHumanLevel.steps.find((step) => step.id === humanStepByLevel[selectedHumanLevel.id]) ?? selectedHumanLevel.steps[0];
 
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
@@ -227,24 +289,24 @@ export default function Vision() {
           </p>
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)] items-start">
-          <div className="space-y-5">
-            <div
-              className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
-              style={{
-                background: "hsl(40 30% 96%)",
-                border: "1px solid hsl(14 25% 72% / 0.35)",
-                animation: "visionRiseReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) both",
-                transformOrigin: "bottom center",
-              }}
-            >
-              <img
-                src={visionDiagram}
-                alt="Vision journey diagram showing the movement from living-being to self-realization and bhakti-yoga"
-                className="w-full h-auto block rounded-[1.4rem]"
-              />
-            </div>
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(360px,1fr)] items-start">
+          <div
+            className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
+            style={{
+              background: "hsl(40 30% 96%)",
+              border: "1px solid hsl(14 25% 72% / 0.35)",
+              animation: "visionRiseReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) both",
+              transformOrigin: "bottom center",
+            }}
+          >
+            <img
+              src={visionDiagram}
+              alt="Vision journey diagram showing the movement from living-being to self-realization and bhakti-yoga"
+              className="w-full h-auto block rounded-[1.4rem]"
+            />
+          </div>
 
+          <div className="space-y-4 xl:sticky xl:top-5">
             <div
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
@@ -257,137 +319,149 @@ export default function Vision() {
               </div>
 
               <div className="space-y-3">
-                {stages.map((stage) => {
-                  const isActive = stage.id === activeStage;
-                  const activeStepId = activeStepByStage[stage.id] ?? stage.steps[0].id;
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "living-being" ? "hsl(0 0% 62% / 0.12)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "living-being" ? "hsl(0 0% 62%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("living-being")} className="w-full text-left">
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm a living being
+                    </p>
+                  </button>
 
-                  return (
-                    <div
-                      key={stage.id}
-                      className="rounded-3xl p-4 transition-all"
-                      style={{
-                        background: isActive ? stage.softColor : "hsl(40 40% 93%)",
-                        border: `1.5px solid ${isActive ? stage.color : "hsl(14 25% 72% / 0.35)"}`,
-                        boxShadow: isActive ? `0 12px 30px ${stage.color}20` : "none",
-                      }}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setActiveStage(stage.id)}
-                        className="w-full text-left flex items-center justify-between gap-3"
-                      >
-                        <div>
-                          <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                            {stage.buttonLabel}
-                          </p>
-                          <p className="font-sans mt-1" style={{ fontSize: "0.82rem", color: "hsl(14 38% 38%)" }}>
-                            {stage.stageTitle}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span
-                            className="inline-flex items-center justify-center rounded-full"
-                            style={{ width: 14, height: 14, background: stage.color }}
-                          />
-                          {isActive && <ArrowUpRight className="w-4 h-4" style={{ color: stage.color }} />}
-                        </div>
-                      </button>
-
-                      {isActive && (
-                        <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
-                          <div
-                            className="rounded-2xl p-4"
-                            style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}
-                          >
-                            <h3 className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                              {stage.stageTitle} level
-                            </h3>
-                            <p className="font-sans leading-relaxed mb-2" style={{ fontSize: "0.88rem", color: "hsl(14 40% 35%)" }}>
-                              {stage.lineIntro}
-                            </p>
-                            <p className="font-sans leading-relaxed" style={{ fontSize: "0.88rem", color: "hsl(14 58% 24%)" }}>
-                              {stage.lineMeaning}
-                            </p>
-                            {stage.reference && (
-                              <p className="font-sans mt-3" style={{ fontSize: "0.76rem", color: "hsl(14 34% 46%)" }}>
-                                {stage.reference}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            {stage.steps.map((step) => {
-                              const isStepActive = step.id === activeStepId;
-                              const stepColor = step.color ?? stage.color;
-
-                              return (
-                                <button
-                                  key={step.id}
-                                  type="button"
-                                  onClick={() =>
-                                    setActiveStepByStage((prev) => ({
-                                      ...prev,
-                                      [stage.id]: step.id,
-                                    }))
-                                  }
-                                  className="rounded-2xl px-3 py-2 font-sans text-sm font-semibold transition-all"
-                                  style={{
-                                    background: isStepActive ? stepColor : "hsl(40 40% 92%)",
-                                    color: isStepActive ? "white" : "hsl(14 45% 34%)",
-                                    border: isStepActive ? `1px solid ${stepColor}` : "1px solid hsl(14 25% 72% / 0.35)",
-                                  }}
-                                >
-                                  {step.label}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
+                  {activeStage === "living-being" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          As Living Being we are made of imperfect senses, that creates illusion, then mistakes appear, and cheating comes as an attempt to hide those mistakes.
+                        </p>
+                      </div>
+                      <StepButtons steps={livingBeingSteps} accent="hsl(0 0% 62%)" activeStep={livingStep} onSelect={setLivingStep} />
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                          {selectedLivingStep.label}
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          {selectedLivingStep.text}
+                        </p>
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+                  )}
+                </div>
 
-          <div className="space-y-4 xl:sticky xl:top-5">
-            <div
-              className="rounded-3xl p-5 shadow-sm"
-              style={{ background: "hsl(40 30% 96%)", border: `1.5px solid ${selectedStep.color ?? selectedStage.color}` }}
-            >
-              <p className="font-sans text-xs uppercase tracking-[0.18em] mb-2" style={{ color: "hsl(14 35% 50%)" }}>
-                Selected box
-              </p>
-              <h2 className="font-serif font-bold mb-2" style={{ fontSize: "1.35rem", color: "hsl(14 72% 18%)" }}>
-                {selectedStep.title}
-              </h2>
-              <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                {selectedStep.text}
-              </p>
-            </div>
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "animal" ? "hsl(0 0% 50% / 0.12)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "animal" ? "hsl(0 0% 50%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("animal")} className="w-full text-left">
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm an animal
+                    </p>
+                  </button>
 
-            {selectedStage.purposes && (
-              <div
-                className="rounded-3xl p-5 shadow-sm"
-                style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
-              >
-                <p className="font-sans text-xs uppercase tracking-[0.18em] mb-3" style={{ color: "hsl(14 35% 50%)" }}>
-                  Related purposes
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedStage.purposes.map((purpose) => (
-                    <span
-                      key={purpose.label}
-                      className="rounded-full px-3 py-1.5 font-sans text-xs font-semibold"
-                      style={{ background: `${purpose.color}18`, color: purpose.color, border: `1px solid ${purpose.color}33` }}
-                    >
-                      {purpose.label}
-                    </span>
-                  ))}
+                  {activeStage === "animal" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          As Animal we are eating, sleeping, defending and mating. But as human being, we have also a superior consciousness that allow us to transcend tha nimal stage.
+                        </p>
+                      </div>
+                      <StepButtons steps={animalSteps} accent="hsl(0 0% 50%)" activeStep={animalStep} onSelect={setAnimalStep} />
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                          {selectedAnimalStep.label}
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          {selectedAnimalStep.text}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "human" ? "hsl(26 68% 42% / 0.08)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "human" ? "hsl(26 68% 42%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("human")} className="w-full text-left">
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm a human
+                    </p>
+                  </button>
+
+                  {activeStage === "human" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, development, and self-realization.
+                        </p>
+                      </div>
+
+                      <div className="space-y-3">
+                        {humanLevels.map((level) => {
+                          const isLevelActive = level.id === activeHumanLevel;
+                          const activeStep = humanStepByLevel[level.id] ?? level.steps[0].id;
+                          const selectedStep = level.steps.find((step) => step.id === activeStep) ?? level.steps[0];
+
+                          return (
+                            <div
+                              key={level.id}
+                              className="rounded-3xl p-4"
+                              style={{
+                                background: isLevelActive ? level.softColor : "hsl(40 40% 93%)",
+                                border: `1.5px solid ${isLevelActive ? level.color : "hsl(14 25% 72% / 0.35)"}`,
+                              }}
+                            >
+                              <button type="button" onClick={() => setActiveHumanLevel(level.id)} className="w-full text-left">
+                                <p className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                  {level.title}
+                                </p>
+                              </button>
+
+                              {isLevelActive && (
+                                <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.88rem", color: "hsl(14 40% 35%)" }}>
+                                    {level.text}
+                                  </p>
+                                  <StepButtons
+                                    steps={level.steps}
+                                    accent={level.color}
+                                    activeStep={activeStep}
+                                    onSelect={(stepId) =>
+                                      setHumanStepByLevel((prev) => ({
+                                        ...prev,
+                                        [level.id]: stepId,
+                                      }))
+                                    }
+                                  />
+                                  <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                                    <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                      {selectedStep.label}
+                                    </p>
+                                    <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                                      {selectedStep.text}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
 
             <div
               className="rounded-3xl p-5 shadow-sm"
@@ -397,7 +471,7 @@ export default function Vision() {
                 The black line is bhakti-yoga
               </p>
               <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                Some very fortunate souls can begin near the black dot. Most of us, however, need the earlier lines to be purified and organized so devotional life can become deep, stable, and genuine.
+                Some very fortunate souls can begin near the black dot. Most of us, however, need the earlier layers of life to be purified and organized so devotional life can become deep, stable, and genuine.
               </p>
             </div>
           </div>
