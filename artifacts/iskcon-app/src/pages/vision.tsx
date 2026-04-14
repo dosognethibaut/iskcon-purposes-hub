@@ -393,20 +393,48 @@ export default function Vision() {
         </div>
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(360px,1fr)] items-start">
-          <div
-            className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
-            style={{
-              background: "hsl(40 30% 96%)",
-              border: "1px solid hsl(14 25% 72% / 0.35)",
-              animation: "visionRiseReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) both",
-              transformOrigin: "bottom center",
-            }}
-          >
-            <img
-              src={visionDiagram}
-              alt="Vision journey diagram showing the movement from living-being to self-realization and bhakti-yoga"
-              className="w-full h-auto block rounded-[1.4rem]"
-            />
+          <div className="space-y-4">
+            <div
+              className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
+              style={{
+                background: "hsl(40 30% 96%)",
+                border: "1px solid hsl(14 25% 72% / 0.35)",
+                animation: "visionRiseReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) both",
+                transformOrigin: "bottom center",
+              }}
+            >
+              <img
+                src={visionDiagram}
+                alt="Vision journey diagram showing the movement from living-being to self-realization and bhakti-yoga"
+                className="w-full h-auto block rounded-[1.4rem]"
+              />
+            </div>
+
+            <div
+              className="rounded-3xl p-5 shadow-sm"
+              style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+            >
+              <h2 className="font-serif font-bold mb-3" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
+                The Life Journey Of A Jiva
+              </h2>
+              <div className="space-y-3">
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  This image presents the life journey of a jiva. It shows a gradual path from conditioned life toward conscious spiritual life.
+                </p>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating. As an animal, we move around eating, sleeping, defending, and mating. As a human, life opens the possibility of real growth, responsibility, and self-development. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna.
+                </p>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. They support us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma.
+                </p>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction.
+                </p>
+                <p className="font-sans text-xs" style={{ color: "hsl(14 35% 50%)" }}>
+                  References: <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">Bg. 18.45</a>, <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">Prabhupada lecture on sva-dharma</a>, <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">SB 1.2.6 lecture</a>.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4 xl:sticky xl:top-5">
@@ -414,42 +442,6 @@ export default function Vision() {
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
-              <div className="space-y-4 mb-5">
-                <div>
-                  <h2 className="font-serif font-bold mb-2" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
-                    The Life Journey Of A Jiva
-                  </h2>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                    This diagram presents the life journey of a jiva. It shows a gradual movement from conditioned life toward conscious spiritual life.
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    As a living being, we struggle with imperfect senses, illusion, mistakes, and cheating.
-                  </p>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    As an animal, we naturally move around eating, sleeping, defending, and mating.
-                  </p>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    As a human, life opens deeper layers of growth, responsibility, culture, balance, and development.
-                  </p>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                    As a devotee, life becomes consciously oriented toward bhakti-yoga and our eternal relationship with the Lord.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
-                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
-                    The 7 Purposes of ISKCON give us a stable and gradual framework, a real foundation for our existential quest. They support us in realizing our two life duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span>. Sva-dharma, represented here in the progressive lines of life, is essential in supporting our quest toward sanatana-dharma.
-                  </p>
-                </div>
-
-                <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                  The life journey of a jiva can also be applied to the life journey of a community. In the same way that an individual matures gradually, a community also needs a steady framework, healthy development, and spiritual direction.
-                </p>
-              </div>
-
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
                 <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
@@ -479,6 +471,9 @@ export default function Vision() {
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           As Living Being we are made of imperfect senses, that creates illusion, then mistakes appear, and cheating comes as an attempt to hide those mistakes.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">CC Adi 2.86</a>
                         </p>
                       </div>
                       <StepButtons steps={livingBeingSteps} accent="hsl(0 0% 62%)" activeStep={livingStep} onSelect={setLivingStep} />
@@ -516,6 +511,9 @@ export default function Vision() {
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           As Animal we are eating, sleeping, defending and mating. But as human being, we have also a superior consciousness that allow us to transcend tha nimal stage.
                         </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">March 28, 1966, New York</a>
+                        </p>
                       </div>
                       <StepButtons steps={animalSteps} accent="hsl(0 0% 50%)" activeStep={animalStep} onSelect={setAnimalStep} />
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
@@ -551,6 +549,9 @@ export default function Vision() {
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, and development.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">The Science of Self-Realization, Chapter 1</a>
                         </p>
                       </div>
 
@@ -630,6 +631,9 @@ export default function Vision() {
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">Bg. 4.34</a>
                         </p>
                       </div>
                       <StepButtons steps={devoteeLevel.steps} accent={devoteeLevel.color} activeStep={devoteeStep} onSelect={setDevoteeStep} />
