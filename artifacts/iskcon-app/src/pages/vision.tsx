@@ -293,21 +293,6 @@ function SimpleSun({
   );
 }
 
-function StageSun({
-  variant,
-}: {
-  variant: "living-being" | "animal" | "human" | "devotee";
-}) {
-  const color =
-    variant === "devotee"
-      ? "hsl(0 0% 9%)"
-      : variant === "human"
-        ? "hsl(39 98% 60%)"
-        : "hsl(0 0% 66%)";
-
-  return <SimpleSun color={color} size={34} />;
-}
-
 function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
   if (!suns?.length) return null;
 
@@ -430,12 +415,9 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("living-being")} className="w-full text-left">
-                    <div className="flex items-center gap-3">
-                      <StageSun variant="living-being" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm a living being
-                      </p>
-                    </div>
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm a living being
+                    </p>
                   </button>
 
                   {activeStage === "living-being" && (
@@ -466,12 +448,9 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("animal")} className="w-full text-left">
-                    <div className="flex items-center gap-3">
-                      <StageSun variant="animal" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm an animal
-                      </p>
-                    </div>
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm an animal
+                    </p>
                   </button>
 
                   {activeStage === "animal" && (
@@ -502,12 +481,9 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("human")} className="w-full text-left">
-                    <div className="flex items-center gap-3">
-                      <StageSun variant="human" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm a human
-                      </p>
-                    </div>
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm a human
+                    </p>
                   </button>
 
                   {activeStage === "human" && (
@@ -584,12 +560,9 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("devotee")} className="w-full text-left">
-                    <div className="flex items-center gap-3">
-                      <StageSun variant="devotee" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm a devotee
-                      </p>
-                    </div>
+                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      I'm a devotee
+                    </p>
                   </button>
 
                   {activeStage === "devotee" && (
