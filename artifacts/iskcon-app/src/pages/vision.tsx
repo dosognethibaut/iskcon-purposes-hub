@@ -206,13 +206,6 @@ const devoteeLevel: HumanLevel = {
   ],
 };
 
-const diagramIcon = {
-  width: 4429,
-  height: 4500,
-  purpose: { x: 3435, y: 3130, size: 104 },
-  stage: { x: 705, y: 3005, size: 145 },
-} as const;
-
 function StepButtons({
   steps,
   accent,
@@ -250,33 +243,69 @@ function StepButtons({
   );
 }
 
+function SimpleSun({
+  color,
+  size,
+}: {
+  color: string;
+  size: number;
+}) {
+  const coreSize = Math.round(size * 0.48);
+  const rayLength = Math.round(size * 0.18);
+  const rayThickness = Math.max(2, Math.round(size * 0.05));
+  const rayOffset = Math.round(size * 0.1);
+
+  return (
+    <div
+      aria-hidden="true"
+      className="relative shrink-0"
+      style={{
+        width: size,
+        height: size,
+      }}
+    >
+      <span
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ width: coreSize, height: coreSize, background: color }}
+      />
+      {[
+        { left: "50%", top: 0, transform: "translateX(-50%)" },
+        { right: rayOffset, top: rayOffset, transform: "rotate(45deg)" },
+        { right: 0, top: "50%", transform: "translateY(-50%) rotate(90deg)" },
+        { right: rayOffset, bottom: rayOffset, transform: "rotate(135deg)" },
+        { left: "50%", bottom: 0, transform: "translateX(-50%)" },
+        { left: rayOffset, bottom: rayOffset, transform: "rotate(45deg)" },
+        { left: 0, top: "50%", transform: "translateY(-50%) rotate(90deg)" },
+        { left: rayOffset, top: rayOffset, transform: "rotate(135deg)" },
+      ].map((ray, index) => (
+        <span
+          key={index}
+          className="absolute rounded-full"
+          style={{
+            width: rayThickness,
+            height: rayLength,
+            background: color,
+            ...ray,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function StageSun({
   variant,
 }: {
   variant: "living-being" | "animal" | "human" | "devotee";
 }) {
-  const filter =
-    variant === "human"
-      ? "none"
-      : variant === "devotee"
-        ? "grayscale(1) brightness(0.12)"
-        : "grayscale(1) brightness(0.86)";
+  const color =
+    variant === "devotee"
+      ? "hsl(0 0% 9%)"
+      : variant === "human"
+        ? "hsl(39 98% 60%)"
+        : "hsl(0 0% 66%)";
 
-  return (
-    <div
-      aria-hidden="true"
-      className="shrink-0"
-      style={{
-        width: 34,
-        height: 34,
-        backgroundImage: `url(${visionDiagram})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: `${diagramIcon.width}px ${diagramIcon.height}px`,
-        backgroundPosition: `-${diagramIcon.stage.x}px -${diagramIcon.stage.y}px`,
-        filter,
-      }}
-    />
-  );
+  return <SimpleSun color={color} size={34} />;
 }
 
 function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
@@ -286,18 +315,7 @@ function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
     <div className="flex flex-wrap gap-x-4 gap-y-2">
       {suns.map((sun) => (
         <div key={`${sun.number}-${sun.label}`} className="inline-flex items-center gap-2">
-          <div
-            aria-hidden="true"
-            className="shrink-0"
-            style={{
-              width: 28,
-              height: 28,
-              backgroundImage: `url(${visionDiagram})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: `${diagramIcon.width}px ${diagramIcon.height}px`,
-              backgroundPosition: `-${diagramIcon.purpose.x}px -${diagramIcon.purpose.y}px`,
-            }}
-          />
+          <SimpleSun color="hsl(31 92% 55%)" size={28} />
           <span className="font-sans text-sm font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
             {sun.label}
           </span>
