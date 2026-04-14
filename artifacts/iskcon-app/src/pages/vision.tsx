@@ -274,13 +274,10 @@ function StageSun({
   const style = stageSunStyles[variant];
 
   return (
-    <div
-      className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-      style={{ background: style.background, boxShadow: style.glow }}
-    >
+    <div className="inline-flex items-center justify-center">
       <span
-        className="inline-flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold"
-        style={{ background: style.color, color: "white" }}
+        className="inline-flex items-center justify-center font-bold leading-none"
+        style={{ color: style.color, fontSize: "1.65rem" }}
       >
         ☼
       </span>
@@ -292,21 +289,17 @@ function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
   if (!suns?.length) return null;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
       {suns.map((sun) => (
-        <div
-          key={`${sun.number}-${sun.label}`}
-          className="inline-flex items-center gap-2 rounded-full px-2.5 py-1"
-          style={{ background: "hsl(31 100% 96%)", border: "1px solid hsl(31 92% 55% / 0.35)" }}
-        >
+        <div key={`${sun.number}-${sun.label}`} className="inline-flex items-center gap-2">
           <span
-            className="inline-flex h-6 w-6 items-center justify-center rounded-full font-sans text-xs font-bold"
-            style={{ background: "hsl(31 92% 55%)", color: "white" }}
+            className="font-bold leading-none"
+            style={{ color: "hsl(31 92% 55%)", fontSize: "1.35rem" }}
           >
-            {sun.number}
+            ☼
           </span>
-          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
-            {sun.label}
+          <span className="font-sans text-sm font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
+            {sun.number}. {sun.label}
           </span>
         </div>
       ))}
