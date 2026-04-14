@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, Eye, ChevronRight, Sparkles } from "lucide-react";
-import visionDiagram from "@assets/7p_Vision_Deploy.png";
+import visionDiagram from "@assets/7p_Vision_140426.png";
 
 type Step = {
   id: string;
@@ -16,6 +16,12 @@ type HumanLevel = {
   softColor: string;
   text: string;
   steps: Step[];
+  purposeSuns?: PurposeSun[];
+};
+
+type PurposeSun = {
+  number: string;
+  label: string;
 };
 
 const livingBeingSteps: Step[] = [
@@ -88,6 +94,7 @@ const humanLevels: HumanLevel[] = [
         text: "Accomplishment here means not just success, but meaningful completion that gives confidence and direction.",
       },
     ],
+    purposeSuns: [{ number: "3", label: "Community" }],
   },
   {
     id: "self-sufficiency",
@@ -112,6 +119,7 @@ const humanLevels: HumanLevel[] = [
         text: "Exchange becomes healthy when it is fair, transparent, and directed toward mutual upliftment rather than exploitation.",
       },
     ],
+    purposeSuns: [{ number: "6", label: "Simple Living" }],
   },
   {
     id: "self-management",
@@ -136,6 +144,7 @@ const humanLevels: HumanLevel[] = [
         text: "Caring moves us beyond self-centeredness and teaches us how to uphold others while growing together.",
       },
     ],
+    purposeSuns: [{ number: "3", label: "Community" }],
   },
   {
     id: "self-development",
@@ -159,6 +168,11 @@ const humanLevels: HumanLevel[] = [
         label: "Sharing",
         text: "What has touched us deeply naturally seeks expression. Sharing becomes an act of compassion and service.",
       },
+    ],
+    purposeSuns: [
+      { number: "2", label: "Learning" },
+      { number: "4", label: "Applying" },
+      { number: "7", label: "Sharing" },
     ],
   },
 ];
@@ -186,7 +200,34 @@ const devoteeLevel: HumanLevel = {
       text: "Service matures devotion. Through service, the whole journey is brought back into relationship with Krishna.",
     },
   ],
+  purposeSuns: [
+    { number: "1", label: "Accessibility" },
+    { number: "5", label: "Holy Place" },
+  ],
 };
+
+const stageSunStyles = {
+  "living-being": {
+    color: "hsl(0 0% 62%)",
+    background: "hsl(0 0% 62% / 0.14)",
+    glow: "0 0 0 1px hsl(0 0% 62% / 0.18)",
+  },
+  animal: {
+    color: "hsl(0 0% 50%)",
+    background: "hsl(0 0% 50% / 0.14)",
+    glow: "0 0 0 1px hsl(0 0% 50% / 0.18)",
+  },
+  human: {
+    color: "hsl(39 98% 58%)",
+    background: "hsl(39 98% 58% / 0.16)",
+    glow: "0 0 0 1px hsl(39 98% 58% / 0.18)",
+  },
+  devotee: {
+    color: "hsl(0 0% 9%)",
+    background: "hsl(0 0% 9% / 0.08)",
+    glow: "0 0 0 1px hsl(0 0% 9% / 0.18)",
+  },
+} as const;
 
 function StepButtons({
   steps,
@@ -221,6 +262,54 @@ function StepButtons({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function StageSun({
+  variant,
+}: {
+  variant: keyof typeof stageSunStyles;
+}) {
+  const style = stageSunStyles[variant];
+
+  return (
+    <div
+      className="inline-flex h-8 w-8 items-center justify-center rounded-full"
+      style={{ background: style.background, boxShadow: style.glow }}
+    >
+      <span
+        className="inline-flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold"
+        style={{ background: style.color, color: "white" }}
+      >
+        ☼
+      </span>
+    </div>
+  );
+}
+
+function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
+  if (!suns?.length) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {suns.map((sun) => (
+        <div
+          key={`${sun.number}-${sun.label}`}
+          className="inline-flex items-center gap-2 rounded-full px-2.5 py-1"
+          style={{ background: "hsl(31 100% 96%)", border: "1px solid hsl(31 92% 55% / 0.35)" }}
+        >
+          <span
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full font-sans text-xs font-bold"
+            style={{ background: "hsl(31 92% 55%)", color: "white" }}
+          >
+            {sun.number}
+          </span>
+          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
+            {sun.label}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -330,9 +419,12 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("living-being")} className="w-full text-left">
-                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                      I'm a living being
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="living-being" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        I'm a living being
+                      </p>
+                    </div>
                   </button>
 
                   {activeStage === "living-being" && (
@@ -363,9 +455,12 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("animal")} className="w-full text-left">
-                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                      I'm an animal
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="animal" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        I'm an animal
+                      </p>
+                    </div>
                   </button>
 
                   {activeStage === "animal" && (
@@ -396,9 +491,12 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("human")} className="w-full text-left">
-                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                      I'm a human
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="human" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        I'm a human
+                      </p>
+                    </div>
                   </button>
 
                   {activeStage === "human" && (
@@ -425,9 +523,12 @@ export default function Vision() {
                               }}
                             >
                               <button type="button" onClick={() => setActiveHumanLevel(level.id)} className="w-full text-left">
-                                <p className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
-                                  {level.title}
-                                </p>
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <p className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                    {level.title}
+                                  </p>
+                                  <PurposeSunRow suns={level.purposeSuns} />
+                                </div>
                               </button>
 
                               {isLevelActive && (
@@ -472,13 +573,17 @@ export default function Vision() {
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("devotee")} className="w-full text-left">
-                    <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                      I'm a devotee
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="devotee" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        I'm a devotee
+                      </p>
+                    </div>
                   </button>
 
                   {activeStage === "devotee" && (
                     <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <PurposeSunRow suns={devoteeLevel.purposeSuns} />
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.
