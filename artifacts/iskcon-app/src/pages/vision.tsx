@@ -206,27 +206,11 @@ const devoteeLevel: HumanLevel = {
   ],
 };
 
-const stageSunStyles = {
-  "living-being": {
-    color: "hsl(0 0% 62%)",
-    background: "hsl(0 0% 62% / 0.14)",
-    glow: "0 0 0 1px hsl(0 0% 62% / 0.18)",
-  },
-  animal: {
-    color: "hsl(0 0% 50%)",
-    background: "hsl(0 0% 50% / 0.14)",
-    glow: "0 0 0 1px hsl(0 0% 50% / 0.18)",
-  },
-  human: {
-    color: "hsl(39 98% 58%)",
-    background: "hsl(39 98% 58% / 0.16)",
-    glow: "0 0 0 1px hsl(39 98% 58% / 0.18)",
-  },
-  devotee: {
-    color: "hsl(0 0% 9%)",
-    background: "hsl(0 0% 9% / 0.08)",
-    glow: "0 0 0 1px hsl(0 0% 9% / 0.18)",
-  },
+const diagramIcon = {
+  width: 4429,
+  height: 4500,
+  purpose: { x: 3435, y: 3130, size: 104 },
+  stage: { x: 705, y: 3005, size: 145 },
 } as const;
 
 function StepButtons({
@@ -269,19 +253,29 @@ function StepButtons({
 function StageSun({
   variant,
 }: {
-  variant: keyof typeof stageSunStyles;
+  variant: "living-being" | "animal" | "human" | "devotee";
 }) {
-  const style = stageSunStyles[variant];
+  const filter =
+    variant === "human"
+      ? "none"
+      : variant === "devotee"
+        ? "grayscale(1) brightness(0.12)"
+        : "grayscale(1) brightness(0.86)";
 
   return (
-    <div className="inline-flex items-center justify-center">
-      <span
-        className="inline-flex items-center justify-center font-bold leading-none"
-        style={{ color: style.color, fontSize: "1.65rem" }}
-      >
-        ☼
-      </span>
-    </div>
+    <div
+      aria-hidden="true"
+      className="shrink-0"
+      style={{
+        width: 34,
+        height: 34,
+        backgroundImage: `url(${visionDiagram})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: `${diagramIcon.width}px ${diagramIcon.height}px`,
+        backgroundPosition: `-${diagramIcon.stage.x}px -${diagramIcon.stage.y}px`,
+        filter,
+      }}
+    />
   );
 }
 
@@ -292,14 +286,20 @@ function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
     <div className="flex flex-wrap gap-x-4 gap-y-2">
       {suns.map((sun) => (
         <div key={`${sun.number}-${sun.label}`} className="inline-flex items-center gap-2">
-          <span
-            className="font-bold leading-none"
-            style={{ color: "hsl(31 92% 55%)", fontSize: "1.35rem" }}
-          >
-            ☼
-          </span>
+          <div
+            aria-hidden="true"
+            className="shrink-0"
+            style={{
+              width: 28,
+              height: 28,
+              backgroundImage: `url(${visionDiagram})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: `${diagramIcon.width}px ${diagramIcon.height}px`,
+              backgroundPosition: `-${diagramIcon.purpose.x}px -${diagramIcon.purpose.y}px`,
+            }}
+          />
           <span className="font-sans text-sm font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
-            {sun.number}. {sun.label}
+            {sun.label}
           </span>
         </div>
       ))}
