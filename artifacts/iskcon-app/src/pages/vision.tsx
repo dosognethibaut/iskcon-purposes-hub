@@ -299,11 +299,11 @@ function StageSun({
   variant: "living-being" | "animal" | "human" | "devotee";
 }) {
   const color =
-    variant === "human"
-      ? "hsl(39 98% 60%)"
-      : variant === "devotee"
+    variant === "devotee"
+      ? "hsl(0 0% 9%)"
+      : variant === "human"
         ? "hsl(39 98% 60%)"
-        : "hsl(39 98% 60%)";
+        : "hsl(0 0% 66%)";
 
   return <SimpleSun color={color} size={34} />;
 }
