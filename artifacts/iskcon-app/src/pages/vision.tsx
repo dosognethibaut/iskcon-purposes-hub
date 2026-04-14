@@ -414,6 +414,42 @@ export default function Vision() {
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
+              <div className="space-y-4 mb-5">
+                <div>
+                  <h2 className="font-serif font-bold mb-2" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
+                    The Life Journey Of A Jiva
+                  </h2>
+                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                    This diagram presents the life journey of a jiva. It shows a gradual movement from conditioned life toward conscious spiritual life.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                    As a living being, we struggle with imperfect senses, illusion, mistakes, and cheating.
+                  </p>
+                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                    As an animal, we naturally move around eating, sleeping, defending, and mating.
+                  </p>
+                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                    As a human, life opens deeper layers of growth, responsibility, culture, balance, and development.
+                  </p>
+                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                    As a devotee, life becomes consciously oriented toward bhakti-yoga and our eternal relationship with the Lord.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                    The 7 Purposes of ISKCON give us a stable and gradual framework, a real foundation for our existential quest. They support us in realizing our two life duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span>. Sva-dharma, represented here in the progressive lines of life, is essential in supporting our quest toward sanatana-dharma.
+                  </p>
+                </div>
+
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                  The life journey of a jiva can also be applied to the life journey of a community. In the same way that an individual matures gradually, a community also needs a steady framework, healthy development, and spiritual direction.
+                </p>
+              </div>
+
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
                 <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
