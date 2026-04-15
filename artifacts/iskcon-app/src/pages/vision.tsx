@@ -422,16 +422,55 @@ export default function Vision() {
                   This image presents the life journey of a jiva. It shows a gradual path from conditioned life toward conscious spiritual life.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating. As an animal, we move around eating, sleeping, defending, and mating. As a human, life opens the possibility of real growth, responsibility, and self-development. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna.
+                  As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating
+                  {" "}
+                  <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">
+                    as Srila Prabhupada explains
+                  </a>.
+                  {" "}
+                  As an animal, we move around eating, sleeping, defending, and mating;
+                  {" "}
+                  <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">
+                    without spiritual life, human beings remain on that same level
+                  </a>.
+                  {" "}
+                  As a human, life opens the possibility of real growth, responsibility, and self-development because
+                  {" "}
+                  <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">
+                    the human form of life is meant for self-realization
+                  </a>.
+                  {" "}
+                  As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna
+                  {" "}
+                  <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">
+                    through submissive hearing, inquiry, and service
+                  </a>.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma.
+                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. It acts like a grid supporting us in understanding and harmonizing our two duties:
+                  {" "}
+                  <span className="font-semibold">sva-dharma</span>
+                  {" "}
+                  and
+                  {" "}
+                  <span className="font-semibold">sanatana-dharma</span>.
+                  {" "}
+                  <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">
+                    Srila Prabhupada explains that one advances through proper work
+                  </a>,
+                  {" "}
+                  and
+                  {" "}
+                  <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">
+                    that sva-dharma must support spiritual realization
+                  </a>.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction.
-                </p>
-                <p className="font-sans text-xs" style={{ color: "hsl(14 35% 50%)" }}>
-                  References: <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">Bg. 18.45</a>, <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">Prabhupada lecture on sva-dharma</a>, <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">SB 1.2.6 lecture</a>.
+                  This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction
+                  {" "}
+                  <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">
+                    so that devotional life can become steady and practical
+                  </a>.
                 </p>
               </div>
             </div>
