@@ -326,7 +326,7 @@ function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
 }
 
 export default function Vision() {
-  const [activeStage, setActiveStage] = useState<"living-being" | "animal" | "human" | "devotee">("living-being");
+  const [activeStage, setActiveStage] = useState<"living-being" | "animal" | "human" | "devotee" | null>(null);
   const [livingStep, setLivingStep] = useState(livingBeingSteps[0].id);
   const [animalStep, setAnimalStep] = useState(animalSteps[0].id);
   const [activeHumanLevel, setActiveHumanLevel] = useState(humanLevels[0].id);
@@ -422,56 +422,51 @@ export default function Vision() {
                   This image presents the life journey of a jiva. It shows a gradual path from conditioned life toward conscious spiritual life.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating
-                  {" "}
-                  <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">
-                    as Srila Prabhupada explains
-                  </a>.
-                  {" "}
-                  As an animal, we move around eating, sleeping, defending, and mating;
-                  {" "}
-                  <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">
-                    without spiritual life, human beings remain on that same level
-                  </a>.
-                  {" "}
-                  As a human, life opens the possibility of real growth, responsibility, and self-development because
-                  {" "}
-                  <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">
-                    the human form of life is meant for self-realization
-                  </a>.
-                  {" "}
-                  As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna
-                  {" "}
-                  <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">
-                    through submissive hearing, inquiry, and service
-                  </a>.
+                  As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating<sup>[1]</sup>. As an animal, we move around eating, sleeping, defending, and mating<sup>[2]</sup>. As a human, life opens the possibility of real growth, responsibility, and self-development<sup>[3]</sup>. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna<sup>[4]</sup>.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. It acts like a grid supporting us in understanding and harmonizing our two duties:
-                  {" "}
-                  <span className="font-semibold">sva-dharma</span>
-                  {" "}
-                  and
-                  {" "}
-                  <span className="font-semibold">sanatana-dharma</span>.
-                  {" "}
-                  <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">
-                    Srila Prabhupada explains that one advances through proper work
-                  </a>,
-                  {" "}
-                  and
-                  {" "}
-                  <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">
-                    that sva-dharma must support spiritual realization
-                  </a>.
+                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span><sup>[5]</sup>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma<sup>[6]</sup>.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction
-                  {" "}
-                  <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">
-                    so that devotional life can become steady and practical
-                  </a>.
+                  This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction<sup>[7]</sup>.
                 </p>
+                <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                  <p className="font-sans text-xs leading-relaxed" style={{ color: "hsl(14 35% 50%)" }}>
+                    [1] Srila Prabhupada on imperfect senses, illusion, mistakes, and cheating:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">CC Adi 2.86</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [2] Srila Prabhupada on eating, sleeping, mating, defending, and spiritual life:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">March 28, 1966, New York</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [3] Srila Prabhupada on the human form being meant for self-realization:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">The Science of Self-Realization, Chapter 1</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [4] Srila Prabhupada on hearing, inquiry, and service:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">Bg. 4.34</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [5] Srila Prabhupada on advancing through one’s prescribed work:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">Bg. 18.45</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [6] Srila Prabhupada on sva-dharma supporting spiritual realization:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">October 11, 1975, Durban</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [7] Srila Prabhupada on steady and practical devotional life:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">February 27, 1974, Calcutta</a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -639,6 +634,16 @@ export default function Vision() {
                                       {selectedStep.text}
                                     </p>
                                   </div>
+                                  {level.id === "self-development" && (
+                                    <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1.5px solid hsl(10 54% 35%)" }}>
+                                      <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
+                                        Sva-dharma
+                                      </p>
+                                      <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                                        Sva-dharma is our particular duty, contribution, and responsible place in life. When it is aligned with service, it gives steadiness and structure to our spiritual progress.
+                                      </p>
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -682,6 +687,14 @@ export default function Vision() {
                         </p>
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
                           {selectedDevoteeStep.text}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1.5px solid hsl(10 54% 35%)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
+                          Sanatana-dharma
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          Sanatana-dharma is the eternal duty of the soul: loving service to Krsna. This is the deeper aim toward which the whole journey is meant to guide us.
                         </p>
                       </div>
                     </div>
