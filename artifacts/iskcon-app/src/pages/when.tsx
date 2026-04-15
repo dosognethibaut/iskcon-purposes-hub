@@ -73,7 +73,7 @@ const monthlyPurposeByKey: Record<string, { id: number; title: string; logo: str
   },
   "2026-10": {
     id: 5,
-    title: "Education",
+    title: "Learning",
     logo: logoLearning,
     accent: "hsl(17 44% 35%)",
     brief: "A month to deepen learning, study carefully, and help spiritual understanding become clear, steady, and practical.",

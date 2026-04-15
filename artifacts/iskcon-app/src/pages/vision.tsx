@@ -415,7 +415,7 @@ export default function Vision() {
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
               <h2 className="font-serif font-bold mb-3" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
-                The Life Journey Of A Jiva
+                The Life Journey of a Jiva / a Community
               </h2>
               <div className="space-y-3">
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
@@ -425,7 +425,7 @@ export default function Vision() {
                   As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating. As an animal, we move around eating, sleeping, defending, and mating. As a human, life opens the possibility of real growth, responsibility, and self-development. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. They support us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma.
+                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
                   This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction.
