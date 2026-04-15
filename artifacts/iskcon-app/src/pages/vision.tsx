@@ -634,21 +634,19 @@ export default function Vision() {
                                       {selectedStep.text}
                                     </p>
                                   </div>
-                                  {level.id === "self-development" && (
-                                    <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1.5px solid hsl(10 54% 35%)" }}>
-                                      <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
-                                        Sva-dharma
-                                      </p>
-                                      <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
-                                        Sva-dharma is our particular duty, contribution, and responsible place in life. When it is aligned with service, it gives steadiness and structure to our spiritual progress.
-                                      </p>
-                                    </div>
-                                  )}
                                 </div>
                               )}
                             </div>
                           );
                         })}
+                      </div>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(10 54% 35% / 0.14)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
+                          Sva-dharma
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          Sva-dharma is our particular duty, contribution, and responsible place in life. When it is aligned with service, it gives steadiness and structure to our spiritual progress.
+                        </p>
                       </div>
                     </div>
                   )}
@@ -689,7 +687,7 @@ export default function Vision() {
                           {selectedDevoteeStep.text}
                         </p>
                       </div>
-                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1.5px solid hsl(10 54% 35%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(10 54% 35% / 0.14)" }}>
                         <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
                           Sanatana-dharma
                         </p>
