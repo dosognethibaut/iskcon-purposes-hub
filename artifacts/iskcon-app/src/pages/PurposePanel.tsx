@@ -575,10 +575,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       {/* Quote block */}
       <div className="px-6 py-6">
         <div className="text-center">
-          <p className="font-serif font-bold leading-relaxed" style={{ fontSize: "0.95rem", color: "hsl(14 52% 18%)" }}>{officialText}</p>
+          <p className="font-serif font-bold leading-relaxed" style={{ fontSize: "1.18rem", color: "hsl(0 0% 4%)" }}>{officialText}</p>
         </div>
-        <div className="my-5 mx-auto w-12 h-px" style={{ background: "hsl(14 25% 68%)" }} />
-        <p className="font-sans leading-relaxed text-center" style={{ fontSize: "0.88rem", color: "hsl(14 40% 38%)" }}>{description}</p>
+        <div className="my-5 mx-auto w-24 h-px" style={{ background: "hsl(43 100% 90% / 0.9)" }} />
+        <p className="font-sans leading-relaxed text-center" style={{ fontSize: "0.98rem", color: brandTheme.creamSoft }}>{description}</p>
       </div>
 
       {/* Community section */}
@@ -598,7 +598,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             }}
           />
           {stats ? (
-            <span className="font-sans text-sm" style={{ color: "hsl(14 40% 48%)" }}>
+            <span className="font-sans text-base font-semibold" style={{ color: brandTheme.creamSoft }}>
               {stats.connected}/{stats.registered}
             </span>
           ) : null}
@@ -606,9 +606,9 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
         {/* Domaine de Radhadesh divider */}
         <div className="flex items-center gap-3 pb-4">
-          <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
-          <span className="font-sans text-xs uppercase tracking-widest whitespace-nowrap" style={{ color: "hsl(14 40% 50%)" }}>Domaine de Radhadesh</span>
-          <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
+          <div className="flex-1 h-px" style={{ background: "hsl(43 100% 90% / 0.4)" }} />
+          <span className="font-sans text-sm uppercase tracking-[0.22em] whitespace-nowrap font-semibold" style={{ color: brandTheme.creamSoft }}>Domaine de Radhadesh</span>
+          <div className="flex-1 h-px" style={{ background: "hsl(43 100% 90% / 0.4)" }} />
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
