@@ -268,16 +268,16 @@ export default function Home() {
 
           </div>
 
-          <div className="flex-1 flex items-center justify-end px-8">
+          <div className="flex-1 flex items-start justify-end px-8 pt-8 md:pt-12">
             <div className="max-w-[34rem] text-right">
-              <div className="flex justify-end mb-4">
+              <div className="flex justify-end mb-3">
                 <img
                   src={radhadeshLogo}
                   alt="Radhadesh logo"
-                  style={{ width: 86, height: 86, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255, 245, 215, 0.12))" }}
+                  style={{ width: 92, height: 92, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255, 245, 215, 0.12))" }}
                 />
               </div>
-              <h1 className="font-serif font-semibold leading-[1.02]" style={{ fontSize: "clamp(2.55rem, 8vw, 4.95rem)", color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
+              <h1 className="font-serif font-semibold" style={{ fontSize: "clamp(2.2rem, 7vw, 4.35rem)", lineHeight: 1.14, color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
                 The 7 Purposes
                 <br />
                 of ISKCON
@@ -316,7 +316,7 @@ export default function Home() {
               </button>
               <div className="flex gap-1.5 flex-1 justify-center">
                 {quotes.map((_, i) => (
-                  <button key={i} onClick={() => goTo(i)} className="rounded-full transition-all" style={{ width: i === current ? 20 : 7, height: 7, background: i === current ? brandTheme.gold : "hsl(43 100% 90% / 0.28)" }} aria-label={`Quote ${i + 1}`} />
+                  <button key={i} onClick={() => goTo(i)} className="rounded-full transition-all" style={{ width: 7, height: 7, background: i === current ? brandTheme.creamSoft : "hsl(43 100% 90% / 0.28)" }} aria-label={`Quote ${i + 1}`} />
                 ))}
               </div>
               <button onClick={() => goTo(current + 1)} className="rounded-full p-1.5" style={{ background: "hsl(344 34% 22% / 0.34)" }} aria-label="Next">
@@ -365,14 +365,14 @@ export default function Home() {
                   opacity: activePurpose !== null && !active ? 0.3 : 1,
                   transition: "opacity 0.2s, transform 0.2s",
                   transform: active ? "scale(1.1)" : "scale(1)",
-                  width: 108,
+                  width: 172,
                 }}
               >
-                <div className="relative" style={{ width: 86, height: 86 }}>
+                <div className="relative" style={{ width: 148, height: 148 }}>
                   <img
                     src={p.logo}
                     alt={p.title}
-                    style={{ width: 86, height: 86, objectFit: "contain" }}
+                    style={{ width: 148, height: 148, objectFit: "contain" }}
                   />
                   {(purposeBadges[p.id] ?? 0) > 0 && (
                     <span
