@@ -7,6 +7,7 @@ export const brandTheme = {
   creamSurface: "hsl(40 78% 91%)",
   gold: "hsl(41 96% 73%)",
   goldDark: "hsl(38 100% 39%)",
+  orangeBadge: "hsl(29 100% 43%)",
   mauve: "hsl(332 15% 56%)",
   plum: "hsl(347 33% 27%)",
   sage: "hsl(82 35% 67%)",

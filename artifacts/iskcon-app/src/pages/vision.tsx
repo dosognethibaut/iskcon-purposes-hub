@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, Eye, ChevronRight, Sparkles } from "lucide-react";
-import visionDiagram from "@assets/7p_Vision_140426.png";
+import visionDiagram from "@assets/Tp_Vision_Radhadesh.png";
 import { brandTheme, purposeColorByTitle } from "@/lib/brand";
 
 type Step = {

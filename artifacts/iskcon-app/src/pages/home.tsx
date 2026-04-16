@@ -227,23 +227,10 @@ export default function Home() {
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "60% 8%" }}
         />
 
-        {/* Vignette */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: [
-              "linear-gradient(180deg, hsl(344 34% 20% / 0.82) 0%, hsl(343 42% 34% / 0.4) 36%, transparent 56%, hsl(344 34% 20% / 0.92) 100%)",
-              "linear-gradient(90deg, hsl(347 33% 24% / 0.74) 0%, hsl(343 51% 38% / 0.34) 44%, transparent 72%)",
-              "radial-gradient(circle at 76% 12%, hsl(43 100% 86% / 0.45), transparent 22%)",
-              "radial-gradient(circle at 82% 28%, hsl(41 96% 73% / 0.3), transparent 24%)",
-            ].join(", "),
-          }}
-        />
-
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
 
-          {/* Top bar — You pill left, charter identity right */}
+          {/* Top bar — you left, logo right */}
           <div className="px-6 pt-10 flex items-start justify-between gap-4">
 
             {/* You pill + bell — top left */}
@@ -279,35 +266,33 @@ export default function Home() {
               )}
             </div>
 
-            <div className="flex flex-col items-end text-right max-w-[20rem]">
-              <div className="flex items-center justify-end gap-3">
-                <img
-                  src={radhadeshLogo}
-                  alt="Radhadesh logo"
-                  style={{ width: 64, height: 64, objectFit: "contain" }}
-                />
-                <div className="text-right">
-                  <h1 className="font-serif font-semibold leading-[0.94]" style={{ fontSize: "clamp(1.85rem, 5.5vw, 3.55rem)", color: brandTheme.creamSoft }}>
-                    The 7 purposes
-                    <br />
-                    of ISKCON
-                  </h1>
-                </div>
-              </div>
-              <div className="mt-3">
+            <div className="shrink-0">
+              <img
+                src={radhadeshLogo}
+                alt="Radhadesh logo"
+                style={{ width: 68, height: 68, objectFit: "contain" }}
+              />
+            </div>
+
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-10">
+            <div className="max-w-[34rem] text-center">
+              <h1 className="font-serif font-semibold leading-[0.92]" style={{ fontSize: "clamp(3rem, 10vw, 5.5rem)", color: brandTheme.creamSoft }}>
+                The 7 Purposes
+                <br />
+                of ISKCON
+              </h1>
+              <div className="mt-5">
                 <div
-                  className="inline-block px-4 py-1 rounded-full font-sans font-semibold"
-                  style={{ background: brandTheme.indigo, color: brandTheme.creamSoft, fontSize: "clamp(0.72rem, 2.5vw, 0.86rem)" }}
+                  className="inline-block px-6 py-2 rounded-full font-serif italic font-semibold"
+                  style={{ background: brandTheme.orangeBadge, color: brandTheme.creamSoft, fontSize: "clamp(1rem, 3vw, 1.2rem)" }}
                 >
                   &amp; Community Building
                 </div>
               </div>
             </div>
-
           </div>
-
-          <div className="flex-1" />
-
           {/* Quote */}
           <div className="px-6 pb-2">
             <a
@@ -401,7 +386,7 @@ export default function Home() {
                 </div>
                 <div
                   className="rounded-full"
-                  style={{ width: active ? 20 : 0, height: 2, background: "hsl(27 84% 50%)", transition: "width 0.2s" }}
+                  style={{ width: active ? 20 : 0, height: 2, background: brandTheme.orangeBadge, transition: "width 0.2s" }}
                 />
               </button>
             );
