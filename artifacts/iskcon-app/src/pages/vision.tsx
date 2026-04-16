@@ -424,8 +424,8 @@ export default function Vision() {
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
                   As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating<sup>[1]</sup>. As an animal, we move around eating, sleeping, defending, and mating<sup>[2]</sup>. As a human, life opens the possibility of real growth, responsibility, and self-development<sup>[3]</sup>. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna<sup>[4]</sup>.
                 </p>
-                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
-                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span><sup>[5]</sup>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma<sup>[6]</sup>.
+                <p className="font-sans font-semibold leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey as an Individual and as a Community. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span><sup>[5]</sup>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma<sup>[6]</sup>. This image shows us the interconnections between our identity, duty, and community life. In that way, each purpose is fundamentally connected to the others, and each of them is necessary for our best gradual realization.
                 </p>
                 <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
                   This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction<sup>[7]</sup>.
@@ -495,7 +495,7 @@ export default function Vision() {
                     <div className="flex items-center gap-3">
                       <StageSun variant="living-being" />
                       <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm a living being
+                        Life Conscious
                       </p>
                     </div>
                   </button>
@@ -534,7 +534,7 @@ export default function Vision() {
                     <div className="flex items-center gap-3">
                       <StageSun variant="animal" />
                       <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm an animal
+                        Animal Conscious
                       </p>
                     </div>
                   </button>
@@ -573,7 +573,7 @@ export default function Vision() {
                     <div className="flex items-center gap-3">
                       <StageSun variant="human" />
                       <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm a human
+                        Human Conscious
                       </p>
                     </div>
                   </button>
@@ -663,7 +663,7 @@ export default function Vision() {
                     <div className="flex items-center gap-3">
                       <StageSun variant="devotee" />
                       <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
-                        I'm a devotee
+                        Krsna Conscious
                       </p>
                     </div>
                   </button>
