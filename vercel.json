@@ -1,11 +1,19 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "corepack enable && pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter @workspace/iskcon-app build",
+  "buildCommand": "pnpm --filter @workspace/iskcon-app build && pnpm --filter @workspace/iskcon-app-adi build",
   "outputDirectory": "artifacts/iskcon-app/dist/public",
   "routes": [
     {
       "handle": "filesystem"
+    },
+    {
+      "src": "/adi",
+      "dest": "/adi/index.html"
+    },
+    {
+      "src": "/adi/(.*)",
+      "dest": "/adi/index.html"
     },
     {
       "src": "/(.*)",

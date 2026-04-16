@@ -1,0 +1,720 @@
+import { useState } from "react";
+import { Link } from "wouter";
+import { ArrowLeft, Eye, ChevronRight, Sparkles } from "lucide-react";
+import visionDiagram from "@assets/7p_Vision_140426.png";
+
+type Step = {
+  id: string;
+  label: string;
+  text: string;
+};
+
+type HumanLevel = {
+  id: string;
+  title: string;
+  color: string;
+  softColor: string;
+  text: string;
+  steps: Step[];
+  purposeSuns?: PurposeSun[];
+};
+
+type PurposeSun = {
+  number: string;
+  label: string;
+};
+
+const livingBeingSteps: Step[] = [
+  {
+    id: "imperfect-senses",
+    label: "Imperfect senses",
+    text: "Our senses cannot grasp reality fully. Because perception is limited, what we know is always partial and vulnerable to error.",
+  },
+  {
+    id: "illusion",
+    label: "Illusion",
+    text: "When perception is incomplete, illusion appears. We take the temporary as permanent and mistake appearances for truth.",
+  },
+  {
+    id: "mistakes",
+    label: "Mistakes",
+    text: "Illusion naturally produces mistakes. Wrong judgment and wrong action are part of conditioned life.",
+  },
+  {
+    id: "cheating",
+    label: "Cheating",
+    text: "Cheating means pretending, hiding, or acting as if we know more than we do. This is the part we can consciously challenge by choosing honesty.",
+  },
+];
+
+const animalSteps: Step[] = [
+  {
+    id: "eating",
+    label: "Eating",
+    text: "Eating is necessary for survival, but when life revolves only around consumption, consciousness stays on a lower platform.",
+  },
+  {
+    id: "sleeping",
+    label: "Sleeping",
+    text: "Rest is natural, yet a life centered only on comfort and bodily maintenance cannot awaken higher purpose.",
+  },
+  {
+    id: "defending",
+    label: "Defending",
+    text: "The urge to protect body, territory, and identity is natural. Human maturity begins when fear no longer rules every choice.",
+  },
+  {
+    id: "mating",
+    label: "Mating",
+    text: "Attraction is powerful in embodied life. Without purification it deepens material attachment; with dharmic guidance it can be regulated.",
+  },
+];
+
+const humanLevels: HumanLevel[] = [
+  {
+    id: "self-satisfaction",
+    title: "Self-satisfaction level",
+    color: "hsl(162 31% 49%)",
+    softColor: "hsl(162 31% 49% / 0.12)",
+    text: "This is where a person begins to search for a more coherent and meaningful life instead of living only by reaction.",
+    steps: [
+      {
+        id: "specializing",
+        label: "Specializing",
+        text: "A person starts discovering real gifts, direction, and a more specific place in life.",
+      },
+      {
+        id: "practising",
+        label: "Practising",
+        text: "Practice builds steadiness. Through repetition, values and aspirations begin to take real shape.",
+      },
+      {
+        id: "accomplishment",
+        label: "Accomplishment",
+        text: "Accomplishment here means not just success, but meaningful completion that gives confidence and direction.",
+      },
+    ],
+    purposeSuns: [{ number: "3", label: "Community" }],
+  },
+  {
+    id: "self-sufficiency",
+    title: "Self-sufficiency level",
+    color: "hsl(46 89% 67%)",
+    softColor: "hsl(46 89% 67% / 0.16)",
+    text: "This level develops practical responsibility. One learns how to contribute, provide, and take care of life in a stable way.",
+    steps: [
+      {
+        id: "supplying",
+        label: "Supplying",
+        text: "Supplying means helping sustain life with something concrete, useful, and nourishing.",
+      },
+      {
+        id: "processing",
+        label: "Processing",
+        text: "Human life involves cultivation, refinement, and transformation. We learn how to shape raw potential into serviceable value.",
+      },
+      {
+        id: "trading",
+        label: "Trading",
+        text: "Exchange becomes healthy when it is fair, transparent, and directed toward mutual upliftment rather than exploitation.",
+      },
+    ],
+    purposeSuns: [{ number: "6", label: "Simple Living" }],
+  },
+  {
+    id: "self-management",
+    title: "Self-management level",
+    color: "hsl(226 59% 44%)",
+    softColor: "hsl(226 59% 44% / 0.12)",
+    text: "This level develops balance, healthier relationships, and the ability to live and serve with others in a stable way.",
+    steps: [
+      {
+        id: "wellbeing",
+        label: "Wellbeing",
+        text: "A person becomes more capable of growth when body, mind, and habits move toward healthier balance.",
+      },
+      {
+        id: "engaging",
+        label: "Engaging",
+        text: "To engage well means participating actively, responsibly, and with a spirit of contribution.",
+      },
+      {
+        id: "caring",
+        label: "Caring",
+        text: "Caring moves us beyond self-centeredness and teaches us how to uphold others while growing together.",
+      },
+    ],
+    purposeSuns: [{ number: "3", label: "Community" }],
+  },
+  {
+    id: "self-development",
+    title: "Self-development level",
+    color: "hsl(15 43% 60%)",
+    softColor: "hsl(15 43% 60% / 0.14)",
+    text: "This level matures consciousness through real formation, reflection, and application.",
+    steps: [
+      {
+        id: "learning",
+        label: "Learning",
+        text: "Learning begins by hearing carefully and taking in teachings that are higher than conditioned habits.",
+      },
+      {
+        id: "applying",
+        label: "Applying",
+        text: "Application is where knowledge starts becoming character, discipline, and transformation.",
+      },
+      {
+        id: "sharing",
+        label: "Sharing",
+        text: "What has touched us deeply naturally seeks expression. Sharing becomes an act of compassion and service.",
+      },
+    ],
+    purposeSuns: [
+      { number: "2", label: "Learning" },
+      { number: "4", label: "Applying" },
+      { number: "7", label: "Sharing" },
+    ],
+  },
+];
+
+const devoteeLevel: HumanLevel = {
+  id: "self-realization",
+  title: "Self-realization level",
+  color: "hsl(0 0% 9%)",
+  softColor: "hsl(0 0% 9% / 0.08)",
+  text: "This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.",
+  steps: [
+    {
+      id: "surrender",
+      label: "Submissively surrender",
+      text: "Bhakti begins with humility and the willingness to come under higher guidance.",
+    },
+    {
+      id: "inquire",
+      label: "Sincerely inquire",
+      text: "Real inquiry is not curiosity alone. It is the sincere desire to understand and live by truth.",
+    },
+    {
+      id: "serve",
+      label: "Selflessly serve",
+      text: "Service matures devotion. Through service, the whole journey is brought back into relationship with Krishna.",
+    },
+  ],
+  purposeSuns: [
+    { number: "1", label: "Accessibility" },
+    { number: "5", label: "Holy Place" },
+  ],
+};
+
+function StepButtons({
+  steps,
+  accent,
+  activeStep,
+  onSelect,
+}: {
+  steps: Step[];
+  accent: string;
+  activeStep: string;
+  onSelect: (stepId: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {steps.map((step, index) => {
+        const isActive = step.id === activeStep;
+        return (
+          <div key={step.id} className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onSelect(step.id)}
+              className="rounded-2xl px-3 py-2 font-sans text-sm font-semibold transition-all"
+              style={{
+                background: isActive ? accent : "hsl(40 40% 92%)",
+                color: isActive ? "white" : "hsl(14 45% 34%)",
+                border: isActive ? `1px solid ${accent}` : "1px solid hsl(14 25% 72% / 0.35)",
+              }}
+            >
+              {step.label}
+            </button>
+            {index < steps.length - 1 && <ChevronRight className="w-4 h-4" style={{ color: "hsl(14 25% 58%)" }} />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function SimpleSun({
+  color,
+  size,
+}: {
+  color: string;
+  size: number;
+}) {
+  const coreSize = Math.round(size * 0.48);
+  const rayLength = Math.round(size * 0.18);
+  const rayThickness = Math.max(2, Math.round(size * 0.05));
+  const rayOffset = Math.round(size * 0.1);
+
+  return (
+    <div
+      aria-hidden="true"
+      className="relative shrink-0"
+      style={{
+        width: size,
+        height: size,
+      }}
+    >
+      <span
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ width: coreSize, height: coreSize, background: color }}
+      />
+      {[
+        { left: "50%", top: 0, transform: "translateX(-50%)" },
+        { right: rayOffset, top: rayOffset, transform: "rotate(45deg)" },
+        { right: 0, top: "50%", transform: "translateY(-50%) rotate(90deg)" },
+        { right: rayOffset, bottom: rayOffset, transform: "rotate(135deg)" },
+        { left: "50%", bottom: 0, transform: "translateX(-50%)" },
+        { left: rayOffset, bottom: rayOffset, transform: "rotate(45deg)" },
+        { left: 0, top: "50%", transform: "translateY(-50%) rotate(90deg)" },
+        { left: rayOffset, top: rayOffset, transform: "rotate(135deg)" },
+      ].map((ray, index) => (
+        <span
+          key={index}
+          className="absolute rounded-full"
+          style={{
+            width: rayThickness,
+            height: rayLength,
+            background: color,
+            ...ray,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function StageSun({
+  variant,
+}: {
+  variant: "living-being" | "animal" | "human" | "devotee";
+}) {
+  const color =
+    variant === "devotee"
+      ? "hsl(0 0% 9%)"
+      : variant === "human"
+        ? "hsl(39 98% 60%)"
+        : "hsl(0 0% 66%)";
+
+  return <SimpleSun color={color} size={34} />;
+}
+
+function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
+  if (!suns?.length) return null;
+
+  return (
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      {suns.map((sun) => (
+        <div key={`${sun.number}-${sun.label}`} className="inline-flex items-center gap-2">
+          <SimpleSun color="hsl(31 92% 55%)" size={28} />
+          <span className="font-sans text-sm font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
+            {sun.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function Vision() {
+  const [activeStage, setActiveStage] = useState<"living-being" | "animal" | "human" | "devotee" | null>(null);
+  const [livingStep, setLivingStep] = useState(livingBeingSteps[0].id);
+  const [animalStep, setAnimalStep] = useState(animalSteps[0].id);
+  const [activeHumanLevel, setActiveHumanLevel] = useState(humanLevels[0].id);
+  const [humanStepByLevel, setHumanStepByLevel] = useState<Record<string, string>>(
+    Object.fromEntries(humanLevels.map((level) => [level.id, level.steps[0].id])),
+  );
+  const [devoteeStep, setDevoteeStep] = useState(devoteeLevel.steps[0].id);
+
+  const selectedLivingStep = livingBeingSteps.find((step) => step.id === livingStep) ?? livingBeingSteps[0];
+  const selectedAnimalStep = animalSteps.find((step) => step.id === animalStep) ?? animalSteps[0];
+  const selectedHumanLevel = humanLevels.find((level) => level.id === activeHumanLevel) ?? humanLevels[0];
+  const selectedHumanStep =
+    selectedHumanLevel.steps.find((step) => step.id === humanStepByLevel[selectedHumanLevel.id]) ?? selectedHumanLevel.steps[0];
+  const selectedDevoteeStep = devoteeLevel.steps.find((step) => step.id === devoteeStep) ?? devoteeLevel.steps[0];
+
+  return (
+    <div className="min-h-[100dvh] bg-background pb-16">
+      <style>{`
+        @keyframes visionRiseReveal {
+          0% {
+            opacity: 0;
+            clip-path: inset(100% 0 0 0 round 28px);
+            transform: translateY(32px);
+          }
+          100% {
+            opacity: 1;
+            clip-path: inset(0 0 0 0 round 28px);
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+
+      <div
+        className="px-5 pt-10 pb-8"
+        style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}
+      >
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
+          style={{ color: "hsl(14 72% 18%)" }}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Link>
+        <div className="flex items-center gap-3 mb-2">
+          <Eye className="w-7 h-7" style={{ color: "hsl(14 55% 38%)" }} />
+          <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>
+            Vision
+          </h1>
+        </div>
+        <p className="font-sans max-w-3xl" style={{ color: "hsl(14 55% 28%)", fontSize: "0.92rem" }}>
+          A step-by-step journey from the grey human starting point toward the black line of bhakti-yoga.
+        </p>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-5">
+        <div
+          className="rounded-3xl px-5 py-5 shadow-sm mb-5"
+          style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+        >
+          <p className="font-serif italic leading-relaxed" style={{ fontSize: "1.02rem", color: "hsl(14 58% 24%)" }}>
+            Most of us begin where there is a grey spot. We grow through different layers of life, and the 7 Purposes help purify, support, and organize that journey so we can engage more properly in bhakti-yoga.
+          </p>
+        </div>
+
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(360px,1fr)] items-start">
+          <div className="space-y-4">
+            <div
+              className="rounded-[2rem] p-3 shadow-sm overflow-hidden"
+              style={{
+                background: "hsl(40 30% 96%)",
+                border: "1px solid hsl(14 25% 72% / 0.35)",
+                animation: "visionRiseReveal 1.3s cubic-bezier(0.22, 1, 0.36, 1) both",
+                transformOrigin: "bottom center",
+              }}
+            >
+              <img
+                src={visionDiagram}
+                alt="Vision journey diagram showing the movement from living-being to self-realization and bhakti-yoga"
+                className="w-full h-auto block rounded-[1.4rem]"
+              />
+            </div>
+
+            <div
+              className="rounded-3xl p-5 shadow-sm"
+              style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+            >
+              <h2 className="font-serif font-bold mb-3" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
+                The Life Journey of a Jiva / a Community
+              </h2>
+              <div className="space-y-3">
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  This image presents the life journey of a jiva. It shows a gradual path from conditioned life toward conscious spiritual life.
+                </p>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating<sup>[1]</sup>. As an animal, we move around eating, sleeping, defending, and mating<sup>[2]</sup>. As a human, life opens the possibility of real growth, responsibility, and self-development<sup>[3]</sup>. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna<sup>[4]</sup>.
+                </p>
+                <p className="font-sans font-semibold leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey as an Individual and as a Community. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span><sup>[5]</sup>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma<sup>[6]</sup>. This image shows us the interconnections between our identity, duty, and community life. In that way, each purpose is fundamentally connected to the others, and each of them is necessary for our best gradual realization.
+                </p>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                  This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction<sup>[7]</sup>.
+                </p>
+                <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                  <p className="font-sans text-xs leading-relaxed" style={{ color: "hsl(14 35% 50%)" }}>
+                    [1] Srila Prabhupada on imperfect senses, illusion, mistakes, and cheating:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">CC Adi 2.86</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [2] Srila Prabhupada on eating, sleeping, mating, defending, and spiritual life:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">March 28, 1966, New York</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [3] Srila Prabhupada on the human form being meant for self-realization:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">The Science of Self-Realization, Chapter 1</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [4] Srila Prabhupada on hearing, inquiry, and service:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">Bg. 4.34</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [5] Srila Prabhupada on advancing through one’s prescribed work:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">Bg. 18.45</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [6] Srila Prabhupada on sva-dharma supporting spiritual realization:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">October 11, 1975, Durban</a>
+                  </p>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                    [7] Srila Prabhupada on steady and practical devotional life:
+                    {" "}
+                    <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">February 27, 1974, Calcutta</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4 xl:sticky xl:top-5">
+            <div
+              className="rounded-3xl p-5 shadow-sm"
+              style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
+                <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
+                  7 Purposes Journey
+                </h2>
+              </div>
+
+              <div className="space-y-3">
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "living-being" ? "hsl(0 0% 62% / 0.12)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "living-being" ? "hsl(0 0% 62%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("living-being")} className="w-full text-left">
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="living-being" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        Life Conscious
+                      </p>
+                    </div>
+                  </button>
+
+                  {activeStage === "living-being" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          As Living Being we are made of imperfect senses, that creates illusion, then mistakes appear, and cheating comes as an attempt to hide those mistakes.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">CC Adi 2.86</a>
+                        </p>
+                      </div>
+                      <StepButtons steps={livingBeingSteps} accent="hsl(0 0% 62%)" activeStep={livingStep} onSelect={setLivingStep} />
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                          {selectedLivingStep.label}
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          {selectedLivingStep.text}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "animal" ? "hsl(0 0% 50% / 0.12)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "animal" ? "hsl(0 0% 50%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("animal")} className="w-full text-left">
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="animal" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        Animal Conscious
+                      </p>
+                    </div>
+                  </button>
+
+                  {activeStage === "animal" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          As Animal we are eating, sleeping, defending and mating. But as human being, we have also a superior consciousness that allow us to transcend tha nimal stage.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">March 28, 1966, New York</a>
+                        </p>
+                      </div>
+                      <StepButtons steps={animalSteps} accent="hsl(0 0% 50%)" activeStep={animalStep} onSelect={setAnimalStep} />
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                          {selectedAnimalStep.label}
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          {selectedAnimalStep.text}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "human" ? "hsl(26 68% 42% / 0.08)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "human" ? "hsl(26 68% 42%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("human")} className="w-full text-left">
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="human" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        Human Conscious
+                      </p>
+                    </div>
+                  </button>
+
+                  {activeStage === "human" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, and development.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">The Science of Self-Realization, Chapter 1</a>
+                        </p>
+                      </div>
+
+                      <div className="space-y-3">
+                        {humanLevels.map((level) => {
+                          const isLevelActive = level.id === activeHumanLevel;
+                          const activeStep = humanStepByLevel[level.id] ?? level.steps[0].id;
+                          const selectedStep = level.steps.find((step) => step.id === activeStep) ?? level.steps[0];
+
+                          return (
+                            <div
+                              key={level.id}
+                              className="rounded-3xl p-4"
+                              style={{
+                                background: isLevelActive ? level.softColor : "hsl(40 40% 93%)",
+                                border: `1.5px solid ${isLevelActive ? level.color : "hsl(14 25% 72% / 0.35)"}`,
+                              }}
+                            >
+                              <button type="button" onClick={() => setActiveHumanLevel(level.id)} className="w-full text-left">
+                                <p className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                  {level.title}
+                                </p>
+                              </button>
+
+                              {isLevelActive && (
+                                <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.88rem", color: "hsl(14 40% 35%)" }}>
+                                    {level.text}
+                                  </p>
+                                  <StepButtons
+                                    steps={level.steps}
+                                    accent={level.color}
+                                    activeStep={activeStep}
+                                    onSelect={(stepId) =>
+                                      setHumanStepByLevel((prev) => ({
+                                        ...prev,
+                                        [level.id]: stepId,
+                                      }))
+                                    }
+                                  />
+                                  <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                                    <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                      {selectedStep.label}
+                                    </p>
+                                    <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                                      {selectedStep.text}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(10 54% 35% / 0.14)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
+                          Sva-dharma
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          Sva-dharma is our particular duty, contribution, and responsible place in life. When it is aligned with service, it gives steadiness and structure to our spiritual progress.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  className="rounded-3xl p-4 transition-all"
+                  style={{
+                    background: activeStage === "devotee" ? "hsl(0 0% 9% / 0.08)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "devotee" ? "hsl(0 0% 9%)" : "hsl(14 25% 72% / 0.35)"}`,
+                  }}
+                >
+                  <button type="button" onClick={() => setActiveStage("devotee")} className="w-full text-left">
+                    <div className="flex items-center gap-3">
+                      <StageSun variant="devotee" />
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                        Krsna Conscious
+                      </p>
+                    </div>
+                  </button>
+
+                  {activeStage === "devotee" && (
+                    <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
+                          This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.
+                        </p>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                          Reference: <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">Bg. 4.34</a>
+                        </p>
+                      </div>
+                      <StepButtons steps={devoteeLevel.steps} accent={devoteeLevel.color} activeStep={devoteeStep} onSelect={setDevoteeStep} />
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                          {selectedDevoteeStep.label}
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          {selectedDevoteeStep.text}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl p-4" style={{ background: "hsl(10 54% 35% / 0.14)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
+                          Sanatana-dharma
+                        </p>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                          Sanatana-dharma is the eternal duty of the soul: loving service to Krsna. This is the deeper aim toward which the whole journey is meant to guide us.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="rounded-3xl p-5 shadow-sm"
+              style={{ background: "hsl(0 0% 9% / 0.05)", border: "1px solid hsl(0 0% 9% / 0.18)" }}
+            >
+              <p className="font-serif font-semibold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                The black line is bhakti-yoga
+              </p>
+              <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                Some very fortunate souls can begin near the black dot. Most of us, however, need the earlier layers of life to be purified and organized so devotional life can become deep, stable, and genuine.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
