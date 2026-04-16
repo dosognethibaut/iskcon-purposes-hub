@@ -5,7 +5,7 @@ import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, 
 import { useAuth } from "@/context/AuthContext";
 import { getBadges, getNotifications, markNotificationsReadAll, subscribeToLocalData } from "@/lib/local-data";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
-import radhadeshLogo from "@assets/image_1774956916097.png";
+import radhadeshLogo from "@assets/radhadesh_r_mark.svg";
 import logoSimpleLiving from "@assets/7p_Radhadesh_SimpleLiving.png";
 import logoCommunity    from "@assets/7p_Radhadesh_Community.png";
 import logoHolyPlace    from "@assets/7p_Radhadesh_HolyPlace.png";
@@ -270,15 +270,15 @@ export default function Home() {
               <img
                 src={radhadeshLogo}
                 alt="Radhadesh logo"
-                style={{ width: 68, height: 68, objectFit: "contain" }}
+                style={{ width: 72, height: 72, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255, 245, 215, 0.18))" }}
               />
             </div>
 
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-10">
-            <div className="max-w-[34rem] text-center">
-              <h1 className="font-serif font-semibold leading-[0.92]" style={{ fontSize: "clamp(3rem, 10vw, 5.5rem)", color: brandTheme.creamSoft }}>
+          <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-6">
+            <div className="max-w-[40rem] text-center">
+              <h1 className="font-serif font-semibold leading-[0.9]" style={{ fontSize: "clamp(3.25rem, 10.5vw, 6rem)", color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
                 The 7 Purposes
                 <br />
                 of ISKCON
@@ -286,7 +286,7 @@ export default function Home() {
               <div className="mt-5">
                 <div
                   className="inline-block px-6 py-2 rounded-full font-serif italic font-semibold"
-                  style={{ background: brandTheme.orangeBadge, color: brandTheme.creamSoft, fontSize: "clamp(1rem, 3vw, 1.2rem)" }}
+                  style={{ background: brandTheme.orangeBadge, color: brandTheme.creamSoft, fontSize: "clamp(1rem, 3vw, 1.2rem)", boxShadow: "0 10px 22px rgba(108, 40, 0, 0.18)" }}
                 >
                   &amp; Community Building
                 </div>
@@ -349,7 +349,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════════════
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
-      <div className="pb-20" ref={purposeSectionRef}>
+      <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.pink }}>
         <div className="pt-8" />
 
         {/* Logo grid — wrapped, big, centered */}
