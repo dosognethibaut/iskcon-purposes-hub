@@ -266,14 +266,6 @@ export default function Home() {
               )}
             </div>
 
-            <div className="shrink-0">
-              <img
-                src={radhadeshLogo}
-                alt="Radhadesh logo"
-                style={{ width: 72, height: 72, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255, 245, 215, 0.18))" }}
-              />
-            </div>
-
           </div>
 
           <div className="flex-1 flex items-center justify-end px-8">
@@ -356,8 +348,8 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════════════
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
-      <div className="pb-20" ref={purposeSectionRef} style={{ background: "hsl(41 100% 80%)" }}>
-        <div className="pt-8" />
+      <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.burgundy }}>
+        <div className="pt-7" />
 
         {/* Logo grid — airy, centered */}
         <div className="mx-auto flex max-w-[1540px] flex-wrap items-start justify-center gap-x-10 gap-y-8 px-6 md:flex-nowrap md:justify-between md:px-10">
@@ -393,7 +385,7 @@ export default function Home() {
                 </div>
                 <div
                   className="rounded-full"
-                  style={{ width: active ? 20 : 0, height: 2, background: brandTheme.orangeBadge, transition: "width 0.2s" }}
+                  style={{ width: active ? 20 : 0, height: 2, background: brandTheme.creamSoft, transition: "width 0.2s" }}
                 />
               </button>
             );
