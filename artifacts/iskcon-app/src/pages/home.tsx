@@ -213,7 +213,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-background">
+    <div style={{ background: brandTheme.burgundy }}>
 
       {/* ═══════════════════════════════════════════════════════════
           HERO — exactly one screen tall
@@ -365,14 +365,14 @@ export default function Home() {
                   opacity: activePurpose !== null && !active ? 0.3 : 1,
                   transition: "opacity 0.2s, transform 0.2s",
                   transform: active ? "scale(1.1)" : "scale(1)",
-                  width: 94,
+                  width: 108,
                 }}
               >
-                <div className="relative" style={{ width: 74, height: 74 }}>
+                <div className="relative" style={{ width: 86, height: 86 }}>
                   <img
                     src={p.logo}
                     alt={p.title}
-                    style={{ width: 74, height: 74, objectFit: "contain" }}
+                    style={{ width: 86, height: 86, objectFit: "contain" }}
                   />
                   {(purposeBadges[p.id] ?? 0) > 0 && (
                     <span
@@ -407,10 +407,10 @@ export default function Home() {
 
       {/* Bottom quote banner */}
       <div className="w-full px-6 pt-4 pb-20 text-center">
-        <p className="font-serif italic leading-relaxed" style={{ fontSize: "1rem", color: "hsl(14 52% 28%)" }}>
+        <p className="font-serif italic leading-relaxed" style={{ fontSize: "1rem", color: brandTheme.creamSoft }}>
           "Your love for me will be shown by how much you cooperate with each other after I am gone."
         </p>
-        <p className="font-sans mt-2 text-xs tracking-wide" style={{ color: "hsl(332 18% 47%)" }}>
+        <p className="font-sans mt-2 text-xs tracking-wide" style={{ color: "hsl(43 100% 86% / 0.78)" }}>
           Śrīla Prabhupāda · Conversation with disciples, Vṛndāvana, October 1977
         </p>
       </div>
