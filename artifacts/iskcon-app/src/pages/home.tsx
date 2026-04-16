@@ -5,7 +5,7 @@ import { HelpCircle, Clock, ChevronLeft, ChevronRight, ChevronDown, UserCircle, 
 import { useAuth } from "@/context/AuthContext";
 import { getBadges, getNotifications, markNotificationsReadAll, subscribeToLocalData } from "@/lib/local-data";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
-import radhadeshLogo from "@assets/radhadesh_r_mark.svg";
+import radhadeshLogo from "@assets/Radhadesh Logo.png";
 import logoSimpleLiving from "@assets/7p_Radhadesh_SimpleLiving.png";
 import logoCommunity    from "@assets/7p_Radhadesh_Community.png";
 import logoHolyPlace    from "@assets/7p_Radhadesh_HolyPlace.png";
@@ -276,17 +276,24 @@ export default function Home() {
 
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-6">
-            <div className="max-w-[40rem] text-center">
-              <h1 className="font-serif font-semibold leading-[0.9]" style={{ fontSize: "clamp(3.25rem, 10.5vw, 6rem)", color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
+          <div className="flex-1 flex items-center justify-end px-8">
+            <div className="max-w-[34rem] text-right">
+              <div className="flex justify-end mb-4">
+                <img
+                  src={radhadeshLogo}
+                  alt="Radhadesh logo"
+                  style={{ width: 86, height: 86, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255, 245, 215, 0.12))" }}
+                />
+              </div>
+              <h1 className="font-serif font-semibold leading-[0.92]" style={{ fontSize: "clamp(3rem, 9.2vw, 5.7rem)", color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
                 The 7 Purposes
                 <br />
                 of ISKCON
               </h1>
-              <div className="mt-5">
+              <div className="mt-5 flex justify-end">
                 <div
                   className="inline-block px-6 py-2 rounded-full font-serif italic font-semibold"
-                  style={{ background: brandTheme.orangeBadge, color: brandTheme.creamSoft, fontSize: "clamp(1rem, 3vw, 1.2rem)", boxShadow: "0 10px 22px rgba(108, 40, 0, 0.18)" }}
+                  style={{ background: brandTheme.mauveDark, color: brandTheme.creamSoft, fontSize: "clamp(1rem, 3vw, 1.2rem)" }}
                 >
                   &amp; Community Building
                 </div>
@@ -327,14 +334,14 @@ export default function Home() {
           </div>
 
           {/* Buttons — Why / When / Vision centred row */}
-          <div className="px-6 pt-4 pb-5 flex items-center justify-center gap-2">
-            <Link href="/why" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 90% / 0.26)", color: brandTheme.creamSoft, background: "hsl(344 34% 22% / 0.34)", fontSize: "0.85rem" }}>
+          <div className="px-6 pt-4 pb-5 flex items-center justify-center gap-3">
+            <Link href="/why" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(43 100% 92% / 0.48)", color: brandTheme.creamSoft, background: "transparent", fontSize: "0.85rem" }}>
               <HelpCircle className="w-4 h-4" /> Why?
             </Link>
-            <Link href="/when" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 90% / 0.26)", color: brandTheme.creamSoft, background: "hsl(344 34% 22% / 0.34)", fontSize: "0.85rem" }}>
+            <Link href="/when" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(43 100% 92% / 0.48)", color: brandTheme.creamSoft, background: "transparent", fontSize: "0.85rem" }}>
               <Clock className="w-4 h-4" /> When?
             </Link>
-            <Link href="/vision" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 90% / 0.26)", color: brandTheme.creamSoft, background: "hsl(344 34% 22% / 0.34)", fontSize: "0.85rem" }}>
+            <Link href="/vision" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(43 100% 92% / 0.48)", color: brandTheme.creamSoft, background: "transparent", fontSize: "0.85rem" }}>
               <Eye className="w-4 h-4" /> Vision
             </Link>
           </div>
