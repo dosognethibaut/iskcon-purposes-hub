@@ -268,8 +268,8 @@ export default function Home() {
 
           </div>
 
-          <div className="flex-1 flex items-start justify-end px-8 pt-1 md:pt-3">
-            <div className="max-w-[34rem] text-right -mt-2 md:-mt-4">
+          <div className="flex-1 flex items-start justify-end px-8 pt-0 md:pt-1">
+            <div className="max-w-[34rem] text-right -mt-8 md:-mt-12">
               <div className="flex justify-end mb-3">
                 <img
                   src={radhadeshLogo}
