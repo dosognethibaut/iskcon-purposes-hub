@@ -6,13 +6,13 @@ import { useAuth } from "@/context/AuthContext";
 import { getBadges, getNotifications, markNotificationsReadAll, subscribeToLocalData } from "@/lib/local-data";
 import prabhupadaPhoto from "@assets/image_1774931191461.png";
 import radhadeshLogo from "@assets/image_1774956916097.png";
-import logoSimpleLiving from "@assets/7p_SimpleLiving3_1774940060432.png";
-import logoCommunity    from "@assets/7p_Community3.png_1774940060432.png";
-import logoHolyPlace    from "@assets/7p_HolyPlace3_1774940060432.png";
-import logoAccessing    from "@assets/7p_Accessing3_1774940060433.png";
-import logoLearning     from "@assets/7p_Learning3_1774940060433.png";
-import logoApplying     from "@assets/7p_Applying3_1774940060433.png";
-import logoSharing      from "@assets/7p_Sharing3_1774940060433.png";
+import logoSimpleLiving from "@assets/7p_Radhadesh_SimpleLiving.png";
+import logoCommunity    from "@assets/7p_Radhadesh_Community.png";
+import logoHolyPlace    from "@assets/7p_Radhadesh_HolyPlace.png";
+import logoAccessing    from "@assets/7p_Radhadesh_Accessing.png";
+import logoLearning     from "@assets/7p_Radhadesh_Learning.png";
+import logoApplying     from "@assets/7p_Radhadesh_Applying.png";
+import logoSharing      from "@assets/7p_Radhadesh_Sharing.png";
 import { brandTheme, purposeColorByTitle } from "@/lib/brand";
 
 const quotes = [

@@ -16,13 +16,13 @@ import {
   updateCurrentUserProfile,
 } from "@/lib/local-data";
 
-import logoAccessing    from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
-import logoLearning     from "@assets/7p_LogoNoTitle_Learning_1774931916883.png";
-import logoApplying     from "@assets/7p_LogoNoTitle_Applying_1774931916883.png";
-import logoCommunity    from "@assets/7p_LogoNoTitle_Community_1774931916884.png";
-import logoHolyPlace    from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
-import logoSharing      from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
-import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
+import logoAccessing    from "@assets/7p_Radhadesh_Accessing.png";
+import logoLearning     from "@assets/7p_Radhadesh_Learning.png";
+import logoApplying     from "@assets/7p_Radhadesh_Applying.png";
+import logoCommunity    from "@assets/7p_Radhadesh_Community.png";
+import logoHolyPlace    from "@assets/7p_Radhadesh_HolyPlace.png";
+import logoSharing      from "@assets/7p_Radhadesh_Sharing.png";
+import logoSimpleLiving from "@assets/7p_Radhadesh_SimpleLiving.png";
 
 const COMMUNITIES = ["Domaine de Radhadesh"];
 const RADHADESH_DEPTS = [
