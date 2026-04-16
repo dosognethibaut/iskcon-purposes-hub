@@ -285,7 +285,7 @@ export default function Home() {
                   style={{ width: 86, height: 86, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255, 245, 215, 0.12))" }}
                 />
               </div>
-              <h1 className="font-serif font-semibold leading-[0.92]" style={{ fontSize: "clamp(3rem, 9.2vw, 5.7rem)", color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
+              <h1 className="font-serif font-semibold leading-[1.02]" style={{ fontSize: "clamp(2.55rem, 8vw, 4.95rem)", color: brandTheme.creamSoft, textShadow: "0 3px 18px rgba(28, 12, 8, 0.16)" }}>
                 The 7 Purposes
                 <br />
                 of ISKCON
@@ -356,11 +356,11 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════════════
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
-      <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.pink }}>
+      <div className="pb-20" ref={purposeSectionRef} style={{ background: "hsl(41 100% 80%)" }}>
         <div className="pt-8" />
 
-        {/* Logo grid — wrapped, big, centered */}
-        <div className="flex flex-wrap justify-center gap-4 px-4">
+        {/* Logo grid — airy, centered */}
+        <div className="mx-auto flex max-w-[1540px] flex-wrap items-start justify-center gap-x-10 gap-y-8 px-6 md:flex-nowrap md:justify-between md:px-10">
           {purposes.map((p, i) => {
             const active = activePurpose === i;
             return (
@@ -373,14 +373,14 @@ export default function Home() {
                   opacity: activePurpose !== null && !active ? 0.3 : 1,
                   transition: "opacity 0.2s, transform 0.2s",
                   transform: active ? "scale(1.1)" : "scale(1)",
-                  width: 80,
+                  width: 94,
                 }}
               >
-                <div className="relative" style={{ width: 80, height: 80 }}>
+                <div className="relative" style={{ width: 74, height: 74 }}>
                   <img
                     src={p.logo}
                     alt={p.title}
-                    style={{ width: 80, height: 80, objectFit: "contain" }}
+                    style={{ width: 74, height: 74, objectFit: "contain" }}
                   />
                   {(purposeBadges[p.id] ?? 0) > 0 && (
                     <span
