@@ -335,7 +335,7 @@ const handleSignIn = async (e: React.FormEvent) => {
             <button type="button" onClick={() => profilePhotoRef.current?.click()} className="relative rounded-full overflow-hidden group" style={{ width: 100, height: 100, flexShrink: 0 }} title="Change photo">
               {currentUser.photoDataUrl
                 ? <img src={currentUser.photoDataUrl} alt={currentUser.fullName} className="rounded-full object-cover w-full h-full" style={{ border: "3px solid hsl(26 68% 42% / 0.4)" }} />
-                : <div className="w-full h-full rounded-full flex items-center justify-center font-serif font-bold shadow-lg" style={{ fontSize: "2.2rem", background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)", border: "3px solid hsl(40 80% 96% / 0.5)" }}>{currentUser.fullName[0]}</div>
+                : <div className="w-full h-full rounded-full flex items-center justify-center font-serif font-bold shadow-lg" style={{ fontSize: "2.2rem", background: "hsl(343 51% 38%)", color: "hsl(43 100% 86%)", border: "3px solid hsl(40 80% 96% / 0.5)" }}>{currentUser.fullName[0]}</div>
               }
               <div className="absolute inset-0 rounded-full flex flex-col items-center justify-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "hsl(14 35% 8% / 0.55)" }}>
                 <Camera className="w-5 h-5 text-white" />
@@ -346,7 +346,7 @@ const handleSignIn = async (e: React.FormEvent) => {
             <div className="text-center">
               <h1 className="font-serif font-bold" style={{ fontSize: "1.7rem", color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</h1>
               <span className="inline-flex items-center gap-1 mt-1 px-3 py-0.5 rounded-full font-sans text-xs font-semibold"
-                style={{ background: currentUser.isAdmin ? "hsl(27 84% 50%)" : "hsl(14 30% 70% / 0.3)", color: currentUser.isAdmin ? "hsl(28 100% 98%)" : "hsl(337 26% 38%)" }}>
+                style={{ background: currentUser.isAdmin ? "hsl(343 51% 38%)" : "hsl(14 30% 70% / 0.3)", color: currentUser.isAdmin ? "hsl(43 100% 86%)" : "hsl(337 26% 38%)" }}>
                 {currentUser.isAdmin ? <><ShieldCheck className="w-3 h-3" /> Admin</> : "Member"}
               </span>
             </div>
@@ -382,7 +382,7 @@ const handleSignIn = async (e: React.FormEvent) => {
               {/* Departments */}
               <div className="rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
                 <div className="flex items-center gap-2 mb-3">
-                  <Briefcase className="w-4 h-4" style={{ color: "hsl(27 84% 50%)" }} />
+                  <Briefcase className="w-4 h-4" style={{ color: "hsl(343 51% 38%)" }} />
                   <span className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Department / Role</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -391,7 +391,7 @@ const handleSignIn = async (e: React.FormEvent) => {
                     return (
                       <button key={dept} type="button" onClick={() => toggleEditDeptRole(dept)}
                         className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
-                        style={{ background: active ? "hsl(27 84% 50%)" : "hsl(26 68% 42% / 0.08)", color: active ? "hsl(28 100% 98%)" : "hsl(26 55% 32%)", border: `1px solid ${active ? "hsl(27 84% 50%)" : "hsl(26 68% 42% / 0.25)"}` }}>
+                        style={{ background: active ? "hsl(343 51% 38%)" : "hsl(343 51% 38% / 0.08)", color: active ? "hsl(43 100% 86%)" : "hsl(344 34% 27%)", border: `1px solid ${active ? "hsl(343 51% 38%)" : "hsl(343 51% 38% / 0.25)"}` }}>
                         {active && <Check className="w-3 h-3 inline mr-1" />}{dept}
                       </button>
                     );
@@ -405,7 +405,7 @@ const handleSignIn = async (e: React.FormEvent) => {
               {/* Save / Cancel */}
               <button onClick={saveProfile} disabled={!editForm.fullName || editSaving}
                 className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full font-sans font-semibold text-sm transition-opacity"
-                style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)", opacity: editSaving ? 0.6 : 1 }}>
+                style={{ background: "hsl(343 51% 38%)", color: "hsl(43 100% 86%)", opacity: editSaving ? 0.6 : 1 }}>
                 {editSaving ? "Saving…" : <><Check className="w-4 h-4" /> Save changes</>}
               </button>
               <button
@@ -433,7 +433,7 @@ const handleSignIn = async (e: React.FormEvent) => {
               {currentUser.deptRoles.length > 0 && (
                 <div className="rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
                   <div className="flex items-center gap-2 mb-2.5">
-                    <Briefcase className="w-4 h-4" style={{ color: "hsl(27 84% 50%)" }} />
+                    <Briefcase className="w-4 h-4" style={{ color: "hsl(343 51% 38%)" }} />
                     <span className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(14 40% 48%)" }}>Department / Role</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -464,7 +464,7 @@ const handleSignIn = async (e: React.FormEvent) => {
             {surveyAnswered} / {totalQuestions} answered
           </p>
           <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(14 30% 70% / 0.25)" }}>
-            <div className="h-full rounded-full transition-all" style={{ width: `${(surveyAnswered / totalQuestions) * 100}%`, background: "hsl(27 84% 50%)" }} />
+            <div className="h-full rounded-full transition-all" style={{ width: `${(surveyAnswered / totalQuestions) * 100}%`, background: "hsl(343 51% 38%)" }} />
           </div>
         </div>
 
@@ -488,7 +488,7 @@ const handleSignIn = async (e: React.FormEvent) => {
                     <div key={qi} className="rounded-2xl p-4"
                       style={{ background: "hsl(40 40% 93%)", border: `1px solid ${done ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}>
                       <div className="flex items-baseline gap-2 mb-3">
-                        <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(27 84% 50%)" }}>
+                        <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(343 51% 38%)" }}>
                           {String(qi + 1).padStart(2, "0")}
                         </span>
                         <p className="font-serif font-semibold leading-snug" style={{ fontSize: "0.92rem", color: "hsl(319 32% 19%)" }}>{q.text}</p>
@@ -501,10 +501,10 @@ const handleSignIn = async (e: React.FormEvent) => {
                           return (
                             <button key={p.id} type="button" onClick={() => surveyToggle(qi, p.id)}
                               className="relative flex flex-col items-center gap-1 py-1.5 rounded-lg transition-all"
-                              style={{ background: active ? "hsl(26 68% 42% / 0.1)" : "transparent", border: "none", outline: active ? "2px solid hsl(27 84% 50%)" : "2px solid transparent", outlineOffset: 0, opacity: active ? 1 : blocked ? 0.2 : 0.38, cursor: blocked ? "not-allowed" : "pointer" }}>
+                              style={{ background: active ? "hsl(26 68% 42% / 0.1)" : "transparent", border: "none", outline: active ? "2px solid hsl(343 51% 38%)" : "2px solid transparent", outlineOffset: 0, opacity: active ? 1 : blocked ? 0.2 : 0.38, cursor: blocked ? "not-allowed" : "pointer" }}>
                               {active && (
                                 <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full font-sans font-bold"
-                                  style={{ width: 15, height: 15, fontSize: "0.48rem", background: "hsl(27 84% 50%)", color: "hsl(40 90% 96%)", lineHeight: 1, zIndex: 1 }}>
+                                  style={{ width: 15, height: 15, fontSize: "0.48rem", background: "hsl(343 51% 38%)", color: "hsl(43 100% 92%)", lineHeight: 1, zIndex: 1 }}>
                                   {rank + 1}
                                 </span>
                               )}
@@ -529,7 +529,7 @@ const handleSignIn = async (e: React.FormEvent) => {
 
 <button type="button" onClick={handleStep2} disabled={!allSurveyAnswered || submitting}
             className="w-full py-3.5 rounded-full font-sans font-semibold text-sm transition-all"
-            style={{ background: allSurveyAnswered && !submitting ? "hsl(27 84% 50%)" : "hsl(14 20% 75%)", color: allSurveyAnswered ? "hsl(28 100% 98%)" : "hsl(14 20% 52%)", cursor: allSurveyAnswered ? "pointer" : "not-allowed" }}>
+            style={{ background: allSurveyAnswered && !submitting ? "hsl(343 51% 38%)" : "hsl(14 20% 75%)", color: allSurveyAnswered ? "hsl(43 100% 86%)" : "hsl(14 20% 52%)", cursor: allSurveyAnswered ? "pointer" : "not-allowed" }}>
             {submitting ? "Saving…" : allSurveyAnswered ? "Complete Registration →" : `${totalQuestions - surveyAnswered} question${totalQuestions - surveyAnswered > 1 ? "s" : ""} remaining`}
           </button>
         </div>
@@ -549,7 +549,7 @@ const handleSignIn = async (e: React.FormEvent) => {
         <div className="flex gap-1 mt-5 p-1 rounded-full" style={{ background: "hsl(14 30% 70% / 0.2)", width: "fit-content" }}>
           {(["register", "signin"] as const).map(t => (
             <button key={t} onClick={() => setTab(t)} className="px-5 py-1.5 rounded-full font-sans font-semibold text-sm transition-all"
-              style={{ background: tab === t ? "hsl(27 84% 50%)" : "transparent", color: tab === t ? "hsl(28 100% 98%)" : "hsl(14 55% 28%)" }}>
+              style={{ background: tab === t ? "hsl(343 51% 38%)" : "transparent", color: tab === t ? "hsl(43 100% 86%)" : "hsl(14 55% 28%)" }}>
               {t === "register" ? "Register" : "Sign in"}
             </button>
           ))}
@@ -570,7 +570,7 @@ const handleSignIn = async (e: React.FormEvent) => {
                 </button>
               </div>
             </Field>
-            <button type="submit" disabled={submitting} className="w-full py-3 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity" style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)", opacity: submitting ? 0.6 : 1 }}>
+            <button type="submit" disabled={submitting} className="w-full py-3 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity" style={{ background: "hsl(343 51% 38%)", color: "hsl(43 100% 86%)", opacity: submitting ? 0.6 : 1 }}>
               {submitting ? "Signing in…" : "Sign in"}
             </button>
             <p className="text-center font-sans text-xs" style={{ color: "hsl(14 40% 50%)" }}>
@@ -639,7 +639,7 @@ const handleSignIn = async (e: React.FormEvent) => {
                       const active = deptRoles.includes(item);
                       return (
                         <button key={item} type="button" onClick={() => toggleDeptRole(item)} className="px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-all"
-                          style={{ background: active ? "hsl(27 84% 50%)" : "hsl(40 40% 88%)", color: active ? "hsl(28 100% 98%)" : "hsl(337 26% 38%)", border: active ? "1.5px solid hsl(27 84% 50%)" : "1.5px solid hsl(14 25% 72%)" }}>
+                          style={{ background: active ? "hsl(343 51% 38%)" : "hsl(40 40% 88%)", color: active ? "hsl(43 100% 86%)" : "hsl(337 26% 38%)", border: active ? "1.5px solid hsl(343 51% 38%)" : "1.5px solid hsl(14 25% 72%)" }}>
                           {item}
                         </button>
                       );
@@ -652,7 +652,7 @@ const handleSignIn = async (e: React.FormEvent) => {
               )}
 
               <button type="submit" disabled={!canSubmitStep1 || submitting} className="w-full py-3.5 rounded-full font-sans font-semibold text-sm mt-2 transition-opacity inline-flex items-center justify-center gap-2"
-                style={{ background: canSubmitStep1 && !submitting ? "hsl(27 84% 50%)" : "hsl(14 20% 70%)", color: canSubmitStep1 ? "hsl(28 100% 98%)" : "hsl(14 20% 50%)", cursor: canSubmitStep1 ? "pointer" : "not-allowed" }}>
+                style={{ background: canSubmitStep1 && !submitting ? "hsl(343 51% 38%)" : "hsl(14 20% 70%)", color: canSubmitStep1 ? "hsl(43 100% 86%)" : "hsl(14 20% 50%)", cursor: canSubmitStep1 ? "pointer" : "not-allowed" }}>
                 {submitting ? "Saving…" : <><span>Save & Continue to Survey</span><ChevronRight className="w-4 h-4" /></>}
               </button>
             </form>
@@ -666,7 +666,7 @@ const handleSignIn = async (e: React.FormEvent) => {
 function ProfileRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl px-4 py-3.5" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
-      <span style={{ color: "hsl(27 84% 50%)" }}>{icon}</span>
+      <span style={{ color: "hsl(343 51% 38%)" }}>{icon}</span>
       <div className="flex-1 min-w-0">
         <p className="font-sans text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: "hsl(14 40% 48%)" }}>{label}</p>
         <p className="font-sans text-sm font-medium truncate" style={{ color: "hsl(319 32% 19%)" }}>{value}</p>

@@ -1,12 +1,13 @@
 import { Link } from "wouter";
 import { ArrowLeft, Compass, Handshake, Globe2, ShieldCheck } from "lucide-react";
+import { brandTheme, withAlpha } from "@/lib/brand";
 
 const pillars = [
   {
     title: "Legacy",
     subtitle: "Srila Prabhupada",
-    accent: "hsl(27 84% 50%)",
-    softAccent: "hsl(26 68% 42% / 0.12)",
+    accent: brandTheme.goldDark,
+    softAccent: withAlpha(brandTheme.goldDark, 0.12),
     keywords: ["Vision", "Master plan", "Decision making"],
     icon: Compass,
     description:
@@ -15,8 +16,8 @@ const pillars = [
   {
     title: "Unity",
     subtitle: "Common goal",
-    accent: "hsl(220 60% 44%)",
-    softAccent: "hsl(220 60% 44% / 0.12)",
+    accent: brandTheme.indigo,
+    softAccent: withAlpha(brandTheme.indigo, 0.12),
     keywords: ["Teamwork", "Harmony", "Mutual respect"],
     icon: Handshake,
     description:
@@ -25,8 +26,8 @@ const pillars = [
   {
     title: "Impact",
     subtitle: "Reaching out",
-    accent: "hsl(168 42% 33%)",
-    softAccent: "hsl(168 42% 33% / 0.12)",
+    accent: brandTheme.sage,
+    softAccent: withAlpha(brandTheme.sage, 0.18),
     keywords: ["Accessibility", "Adaptability", "Relevance"],
     icon: Globe2,
     description:
@@ -35,8 +36,8 @@ const pillars = [
   {
     title: "Integrity",
     subtitle: "Safety & success",
-    accent: "hsl(14 40% 30%)",
-    softAccent: "hsl(14 40% 30% / 0.12)",
+    accent: brandTheme.plum,
+    softAccent: withAlpha(brandTheme.plum, 0.14),
     keywords: ["Trust", "Patience", "Confidence"],
     icon: ShieldCheck,
     description:

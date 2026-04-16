@@ -67,7 +67,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE — Domaine de Radhadesh inspired charter */
+/* LIGHT MODE — Domaine de Radhadesh logo palette */
 :root {
   --button-outline: rgba(0,0,0, .12);
   --badge-outline: rgba(0,0,0, .06);
@@ -75,40 +75,40 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .07);
 
-  --background: 20 48% 95%;
-  --foreground: 319 32% 19%;
-  --border: 343 24% 78%;
-  --card: 24 90% 97%;
-  --card-foreground: 319 32% 19%;
-  --card-border: 343 22% 82%;
-  --sidebar: 20 70% 94%;
-  --sidebar-foreground: 319 32% 19%;
-  --sidebar-border: 343 24% 76%;
-  --sidebar-primary: 27 84% 50%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 330 38% 91%;
-  --sidebar-accent-foreground: 329 34% 26%;
-  --sidebar-ring: 27 84% 50%;
-  --popover: 24 90% 97%;
-  --popover-foreground: 319 32% 19%;
-  --popover-border: 343 22% 82%;
-  --primary: 27 84% 50%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 334 41% 88%;
-  --secondary-foreground: 322 35% 22%;
-  --muted: 334 22% 90%;
-  --muted-foreground: 330 16% 42%;
-  --accent: 44 95% 83%;
-  --accent-foreground: 325 36% 22%;
+  --background: 42 86% 90%;
+  --foreground: 344 34% 27%;
+  --border: 343 26% 72%;
+  --card: 42 100% 95%;
+  --card-foreground: 344 34% 27%;
+  --card-border: 343 22% 80%;
+  --sidebar: 42 94% 88%;
+  --sidebar-foreground: 344 34% 27%;
+  --sidebar-border: 343 24% 74%;
+  --sidebar-primary: 343 51% 38%;
+  --sidebar-primary-foreground: 43 100% 86%;
+  --sidebar-accent: 343 39% 90%;
+  --sidebar-accent-foreground: 344 34% 27%;
+  --sidebar-ring: 343 51% 38%;
+  --popover: 42 100% 95%;
+  --popover-foreground: 344 34% 27%;
+  --popover-border: 343 22% 80%;
+  --primary: 343 51% 38%;
+  --primary-foreground: 43 100% 86%;
+  --secondary: 343 39% 90%;
+  --secondary-foreground: 344 34% 27%;
+  --muted: 39 50% 88%;
+  --muted-foreground: 343 18% 42%;
+  --accent: 43 100% 86%;
+  --accent-foreground: 344 34% 27%;
   --destructive: 350 68% 46%;
   --destructive-foreground: 0 0% 100%;
-  --input: 343 20% 78%;
-  --ring: 27 84% 50%;
-  --chart-1: 27 84% 50%;
-  --chart-2: 340 51% 38%;
-  --chart-3: 252 35% 24%;
-  --chart-4: 42 96% 73%;
-  --chart-5: 322 22% 68%;
+  --input: 343 22% 78%;
+  --ring: 343 51% 38%;
+  --chart-1: 343 51% 38%;
+  --chart-2: 241 39% 31%;
+  --chart-3: 82 35% 67%;
+  --chart-4: 38 100% 39%;
+  --chart-5: 332 15% 56%;
 
   --app-font-sans: 'Manrope', sans-serif;
   --app-font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -142,40 +142,40 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 255 32% 13%;
-  --foreground: 27 100% 95%;
-  --border: 330 18% 27%;
-  --card: 285 24% 17%;
-  --card-foreground: 27 100% 95%;
-  --card-border: 330 18% 27%;
-  --sidebar: 257 30% 14%;
-  --sidebar-foreground: 27 100% 95%;
-  --sidebar-border: 330 18% 27%;
-  --sidebar-primary: 27 84% 54%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 327 28% 22%;
-  --sidebar-accent-foreground: 27 100% 95%;
-  --sidebar-ring: 27 84% 54%;
-  --popover: 285 24% 17%;
-  --popover-foreground: 27 100% 95%;
-  --popover-border: 330 18% 27%;
-  --primary: 27 84% 54%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 326 26% 22%;
-  --secondary-foreground: 27 100% 95%;
-  --muted: 262 18% 20%;
-  --muted-foreground: 324 18% 70%;
-  --accent: 335 30% 24%;
-  --accent-foreground: 27 100% 95%;
+  --background: 347 33% 16%;
+  --foreground: 43 100% 92%;
+  --border: 343 22% 30%;
+  --card: 347 31% 20%;
+  --card-foreground: 43 100% 92%;
+  --card-border: 343 22% 30%;
+  --sidebar: 347 31% 18%;
+  --sidebar-foreground: 43 100% 92%;
+  --sidebar-border: 343 22% 30%;
+  --sidebar-primary: 43 100% 86%;
+  --sidebar-primary-foreground: 344 34% 27%;
+  --sidebar-accent: 343 24% 26%;
+  --sidebar-accent-foreground: 43 100% 92%;
+  --sidebar-ring: 43 100% 86%;
+  --popover: 347 31% 20%;
+  --popover-foreground: 43 100% 92%;
+  --popover-border: 343 22% 30%;
+  --primary: 43 100% 86%;
+  --primary-foreground: 344 34% 27%;
+  --secondary: 343 24% 26%;
+  --secondary-foreground: 43 100% 92%;
+  --muted: 347 19% 24%;
+  --muted-foreground: 39 56% 78%;
+  --accent: 343 24% 26%;
+  --accent-foreground: 43 100% 92%;
   --destructive: 350 68% 48%;
   --destructive-foreground: 0 0% 100%;
-  --input: 330 18% 27%;
-  --ring: 27 84% 54%;
-  --chart-1: 27 84% 54%;
-  --chart-2: 42 95% 72%;
-  --chart-3: 334 40% 48%;
-  --chart-4: 320 18% 68%;
-  --chart-5: 257 34% 44%;
+  --input: 343 22% 30%;
+  --ring: 43 100% 86%;
+  --chart-1: 43 100% 86%;
+  --chart-2: 343 51% 38%;
+  --chart-3: 241 39% 31%;
+  --chart-4: 82 35% 67%;
+  --chart-5: 38 100% 39%;
 
   --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.25);
   --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.30);
@@ -211,13 +211,12 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(circle at 18% 22%, hsl(250 42% 28% / 0.72), transparent 32%),
-    radial-gradient(circle at 44% 16%, hsl(342 54% 40% / 0.48), transparent 28%),
-    radial-gradient(circle at 76% 10%, hsl(44 100% 82% / 0.72), transparent 26%),
-    radial-gradient(circle at 84% 34%, hsl(30 86% 52% / 0.52), transparent 24%),
-    radial-gradient(circle at 54% 74%, hsl(334 24% 80% / 0.58), transparent 28%),
-    linear-gradient(135deg, hsl(255 34% 16%) 0%, hsl(339 47% 38%) 38%, hsl(28 84% 50%) 72%, hsl(42 100% 82%) 100%);
-  opacity: 0.22;
+    radial-gradient(circle at 22% 18%, hsl(343 51% 38% / 0.22), transparent 30%),
+    radial-gradient(circle at 76% 10%, hsl(43 100% 86% / 0.42), transparent 24%),
+    radial-gradient(circle at 80% 30%, hsl(41 96% 73% / 0.24), transparent 22%),
+    radial-gradient(circle at 56% 78%, hsl(343 39% 90% / 0.36), transparent 28%),
+    linear-gradient(145deg, hsl(42 100% 94%) 0%, hsl(42 86% 90%) 52%, hsl(39 76% 84%) 100%);
+  opacity: 0.7;
 }
 
 /* Elevate system */

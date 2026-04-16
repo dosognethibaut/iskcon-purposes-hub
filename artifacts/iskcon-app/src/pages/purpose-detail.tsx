@@ -27,6 +27,7 @@ import logoCommunity    from "@assets/7p_LogoNoTitle_Community_1774931916884.png
 import logoHolyPlace    from "@assets/7p_LogoNoTitle_HolyPlace_1774931916884.png";
 import logoSharing      from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
 import logoSimpleLiving from "@assets/7p_LogoNoTitle_SimpleLiving_1774931916885.png";
+import { brandTheme, purposeColorByTitle } from "@/lib/brand";
 
 const logoByTitle: Record<string, string> = {
   "Accessing":     logoAccessing,
@@ -46,16 +47,6 @@ const numberByTitle: Record<string, number> = {
   "Holy Place":    5,
   "Simple Living": 6,
   "Sharing":       7,
-};
-
-const accentByTitle: Record<string, string> = {
-  "Accessing":     "hsl(14 52% 38%)",
-  "Learning":      "hsl(17 44% 35%)",
-  "Community":     "hsl(220 60% 44%)",
-  "Applying":      "hsl(14 18% 33%)",
-  "Holy Place":    "hsl(14 8% 22%)",
-  "Simple Living": "hsl(168 42% 33%)",
-  "Sharing":       "hsl(14 40% 30%)",
 };
 
 const activitySchema = z.object({
@@ -144,17 +135,17 @@ export default function PurposeDetail() {
   }
 
   const logo = logoByTitle[purpose.title];
-  const accent = accentByTitle[purpose.title] ?? "hsl(27 84% 50%)";
+  const accent = purposeColorByTitle[purpose.title] ?? brandTheme.burgundy;
 
   return (
-    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(20 48% 95%)" }}>
+    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(43 80% 92%)" }}>
 
       {/* Header — parchment gradient matching home */}
       <div
         className="relative px-5 pt-10 pb-8"
         style={{
-          background: "linear-gradient(160deg, hsl(38 52% 82%) 0%, hsl(36 48% 78%) 100%)",
-          borderBottom: "1px solid hsl(14 30% 60% / 0.25)",
+          background: "linear-gradient(160deg, hsl(43 100% 86%) 0%, hsl(42 88% 80%) 100%)",
+          borderBottom: "1px solid hsl(343 26% 58% / 0.25)",
         }}
       >
         {/* Back button */}
@@ -162,7 +153,7 @@ export default function PurposeDetail() {
           href="/"
           data-testid="back-button"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-6 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(319 32% 19%)" }}
+          style={{ color: brandTheme.burgundyDark }}
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
@@ -177,13 +168,13 @@ export default function PurposeDetail() {
             {/* Purpose number badge */}
             <div
               className="inline-block px-3 py-1 rounded-lg font-sans text-xs font-bold tracking-widest uppercase mb-2"
-              style={{ background: accent, color: "hsl(28 100% 98%)" }}
+              style={{ background: accent, color: brandTheme.creamSoft }}
             >
               Purpose {numberByTitle[purpose.title] ?? purpose.number}
             </div>
             <h1
               className="font-serif font-bold leading-tight"
-              style={{ fontSize: "clamp(1.5rem, 6vw, 2.2rem)", color: "hsl(319 34% 18%)" }}
+              style={{ fontSize: "clamp(1.5rem, 6vw, 2.2rem)", color: brandTheme.burgundyDark }}
             >
               {purpose.title}
             </h1>
@@ -193,7 +184,7 @@ export default function PurposeDetail() {
         {/* Description */}
         <p
           className="font-sans leading-relaxed mt-4 max-w-lg mx-auto"
-          style={{ color: "hsl(334 30% 30%)", fontSize: "0.92rem" }}
+          style={{ color: "hsl(344 24% 34%)", fontSize: "0.92rem" }}
         >
           {purpose.fullDescription}
         </p>
@@ -313,7 +304,7 @@ export default function PurposeDetail() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" data-testid="button-submit-activity" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(28 100% 98%)" }}>
+                  <Button type="submit" data-testid="button-submit-activity" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(43 100% 86%)" }}>
                     {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     Propose Activity
                   </Button>

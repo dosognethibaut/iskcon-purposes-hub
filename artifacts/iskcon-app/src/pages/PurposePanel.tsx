@@ -41,6 +41,7 @@ import {
   subscribeToLocalData,
   uncompleteActivity as uncompleteActivityLocal,
 } from "@/lib/local-data";
+import { brandTheme, purposeColorById } from "@/lib/brand";
 
 const activitySchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -56,17 +57,6 @@ const messageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty"),
   authorName: z.string().min(1, "Your name is required"),
 });
-
-const accentById: Record<number, string> = {
-  1: "hsl(163 40% 36%)",   // Simple Living — darkest teal-green (leaves & text in logo)
-  2: "hsl(222 72% 40%)",   // Community — solid cobalt blue (only colour in logo)
-  3: "hsl(0 0% 10%)",      // Holy Place — near-black (dark top half of logo)
-  4: "hsl(10 54% 35%)",    // Accessing — dark terra cotta (text colour in logo)
-  5: "hsl(10 54% 35%)",    // Learning — dark terra cotta (text colour in logo)
-  6: "hsl(10 54% 35%)",    // Applying — dark terra cotta (text colour in logo)
-  7: "hsl(10 54% 35%)",    // Sharing — dark terra cotta (text colour in logo)
-};
-
 
 // ── Badge helpers (localStorage-based "seen" tracking) ──────────────────────
 function getSeenIds(key: string): Set<number> {
@@ -245,7 +235,7 @@ function CommentSection({
 export default function PurposePanel({ purposeId, title, officialText, description, initialTab = "activities" }: PurposePanelProps) {
   const queryClient = useQueryClient();
   const { currentUser, token } = useAuth();
-  const accent = accentById[purposeId] ?? "hsl(27 84% 50%)";
+  const accent = purposeColorById[purposeId] ?? brandTheme.burgundy;
   const cardBg = "hsl(40 28% 97%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
@@ -1012,7 +1002,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createActivity.isPending} style={{ background: accent, color: "hsl(28 100% 98%)" }}>
+                      disabled={createActivity.isPending} style={{ background: accent, color: "hsl(43 100% 86%)" }}>
                       {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
@@ -1173,7 +1163,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(28 100% 98%)" }}>
+                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(43 100% 86%)" }}>
                       {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
@@ -1200,11 +1190,11 @@ function SignInPrompt({ action }: { action: string }) {
   return (
     <div className="flex flex-col items-center gap-3 py-5 text-center">
       <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "hsl(26 68% 42% / 0.12)" }}>
-        <Lock className="w-5 h-5" style={{ color: "hsl(27 84% 50%)" }} />
+        <Lock className="w-5 h-5" style={{ color: "hsl(343 51% 38%)" }} />
       </div>
       <p className="font-sans text-sm" style={{ color: "hsl(14 40% 42%)" }}>Sign in to {action}</p>
       <Link href="/register" className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-sans font-semibold text-sm"
-        style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)" }}>
+        style={{ background: "hsl(343 51% 38%)", color: "hsl(43 100% 86%)" }}>
         Sign in / Register
       </Link>
     </div>

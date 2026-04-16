@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, Eye, ChevronRight, Sparkles } from "lucide-react";
 import visionDiagram from "@assets/7p_Vision_140426.png";
+import { brandTheme, purposeColorByTitle } from "@/lib/brand";
 
 type Step = {
   id: string;
@@ -315,8 +316,11 @@ function PurposeSunRow({ suns }: { suns: PurposeSun[] | undefined }) {
     <div className="flex flex-wrap gap-x-4 gap-y-2">
       {suns.map((sun) => (
         <div key={`${sun.number}-${sun.label}`} className="inline-flex items-center gap-2">
-          <SimpleSun color="hsl(31 92% 55%)" size={28} />
-          <span className="font-sans text-sm font-semibold" style={{ color: "hsl(31 84% 43%)" }}>
+          <SimpleSun color={purposeColorByTitle[sun.label === "Accessibility" ? "Accessing" : sun.label] ?? brandTheme.goldDark} size={28} />
+          <span
+            className="font-sans text-sm font-semibold"
+            style={{ color: purposeColorByTitle[sun.label === "Accessibility" ? "Accessing" : sun.label] ?? brandTheme.goldDark }}
+          >
             {sun.label}
           </span>
         </div>
@@ -477,7 +481,7 @@ export default function Vision() {
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-4 h-4" style={{ color: "hsl(27 84% 50%)" }} />
+                <Sparkles className="w-4 h-4" style={{ color: "hsl(343 51% 38%)" }} />
                 <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(319 32% 19%)" }}>
                   7 Purposes Journey
                 </h2>
@@ -565,8 +569,8 @@ export default function Vision() {
                 <div
                   className="rounded-3xl p-4 transition-all"
                   style={{
-                    background: activeStage === "human" ? "hsl(26 68% 42% / 0.08)" : "hsl(40 40% 93%)",
-                    border: `1.5px solid ${activeStage === "human" ? "hsl(27 84% 50%)" : "hsl(14 25% 72% / 0.35)"}`,
+                    background: activeStage === "human" ? "hsl(343 51% 38% / 0.08)" : "hsl(40 40% 93%)",
+                    border: `1.5px solid ${activeStage === "human" ? "hsl(343 51% 38%)" : "hsl(14 25% 72% / 0.35)"}`,
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("human")} className="w-full text-left">

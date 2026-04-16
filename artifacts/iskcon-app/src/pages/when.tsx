@@ -11,6 +11,7 @@ import logoAccessing from "@assets/7p_LogoNoTitle_Accessing_1774931916882.png";
 import logoLearning from "@assets/7p_LogoNoTitle_Learning_1774931916883.png";
 import logoApplying from "@assets/7p_LogoNoTitle_Applying_1774931916883.png";
 import logoSharing from "@assets/7p_LogoNoTitle_Sharing_1774931916884.png";
+import { brandTheme, purposeColorById, purposeColorByTitle } from "@/lib/brand";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -19,15 +20,7 @@ const MONTH_NAMES = [
   "July", "August", "September", "October", "November", "December",
 ];
 
-const accentByPurposeId: Record<number, string> = {
-  1: "hsl(163 40% 36%)",
-  2: "hsl(222 72% 40%)",
-  3: "hsl(0 0% 10%)",
-  4: "hsl(10 54% 35%)",
-  5: "hsl(10 54% 35%)",
-  6: "hsl(10 54% 35%)",
-  7: "hsl(10 54% 35%)",
-};
+const accentByPurposeId: Record<number, string> = purposeColorById;
 
 const purposeNames: Record<number, string> = {
   1: "Simple Living",
@@ -44,7 +37,7 @@ const monthlyPurposeByKey: Record<string, { id: number; title: string; logo: str
     id: 2,
     title: "Community",
     logo: logoCommunity,
-    accent: "hsl(220 60% 44%)",
+    accent: purposeColorByTitle["Community"],
     brief: "A month to strengthen relationships in service and grow a shared spirit of care, support, and cooperation.",
   },
   "2026-04": null,
@@ -54,49 +47,49 @@ const monthlyPurposeByKey: Record<string, { id: number; title: string; logo: str
     id: 1,
     title: "Simple Living",
     logo: logoSimpleLiving,
-    accent: "hsl(163 40% 36%)",
+    accent: purposeColorByTitle["Simple Living"],
     brief: "A month to simplify, reconnect with essentials, and create more room for peaceful service and high thinking.",
   },
   "2026-08": {
     id: 4,
     title: "Accessing",
     logo: logoAccessing,
-    accent: "hsl(14 52% 38%)",
+    accent: purposeColorByTitle["Accessing"],
     brief: "A month to make Krishna conscious wisdom easier to approach, easier to encounter, and easier to receive.",
   },
   "2026-09": {
     id: 6,
     title: "Applying",
     logo: logoApplying,
-    accent: "hsl(14 18% 33%)",
+    accent: purposeColorByTitle["Applying"],
     brief: "A month to bring realization into practice and let devotion shape habits, service, and daily choices.",
   },
   "2026-10": {
     id: 5,
     title: "Learning",
     logo: logoLearning,
-    accent: "hsl(17 44% 35%)",
+    accent: purposeColorByTitle["Learning"],
     brief: "A month to deepen learning, study carefully, and help spiritual understanding become clear, steady, and practical.",
   },
   "2026-11": {
     id: 3,
     title: "Holy Place",
     logo: logoHolyPlace,
-    accent: "hsl(0 0% 10%)",
+    accent: purposeColorByTitle["Holy Place"],
     brief: "A month to honor sacred space and sacred atmosphere, where remembrance, beauty, and worship nourish the heart.",
   },
   "2026-12": {
     id: 7,
     title: "Sharing",
     logo: logoSharing,
-    accent: "hsl(14 40% 30%)",
+    accent: purposeColorByTitle["Sharing"],
     brief: "A month to offer what we have received, with generosity, encouragement, and a genuine wish to uplift others.",
   },
   "2027-01": {
     id: 2,
     title: "Community",
     logo: logoCommunity,
-    accent: "hsl(220 60% 44%)",
+    accent: purposeColorByTitle["Community"],
     brief: "A month to begin the year by strengthening connection, cooperation, and a shared spirit of devotional service.",
   },
 };
@@ -184,12 +177,12 @@ export default function When() {
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(319 32% 19%)" }}
+          style={{ color: brandTheme.burgundyDark }}
         >
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(319 32% 19%)" }}>
+        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: brandTheme.burgundyDark }}>
           When?
         </h1>
         <p className="font-sans mt-1" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>
@@ -287,14 +280,14 @@ export default function When() {
                         <span
                           className="font-sans text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full"
                           style={{
-                            background: isToday(day) ? "hsl(27 84% 50%)" : "transparent",
+                            background: isToday(day) ? "hsl(343 51% 38%)" : "transparent",
                             color: isToday(day) ? "white" : "hsl(14 55% 25%)",
                           }}
                         >
                           {day}
                         </span>
                         {dayActivities.slice(0, 2).map((a: any, ei: number) => {
-                          const color = accentByPurposeId[a.purposeId] ?? "hsl(27 84% 50%)";
+                          const color = accentByPurposeId[a.purposeId] ?? "hsl(343 51% 38%)";
                           return (
                             <div
                               key={ei}
@@ -327,7 +320,7 @@ export default function When() {
                 {monthActivities
                   .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
                   .map((activity: any) => {
-                    const color = accentByPurposeId[activity.purposeId] ?? "hsl(27 84% 50%)";
+                    const color = accentByPurposeId[activity.purposeId] ?? "hsl(343 51% 38%)";
                     const isFull = activity.maxParticipants && activity.participantCount >= activity.maxParticipants;
                     return (
                       <div

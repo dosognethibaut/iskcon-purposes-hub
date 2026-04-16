@@ -40,7 +40,7 @@ export default function Purposes() {
         </h1>
         <div
           className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-          style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)", fontSize: "0.9rem" }}
+          style={{ background: "hsl(343 51% 38%)", color: "hsl(43 100% 86%)", fontSize: "0.9rem" }}
         >
           &amp; Community Building
         </div>
