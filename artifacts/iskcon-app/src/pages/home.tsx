@@ -301,10 +301,10 @@ export default function Home() {
               className="block"
               style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
             >
-              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1.15rem, 4.5vw, 1.45rem)", color: brandTheme.creamSoft }}>
+              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1.05rem, 4vw, 1.32rem)", color: "hsl(40 92% 92%)", textShadow: "0 2px 14px rgba(0,0,0,0.48)" }}>
                 <span style={{ color: brandTheme.gold }}>"</span>{quotes[current].text}<span style={{ color: brandTheme.gold }}>"</span>
               </p>
-              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.82rem", color: "hsl(43 100% 86% / 0.86)", letterSpacing: "0.04em" }}>
+              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.82rem", color: "hsl(43 100% 90% / 0.98)", letterSpacing: "0.04em", textShadow: "0 2px 10px rgba(0,0,0,0.38)" }}>
                 {quotes[current].ref}
               </p>
             </a>
@@ -327,13 +327,13 @@ export default function Home() {
 
           {/* Buttons — Why / When / Vision centred row */}
           <div className="px-6 pt-4 pb-5 flex items-center justify-center gap-3">
-            <Link href="/why" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(43 100% 92% / 0.48)", color: brandTheme.creamSoft, background: "transparent", fontSize: "0.85rem" }}>
+            <Link href="/why" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 92% / 0.62)", color: "hsl(40 92% 92%)", background: "hsl(0 0% 100% / 0.06)", fontSize: "0.85rem", textShadow: "0 1px 8px rgba(0,0,0,0.32)" }}>
               <HelpCircle className="w-4 h-4" /> Why?
             </Link>
-            <Link href="/when" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(43 100% 92% / 0.48)", color: brandTheme.creamSoft, background: "transparent", fontSize: "0.85rem" }}>
+            <Link href="/when" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 92% / 0.62)", color: "hsl(40 92% 92%)", background: "hsl(0 0% 100% / 0.06)", fontSize: "0.85rem", textShadow: "0 1px 8px rgba(0,0,0,0.32)" }}>
               <Clock className="w-4 h-4" /> When?
             </Link>
-            <Link href="/vision" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(43 100% 92% / 0.48)", color: brandTheme.creamSoft, background: "transparent", fontSize: "0.85rem" }}>
+            <Link href="/vision" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 92% / 0.62)", color: "hsl(40 92% 92%)", background: "hsl(0 0% 100% / 0.06)", fontSize: "0.85rem", textShadow: "0 1px 8px rgba(0,0,0,0.32)" }}>
               <Eye className="w-4 h-4" /> Vision
             </Link>
           </div>
@@ -349,10 +349,10 @@ export default function Home() {
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
       <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.burgundy }}>
-        <div className="pt-7" />
+        <div className="pt-2" />
 
         {/* Logo grid — airy, centered */}
-        <div className="mx-auto flex max-w-[1540px] flex-wrap items-start justify-center gap-x-10 gap-y-8 px-6 md:flex-nowrap md:justify-between md:px-10">
+        <div className="mx-auto flex max-w-[1540px] flex-wrap items-start justify-center gap-x-6 gap-y-4 px-4 md:flex-nowrap md:justify-between md:px-8">
           {purposes.map((p, i) => {
             const active = activePurpose === i;
             return (

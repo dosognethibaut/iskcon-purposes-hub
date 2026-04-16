@@ -236,7 +236,9 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const queryClient = useQueryClient();
   const { currentUser, token } = useAuth();
   const accent = purposeColorById[purposeId] ?? brandTheme.burgundy;
-  const cardBg = "hsl(40 28% 97%)";
+  const cardBg = "hsl(0 0% 100%)";
+  const panelText = purposeId === 3 ? "hsl(0 0% 4%)" : accent;
+  const accentOn = purposeId === 3 ? "hsl(0 0% 100%)" : "hsl(43 100% 92%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {
@@ -611,8 +613,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
-            style={{ background: "hsl(38 40% 80%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
-            <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(340 44% 34%)" }}>
+            style={{ background: cardBg, border: `1px solid ${accent}33` }}>
+            <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: activeTab === "activities" ? accentOn : panelText, background: activeTab === "activities" ? accent : "transparent" }}>
               <CalendarDays className="w-4 h-4 mr-1.5" /> Activities
               {newActivitiesCount > 0 && (
                 <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
@@ -620,7 +622,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(340 44% 34%)" }}>
+            <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: activeTab === "messages" ? accentOn : panelText, background: activeTab === "messages" ? accent : "transparent" }}>
               <MessageCircle className="w-4 h-4 mr-1.5" /> Messages
               {newMessagesCount > 0 && (
                 <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
@@ -642,7 +644,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
                     <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
-                      <p className="font-serif font-bold leading-snug mb-1" style={{ fontSize: "0.95rem", color: "hsl(319 32% 19%)" }}>{activity.title}</p>
+                      <p className="font-serif font-bold leading-snug mb-1" style={{ fontSize: "0.95rem", color: panelText }}>{activity.title}</p>
                       <p className="font-sans text-sm leading-relaxed mb-2" style={{ color: "hsl(334 30% 30%)" }}>{activity.description}</p>
                       {(activity.scheduledAt || activity.place) && (
                         <div className="flex flex-wrap gap-3 mb-3 text-xs font-sans" style={{ color: "hsl(14 40% 45%)" }}>
@@ -653,7 +655,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       )}
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(337 26% 38%)" }}>By {activity.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: panelText }}>By {activity.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
@@ -724,7 +726,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           ? <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.85)" }} />
                           : <CalendarDays className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />}
                         <div className="flex-1 min-w-0">
-                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: isDone ? "rgba(255,255,255,0.97)" : "hsl(319 32% 19%)" }}>
+                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: isDone ? "rgba(255,255,255,0.97)" : panelText }}>
                             {activity.title}
                           </span>
                           {/* Always-visible meta: date · place · participants */}
@@ -910,7 +912,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             <div className="rounded-2xl p-5 shadow relative overflow-hidden"
               style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
-              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(319 32% 19%)" }}>Propose an Activity</h3>
+              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: panelText }}>Propose an Activity</h3>
               <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your proposal will appear once validated</p>
               {!currentUser ? (
                 <SignInPrompt action="propose an activity" />
@@ -1024,12 +1026,12 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
                     <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
-                      <p className="font-serif italic leading-relaxed mb-3" style={{ fontSize: "0.92rem", color: "hsl(14 65% 22%)" }}>
+                      <p className="font-serif italic leading-relaxed mb-3" style={{ fontSize: "0.92rem", color: panelText }}>
                         "{message.content}"
                       </p>
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(337 26% 38%)" }}>— {message.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: panelText }}>— {message.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
@@ -1078,12 +1080,12 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}>
                       <div style={{ height: 3, background: accent }} />
                       <div className="p-5 pb-3">
-                        <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: "hsl(14 65% 22%)" }}>
+                        <p className="font-serif italic text-base leading-relaxed mb-4" style={{ color: panelText }}>
                           "{message.content}"
                         </p>
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 40% 50%)" }}>
-                            <span className="font-bold" style={{ color: "hsl(337 26% 38%)" }}>— {message.authorName}</span>
+                            <span className="font-bold" style={{ color: panelText }}>— {message.authorName}</span>
                             <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                           </div>
                           <div className="flex items-center gap-2 flex-wrap">
@@ -1139,7 +1141,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             <div className="rounded-2xl p-5 shadow relative overflow-hidden"
               style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
-              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(319 32% 19%)" }}>Share a Message</h3>
+              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: panelText }}>Share a Message</h3>
               <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your message will appear once validated</p>
               {!currentUser ? (
                 <SignInPrompt action="share a message" />

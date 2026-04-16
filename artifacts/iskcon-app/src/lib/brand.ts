@@ -14,15 +14,18 @@ export const brandTheme = {
   sage: "hsl(82 35% 67%)",
   indigo: "hsl(241 39% 31%)",
   pink: "hsl(335 43% 84%)",
+  peach: "hsl(27 83% 76%)",
+  lavender: "hsl(244 56% 79%)",
+  black: "hsl(0 0% 4%)",
 } as const;
 
 export const purposeColorById: Record<number, string> = {
   1: brandTheme.sage,
-  2: brandTheme.indigo,
-  3: brandTheme.goldDark,
+  2: brandTheme.lavender,
+  3: brandTheme.black,
   4: brandTheme.pink,
-  5: brandTheme.burgundy,
-  6: brandTheme.mauve,
+  5: brandTheme.peach,
+  6: brandTheme.orangeBadge,
   7: brandTheme.plum,
 };
 
