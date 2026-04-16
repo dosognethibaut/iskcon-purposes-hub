@@ -14,8 +14,9 @@ import Register from "@/pages/register";
 import Survey from "@/pages/survey";
 
 const queryClient = new QueryClient();
+const routerBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-function Router() {
+function AppRoutes() {
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -31,13 +32,31 @@ function Router() {
   );
 }
 
+function ScopedApp({ base }: { base: string }) {
+  return (
+    <WouterRouter base={base}>
+      <AppRoutes />
+    </WouterRouter>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
+          <WouterRouter base={routerBase}>
+            <Switch>
+              <Route path="/adi">
+                <ScopedApp base={`${routerBase}/adi`} />
+              </Route>
+              <Route path="/adi/:rest*">
+                <ScopedApp base={`${routerBase}/adi`} />
+              </Route>
+              <Route>
+                <AppRoutes />
+              </Route>
+            </Switch>
           </WouterRouter>
           <Toaster />
         </TooltipProvider>
