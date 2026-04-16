@@ -23,6 +23,7 @@ import logoCommunity    from "@assets/7p_Radhadesh_Community.png";
 import logoHolyPlace    from "@assets/7p_Radhadesh_HolyPlace.png";
 import logoSharing      from "@assets/7p_Radhadesh_Sharing.png";
 import logoSimpleLiving from "@assets/7p_Radhadesh_SimpleLiving.png";
+import { brandTheme } from "@/lib/brand";
 
 const COMMUNITIES = ["Domaine de Radhadesh"];
 const RADHADESH_DEPTS = [
@@ -319,7 +320,7 @@ const handleSignIn = async (e: React.FormEvent) => {
     return (
       <div className="min-h-[100dvh] bg-background pb-16">
         {/* Header */}
-        <div className="px-5 pt-10 pb-8 relative overflow-hidden" style={{ background: "linear-gradient(130deg, hsl(40 58% 84%) 0%, hsl(26 55% 78%) 100%)" }}>
+        <div className="px-5 pt-10 pb-8 relative overflow-hidden" style={{ background: brandTheme.cream }}>
           <div className="flex items-center justify-between mb-6">
             <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(319 32% 19%)" }}>
               <ArrowLeft className="w-4 h-4" /> Home
@@ -458,7 +459,7 @@ const handleSignIn = async (e: React.FormEvent) => {
     let globalIndex = 0;
     return (
       <div className="min-h-[100dvh] pb-16" style={{ background: "hsl(40 30% 96%)" }}>
-        <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)", borderBottom: "1px solid hsl(14 20% 78%)" }}>
+        <div className="px-5 pt-10 pb-6" style={{ background: brandTheme.cream, borderBottom: "1px solid hsl(14 20% 78%)" }}>
           <h1 className="font-serif font-bold" style={{ fontSize: "1.8rem", color: "hsl(319 32% 19%)" }}>Community Survey</h1>
           <p className="font-sans mt-1 mb-3" style={{ color: "hsl(337 26% 38%)", fontSize: "0.88rem" }}>
             {surveyAnswered} / {totalQuestions} answered
@@ -539,7 +540,7 @@ const handleSignIn = async (e: React.FormEvent) => {
 
   return (
     <div className="min-h-[100dvh] bg-background pb-16">
-      <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}>
+      <div className="px-5 pt-10 pb-6" style={{ background: brandTheme.cream }}>
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(319 32% 19%)" }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>

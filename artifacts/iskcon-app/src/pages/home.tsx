@@ -279,33 +279,27 @@ export default function Home() {
               )}
             </div>
 
-            <div className="flex flex-col items-end text-right max-w-[19rem]">
-              <div className="rounded-[1.6rem] px-4 py-3 backdrop-blur-md" style={{ background: "linear-gradient(135deg, hsl(347 33% 24% / 0.48) 0%, hsl(343 51% 38% / 0.26) 56%, hsl(43 100% 86% / 0.14) 100%)", border: "1px solid hsl(43 100% 90% / 0.22)", boxShadow: "0 18px 36px rgba(58, 18, 33, 0.2)" }}>
-                <div className="flex items-start justify-end gap-3">
-                  <div className="text-right">
-                    <p className="font-sans font-medium uppercase tracking-[0.22em]" style={{ fontSize: "0.64rem", color: brandTheme.cream }}>
-                      Domaine de Radhadesh
-                    </p>
-                    <h1 className="font-serif font-semibold leading-[0.92]" style={{ fontSize: "clamp(2rem, 6vw, 4rem)", color: brandTheme.creamSoft }}>
-                      The 7 Purposes
-                    </h1>
-                    <p className="font-sans mt-1.5" style={{ fontSize: "0.84rem", color: "hsl(43 100% 90% / 0.86)", letterSpacing: "0.04em" }}>
-                      Community building through a Radhadesh mood
-                    </p>
-                  </div>
-                  <img
-                    src={radhadeshLogo}
-                    alt="Domaine de Radhadesh logo"
-                    style={{ width: 72, height: 72, objectFit: "contain", borderRadius: "1rem", boxShadow: "0 10px 24px rgba(16, 8, 24, 0.16)" }}
-                  />
+            <div className="flex flex-col items-end text-right max-w-[20rem]">
+              <div className="flex items-center justify-end gap-3">
+                <img
+                  src={radhadeshLogo}
+                  alt="Radhadesh logo"
+                  style={{ width: 64, height: 64, objectFit: "contain" }}
+                />
+                <div className="text-right">
+                  <h1 className="font-serif font-semibold leading-[0.94]" style={{ fontSize: "clamp(1.85rem, 5.5vw, 3.55rem)", color: brandTheme.creamSoft }}>
+                    The 7 purposes
+                    <br />
+                    of ISKCON
+                  </h1>
                 </div>
-                <div className="mt-4 flex items-center justify-end gap-2">
-                  <div
-                    className="inline-block px-4 py-1 rounded-full font-sans font-semibold"
-                    style={{ background: brandTheme.burgundy, color: brandTheme.creamSoft, fontSize: "clamp(0.72rem, 2.5vw, 0.86rem)", border: `1px solid ${brandTheme.cream}33` }}
-                  >
-                    Community Building
-                  </div>
+              </div>
+              <div className="mt-3">
+                <div
+                  className="inline-block px-4 py-1 rounded-full font-sans font-semibold"
+                  style={{ background: brandTheme.indigo, color: brandTheme.creamSoft, fontSize: "clamp(0.72rem, 2.5vw, 0.86rem)" }}
+                >
+                  &amp; Community Building
                 </div>
               </div>
             </div>

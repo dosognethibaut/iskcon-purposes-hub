@@ -138,13 +138,13 @@ export default function PurposeDetail() {
   const accent = purposeColorByTitle[purpose.title] ?? brandTheme.burgundy;
 
   return (
-    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(43 80% 92%)" }}>
+    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: brandTheme.cream }}>
 
       {/* Header — parchment gradient matching home */}
       <div
         className="relative px-5 pt-10 pb-8"
         style={{
-          background: "linear-gradient(160deg, hsl(43 100% 86%) 0%, hsl(42 88% 80%) 100%)",
+          background: brandTheme.cream,
           borderBottom: "1px solid hsl(343 26% 58% / 0.25)",
         }}
       >

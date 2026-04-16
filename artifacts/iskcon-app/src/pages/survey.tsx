@@ -8,6 +8,7 @@ import logoCommunity    from "@assets/7p_Radhadesh_Community.png";
 import logoHolyPlace    from "@assets/7p_Radhadesh_HolyPlace.png";
 import logoSharing      from "@assets/7p_Radhadesh_Sharing.png";
 import logoSimpleLiving from "@assets/7p_Radhadesh_SimpleLiving.png";
+import { brandTheme } from "@/lib/brand";
 
 const purposes = [
   { id: "accessing",  label: "Accessing",     logo: logoAccessing },
@@ -177,7 +178,7 @@ export default function Survey() {
     <div className="min-h-[100dvh] pb-16" style={{ background: "hsl(40 30% 96%)" }}>
 
       {/* Header */}
-      <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)", borderBottom: "1px solid hsl(14 20% 78%)" }}>
+      <div className="px-5 pt-10 pb-6" style={{ background: brandTheme.cream, borderBottom: "1px solid hsl(14 20% 78%)" }}>
         <Link href="/register" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(319 32% 19%)" }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>

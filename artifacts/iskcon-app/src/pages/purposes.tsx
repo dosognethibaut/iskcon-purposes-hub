@@ -7,6 +7,7 @@ import logoAccessing from "@assets/7p_Radhadesh_Accessing.png";
 import logoLearning from "@assets/7p_Radhadesh_Learning.png";
 import logoApplying from "@assets/7p_Radhadesh_Applying.png";
 import logoSharing from "@assets/7p_Radhadesh_Sharing.png";
+import { brandTheme } from "@/lib/brand";
 
 const purposes = [
   { id: 1, title: "Accessing",     shortDescription: "Open the doors to spiritual knowledge for everyone.",         logo: logoAccessing },
@@ -23,10 +24,7 @@ export default function Purposes() {
     <div className="min-h-[100dvh] bg-background pb-20">
 
       {/* Header */}
-      <div
-        className="px-5 pt-8 pb-6"
-        style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}
-      >
+      <div className="px-5 pt-8 pb-6" style={{ background: brandTheme.cream }}>
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
@@ -40,7 +38,7 @@ export default function Purposes() {
         </h1>
         <div
           className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-          style={{ background: "hsl(343 51% 38%)", color: "hsl(43 100% 86%)", fontSize: "0.9rem" }}
+          style={{ background: brandTheme.indigo, color: brandTheme.creamSoft, fontSize: "0.9rem" }}
         >
           &amp; Community Building
         </div>

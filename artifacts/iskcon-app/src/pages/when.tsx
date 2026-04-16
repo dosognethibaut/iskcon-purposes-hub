@@ -170,10 +170,7 @@ export default function When() {
     <div className="min-h-[100dvh] bg-background pb-16">
 
       {/* Header */}
-      <div
-        className="px-5 pt-10 pb-6"
-        style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)" }}
-      >
+      <div className="px-5 pt-10 pb-6" style={{ background: brandTheme.cream }}>
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
