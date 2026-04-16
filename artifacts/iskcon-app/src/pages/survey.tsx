@@ -87,7 +87,7 @@ function PurposeGrid({
             style={{
               background: active ? "hsl(26 68% 42% / 0.1)" : "transparent",
               border: "none",
-              outline: active ? "2px solid hsl(26 68% 42%)" : "2px solid transparent",
+              outline: active ? "2px solid hsl(27 84% 50%)" : "2px solid transparent",
               outlineOffset: 0,
               opacity: active ? 1 : blocked ? 0.2 : 0.38,
               cursor: blocked ? "not-allowed" : "pointer",
@@ -96,7 +96,7 @@ function PurposeGrid({
             {active && (
               <span
                 className="absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full font-sans font-bold"
-                style={{ width: 15, height: 15, fontSize: "0.48rem", background: "hsl(26 68% 42%)", color: "hsl(40 90% 96%)", lineHeight: 1, zIndex: 1 }}
+                style={{ width: 15, height: 15, fontSize: "0.48rem", background: "hsl(27 84% 50%)", color: "hsl(40 90% 96%)", lineHeight: 1, zIndex: 1 }}
               >
                 {rank + 1}
               </span>
@@ -157,14 +157,14 @@ export default function Survey() {
   if (submitted) {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center px-6 gap-4" style={{ background: "hsl(40 30% 96%)" }}>
-        <CheckCircle2 className="w-16 h-16" style={{ color: "hsl(26 68% 42%)" }} />
-        <h2 className="font-serif font-bold text-2xl text-center" style={{ color: "hsl(14 72% 18%)" }}>
+        <CheckCircle2 className="w-16 h-16" style={{ color: "hsl(27 84% 50%)" }} />
+        <h2 className="font-serif font-bold text-2xl text-center" style={{ color: "hsl(319 32% 19%)" }}>
           Thank you!
         </h2>
         <p className="font-sans text-center text-sm max-w-xs" style={{ color: "hsl(14 40% 42%)" }}>
           Your answers help us build a richer community experience. Go back to complete your registration.
         </p>
-        <Link href="/register" className="mt-4 px-6 py-3 rounded-full font-sans font-semibold text-sm" style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
+        <Link href="/register" className="mt-4 px-6 py-3 rounded-full font-sans font-semibold text-sm" style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)" }}>
           Back to registration
         </Link>
       </div>
@@ -178,15 +178,15 @@ export default function Survey() {
 
       {/* Header */}
       <div className="px-5 pt-10 pb-6" style={{ background: "linear-gradient(110deg, hsl(40 58% 84%) 0%, hsl(37 50% 80%) 100%)", borderBottom: "1px solid hsl(14 20% 78%)" }}>
-        <Link href="/register" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(14 72% 18%)" }}>
+        <Link href="/register" className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity" style={{ color: "hsl(319 32% 19%)" }}>
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2rem", color: "hsl(14 72% 18%)" }}>Community Survey</h1>
-        <p className="font-sans mt-1 mb-3" style={{ color: "hsl(14 45% 38%)", fontSize: "0.88rem" }}>
+        <h1 className="font-serif font-bold" style={{ fontSize: "2rem", color: "hsl(319 32% 19%)" }}>Community Survey</h1>
+        <p className="font-sans mt-1 mb-3" style={{ color: "hsl(337 26% 38%)", fontSize: "0.88rem" }}>
           {answered} / {totalQuestions} answered
         </p>
         <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(14 30% 70% / 0.25)" }}>
-          <div className="h-full rounded-full transition-all" style={{ width: `${(answered / totalQuestions) * 100}%`, background: "hsl(26 68% 42%)" }} />
+          <div className="h-full rounded-full transition-all" style={{ width: `${(answered / totalQuestions) * 100}%`, background: "hsl(27 84% 50%)" }} />
         </div>
       </div>
 
@@ -195,7 +195,7 @@ export default function Survey() {
         {sections.map((section) => (
           <div key={section.title}>
             <div className="mb-4">
-              <h2 className="font-serif font-bold" style={{ fontSize: "1.1rem", color: "hsl(14 72% 18%)" }}>{section.title}</h2>
+              <h2 className="font-serif font-bold" style={{ fontSize: "1.1rem", color: "hsl(319 32% 19%)" }}>{section.title}</h2>
               {section.subtitle && (
                 <p className="font-sans text-xs mt-0.5 italic" style={{ color: "hsl(14 40% 48%)" }}>{section.subtitle}</p>
               )}
@@ -215,10 +215,10 @@ export default function Survey() {
                     style={{ background: "hsl(40 40% 93%)", border: `1px solid ${done ? "hsl(26 68% 42% / 0.4)" : "hsl(14 20% 80%)"}` }}
                   >
                     <div className="flex items-baseline gap-2 mb-3">
-                      <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(26 68% 42%)" }}>
+                      <span className="font-sans font-bold text-xs shrink-0" style={{ color: "hsl(27 84% 50%)" }}>
                         {String(qi + 1).padStart(2, "0")}
                       </span>
-                      <p className="font-serif font-semibold leading-snug" style={{ fontSize: "0.92rem", color: "hsl(14 72% 18%)" }}>
+                      <p className="font-serif font-semibold leading-snug" style={{ fontSize: "0.92rem", color: "hsl(319 32% 19%)" }}>
                         {q.text}
                       </p>
                     </div>
@@ -243,8 +243,8 @@ export default function Survey() {
           disabled={!allAnswered}
           className="w-full py-3.5 rounded-full font-sans font-semibold text-sm transition-all"
           style={{
-            background: allAnswered ? "hsl(26 68% 42%)" : "hsl(14 20% 75%)",
-            color: allAnswered ? "hsl(40 80% 96%)" : "hsl(14 20% 52%)",
+            background: allAnswered ? "hsl(27 84% 50%)" : "hsl(14 20% 75%)",
+            color: allAnswered ? "hsl(28 100% 98%)" : "hsl(14 20% 52%)",
             cursor: allAnswered ? "pointer" : "not-allowed",
           }}
         >

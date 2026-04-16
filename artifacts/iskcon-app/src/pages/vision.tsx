@@ -366,14 +366,14 @@ export default function Vision() {
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(14 72% 18%)" }}
+          style={{ color: "hsl(319 32% 19%)" }}
         >
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
         <div className="flex items-center gap-3 mb-2">
           <Eye className="w-7 h-7" style={{ color: "hsl(14 55% 38%)" }} />
-          <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>
+          <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(319 32% 19%)" }}>
             Vision
           </h1>
         </div>
@@ -414,54 +414,54 @@ export default function Vision() {
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
-              <h2 className="font-serif font-bold mb-3" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
+              <h2 className="font-serif font-bold mb-3" style={{ fontSize: "1.2rem", color: "hsl(319 32% 19%)" }}>
                 The Life Journey of a Jiva / a Community
               </h2>
               <div className="space-y-3">
-                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(330 18% 34%)" }}>
                   This image presents the life journey of a jiva. It shows a gradual path from conditioned life toward conscious spiritual life.
                 </p>
-                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(330 18% 34%)" }}>
                   As a living being, we are limited by imperfect senses, illusion, mistakes, and cheating<sup>[1]</sup>. As an animal, we move around eating, sleeping, defending, and mating<sup>[2]</sup>. As a human, life opens the possibility of real growth, responsibility, and self-development<sup>[3]</sup>. As a devotee, life becomes consciously directed toward bhakti-yoga and our eternal relationship with Krsna<sup>[4]</sup>.
                 </p>
-                <p className="font-sans font-semibold leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                <p className="font-sans font-semibold leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(330 18% 34%)" }}>
                   The 7 Purposes of ISKCON offer a stable and gradual framework for this existential journey as an Individual and as a Community. It acts like a grid supporting us in understanding and harmonizing our two duties: <span className="font-semibold">sva-dharma</span> and <span className="font-semibold">sanatana-dharma</span><sup>[5]</sup>. Sva-dharma supports and stabilizes our progress toward sanatana-dharma<sup>[6]</sup>. This image shows us the interconnections between our identity, duty, and community life. In that way, each purpose is fundamentally connected to the others, and each of them is necessary for our best gradual realization.
                 </p>
-                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(14 40% 35%)" }}>
+                <p className="font-sans leading-relaxed" style={{ fontSize: "0.92rem", color: "hsl(330 18% 34%)" }}>
                   This same journey can also describe the life of a community. Just as an individual matures gradually, a community also needs a healthy foundation, a clear framework, and spiritual direction<sup>[7]</sup>.
                 </p>
                 <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
-                  <p className="font-sans text-xs leading-relaxed" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed" style={{ color: "hsl(332 18% 47%)" }}>
                     [1] Srila Prabhupada on imperfect senses, illusion, mistakes, and cheating:
                     {" "}
                     <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">CC Adi 2.86</a>
                   </p>
-                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                     [2] Srila Prabhupada on eating, sleeping, mating, defending, and spiritual life:
                     {" "}
                     <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">March 28, 1966, New York</a>
                   </p>
-                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                     [3] Srila Prabhupada on the human form being meant for self-realization:
                     {" "}
                     <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">The Science of Self-Realization, Chapter 1</a>
                   </p>
-                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                     [4] Srila Prabhupada on hearing, inquiry, and service:
                     {" "}
                     <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">Bg. 4.34</a>
                   </p>
-                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                     [5] Srila Prabhupada on advancing through one’s prescribed work:
                     {" "}
                     <a href="https://vedabase.io/en/library/bg/18/45/" target="_blank" rel="noreferrer" className="underline">Bg. 18.45</a>
                   </p>
-                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                     [6] Srila Prabhupada on sva-dharma supporting spiritual realization:
                     {" "}
                     <a href="https://vedabase.io/en/library/transcripts/751011bgdur/" target="_blank" rel="noreferrer" className="underline">October 11, 1975, Durban</a>
                   </p>
-                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs leading-relaxed mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                     [7] Srila Prabhupada on steady and practical devotional life:
                     {" "}
                     <a href="https://vedabase.io/en/library/transcripts/740227sbcal/" target="_blank" rel="noreferrer" className="underline">February 27, 1974, Calcutta</a>
@@ -477,8 +477,8 @@ export default function Vision() {
               style={{ background: "hsl(40 30% 96%)", border: "1px solid hsl(14 25% 72% / 0.35)" }}
             >
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-4 h-4" style={{ color: "hsl(26 68% 42%)" }} />
-                <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(14 72% 18%)" }}>
+                <Sparkles className="w-4 h-4" style={{ color: "hsl(27 84% 50%)" }} />
+                <h2 className="font-serif font-bold" style={{ fontSize: "1.2rem", color: "hsl(319 32% 19%)" }}>
                   7 Purposes Journey
                 </h2>
               </div>
@@ -494,7 +494,7 @@ export default function Vision() {
                   <button type="button" onClick={() => setActiveStage("living-being")} className="w-full text-left">
                     <div className="flex items-center gap-3">
                       <StageSun variant="living-being" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(319 32% 19%)" }}>
                         Life Conscious
                       </p>
                     </div>
@@ -506,16 +506,16 @@ export default function Vision() {
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           As Living Being we are made of imperfect senses, that creates illusion, then mistakes appear, and cheating comes as an attempt to hide those mistakes.
                         </p>
-                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                           Reference: <a href="https://vedabase.io/en/library/cc/adi/2/86/" target="_blank" rel="noreferrer" className="underline">CC Adi 2.86</a>
                         </p>
                       </div>
                       <StepButtons steps={livingBeingSteps} accent="hsl(0 0% 62%)" activeStep={livingStep} onSelect={setLivingStep} />
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
-                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(319 32% 19%)" }}>
                           {selectedLivingStep.label}
                         </p>
-                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                           {selectedLivingStep.text}
                         </p>
                       </div>
@@ -533,7 +533,7 @@ export default function Vision() {
                   <button type="button" onClick={() => setActiveStage("animal")} className="w-full text-left">
                     <div className="flex items-center gap-3">
                       <StageSun variant="animal" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(319 32% 19%)" }}>
                         Animal Conscious
                       </p>
                     </div>
@@ -545,16 +545,16 @@ export default function Vision() {
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           As Animal we are eating, sleeping, defending and mating. But as human being, we have also a superior consciousness that allow us to transcend tha nimal stage.
                         </p>
-                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                           Reference: <a href="https://vedabase.io/en/library/transcripts/660328bg-new-york/" target="_blank" rel="noreferrer" className="underline">March 28, 1966, New York</a>
                         </p>
                       </div>
                       <StepButtons steps={animalSteps} accent="hsl(0 0% 50%)" activeStep={animalStep} onSelect={setAnimalStep} />
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
-                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(319 32% 19%)" }}>
                           {selectedAnimalStep.label}
                         </p>
-                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                           {selectedAnimalStep.text}
                         </p>
                       </div>
@@ -566,13 +566,13 @@ export default function Vision() {
                   className="rounded-3xl p-4 transition-all"
                   style={{
                     background: activeStage === "human" ? "hsl(26 68% 42% / 0.08)" : "hsl(40 40% 93%)",
-                    border: `1.5px solid ${activeStage === "human" ? "hsl(26 68% 42%)" : "hsl(14 25% 72% / 0.35)"}`,
+                    border: `1.5px solid ${activeStage === "human" ? "hsl(27 84% 50%)" : "hsl(14 25% 72% / 0.35)"}`,
                   }}
                 >
                   <button type="button" onClick={() => setActiveStage("human")} className="w-full text-left">
                     <div className="flex items-center gap-3">
                       <StageSun variant="human" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(319 32% 19%)" }}>
                         Human Conscious
                       </p>
                     </div>
@@ -584,7 +584,7 @@ export default function Vision() {
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           Human life contains several layers of growth. We do not become spiritually steady in one jump, but by passing through formation, responsibility, balance, and development.
                         </p>
-                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                           Reference: <a href="https://vedabase.io/en/library/ssr/1/" target="_blank" rel="noreferrer" className="underline">The Science of Self-Realization, Chapter 1</a>
                         </p>
                       </div>
@@ -605,14 +605,14 @@ export default function Vision() {
                               }}
                             >
                               <button type="button" onClick={() => setActiveHumanLevel(level.id)} className="w-full text-left">
-                                <p className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                <p className="font-serif font-bold leading-tight" style={{ fontSize: "1rem", color: "hsl(319 32% 19%)" }}>
                                   {level.title}
                                 </p>
                               </button>
 
                               {isLevelActive && (
                                 <div className="mt-4 pt-4 space-y-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
-                                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.88rem", color: "hsl(14 40% 35%)" }}>
+                                  <p className="font-sans leading-relaxed" style={{ fontSize: "0.88rem", color: "hsl(330 18% 34%)" }}>
                                     {level.text}
                                   </p>
                                   <StepButtons
@@ -627,10 +627,10 @@ export default function Vision() {
                                     }
                                   />
                                   <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
-                                    <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                                    <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(319 32% 19%)" }}>
                                       {selectedStep.label}
                                     </p>
-                                    <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                                    <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                                       {selectedStep.text}
                                     </p>
                                   </div>
@@ -644,7 +644,7 @@ export default function Vision() {
                         <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
                           Sva-dharma
                         </p>
-                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                           Sva-dharma is our particular duty, contribution, and responsible place in life. When it is aligned with service, it gives steadiness and structure to our spiritual progress.
                         </p>
                       </div>
@@ -662,7 +662,7 @@ export default function Vision() {
                   <button type="button" onClick={() => setActiveStage("devotee")} className="w-full text-left">
                     <div className="flex items-center gap-3">
                       <StageSun variant="devotee" />
-                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(14 72% 18%)" }}>
+                      <p className="font-serif font-bold leading-tight" style={{ fontSize: "1.08rem", color: "hsl(319 32% 19%)" }}>
                         Krsna Conscious
                       </p>
                     </div>
@@ -674,16 +674,16 @@ export default function Vision() {
                         <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 58% 24%)" }}>
                           This is the doorway to the black line of bhakti-yoga, where life becomes consciously oriented toward Krishna.
                         </p>
-                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 50%)" }}>
+                        <p className="font-sans text-xs mt-2" style={{ color: "hsl(332 18% 47%)" }}>
                           Reference: <a href="https://vedabase.io/en/library/bg/4/34/" target="_blank" rel="noreferrer" className="underline">Bg. 4.34</a>
                         </p>
                       </div>
                       <StepButtons steps={devoteeLevel.steps} accent={devoteeLevel.color} activeStep={devoteeStep} onSelect={setDevoteeStep} />
                       <div className="rounded-2xl p-4" style={{ background: "hsl(40 35% 94%)", border: "1px solid hsl(14 25% 72% / 0.28)" }}>
-                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+                        <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(319 32% 19%)" }}>
                           {selectedDevoteeStep.label}
                         </p>
-                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                           {selectedDevoteeStep.text}
                         </p>
                       </div>
@@ -691,7 +691,7 @@ export default function Vision() {
                         <p className="font-serif font-bold mb-2" style={{ fontSize: "1rem", color: "hsl(10 54% 35%)" }}>
                           Sanatana-dharma
                         </p>
-                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+                        <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                           Sanatana-dharma is the eternal duty of the soul: loving service to Krsna. This is the deeper aim toward which the whole journey is meant to guide us.
                         </p>
                       </div>
@@ -705,10 +705,10 @@ export default function Vision() {
               className="rounded-3xl p-5 shadow-sm"
               style={{ background: "hsl(0 0% 9% / 0.05)", border: "1px solid hsl(0 0% 9% / 0.18)" }}
             >
-              <p className="font-serif font-semibold mb-2" style={{ fontSize: "1rem", color: "hsl(14 72% 18%)" }}>
+              <p className="font-serif font-semibold mb-2" style={{ fontSize: "1rem", color: "hsl(319 32% 19%)" }}>
                 The black line is bhakti-yoga
               </p>
-              <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(14 40% 35%)" }}>
+              <p className="font-sans leading-relaxed" style={{ fontSize: "0.9rem", color: "hsl(330 18% 34%)" }}>
                 Some very fortunate souls can begin near the black dot. Most of us, however, need the earlier layers of life to be purified and organized so devotional life can become deep, stable, and genuine.
               </p>
             </div>

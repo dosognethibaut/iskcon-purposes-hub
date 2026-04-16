@@ -184,12 +184,12 @@ export default function When() {
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(14 72% 18%)" }}
+          style={{ color: "hsl(319 32% 19%)" }}
         >
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>
+        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(319 32% 19%)" }}>
           When?
         </h1>
         <p className="font-sans mt-1" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>
@@ -206,10 +206,10 @@ export default function When() {
             >
               <div className="flex items-center justify-between gap-4 mb-4">
                 <div>
-                  <p className="font-sans text-xs uppercase tracking-[0.18em]" style={{ color: "hsl(14 35% 50%)" }}>
+                  <p className="font-sans text-xs uppercase tracking-[0.18em]" style={{ color: "hsl(332 18% 47%)" }}>
                     Purpose of the month
                   </p>
-                  <h2 className="font-serif font-bold mt-1" style={{ fontSize: "1.45rem", color: "hsl(14 72% 18%)" }}>
+                  <h2 className="font-serif font-bold mt-1" style={{ fontSize: "1.45rem", color: "hsl(319 32% 19%)" }}>
                     {monthlyPurpose.title}
                   </h2>
                 </div>
@@ -221,7 +221,7 @@ export default function When() {
                 />
               </div>
 
-              <p className="font-sans leading-relaxed mb-4" style={{ color: "hsl(14 40% 35%)", fontSize: "0.92rem" }}>
+              <p className="font-sans leading-relaxed mb-4" style={{ color: "hsl(330 18% 34%)", fontSize: "0.92rem" }}>
                 {monthlyPurpose.brief}
               </p>
 
@@ -287,14 +287,14 @@ export default function When() {
                         <span
                           className="font-sans text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full"
                           style={{
-                            background: isToday(day) ? "hsl(26 68% 42%)" : "transparent",
+                            background: isToday(day) ? "hsl(27 84% 50%)" : "transparent",
                             color: isToday(day) ? "white" : "hsl(14 55% 25%)",
                           }}
                         >
                           {day}
                         </span>
                         {dayActivities.slice(0, 2).map((a: any, ei: number) => {
-                          const color = accentByPurposeId[a.purposeId] ?? "hsl(26 68% 42%)";
+                          const color = accentByPurposeId[a.purposeId] ?? "hsl(27 84% 50%)";
                           return (
                             <div
                               key={ei}
@@ -327,7 +327,7 @@ export default function When() {
                 {monthActivities
                   .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
                   .map((activity: any) => {
-                    const color = accentByPurposeId[activity.purposeId] ?? "hsl(26 68% 42%)";
+                    const color = accentByPurposeId[activity.purposeId] ?? "hsl(27 84% 50%)";
                     const isFull = activity.maxParticipants && activity.participantCount >= activity.maxParticipants;
                     return (
                       <div
@@ -338,7 +338,7 @@ export default function When() {
                         <div style={{ height: 3, background: color }} />
                         <div className="p-4">
                           <div className="flex items-start justify-between gap-2 mb-1">
-                            <p className="font-serif font-bold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>
+                            <p className="font-serif font-bold leading-snug" style={{ fontSize: "0.95rem", color: "hsl(319 32% 19%)" }}>
                               {activity.title}
                             </p>
                             <span className="font-sans text-xs font-semibold shrink-0 px-2 py-0.5 rounded-full" style={{ background: `${color}18`, color }}>
@@ -361,7 +361,7 @@ export default function When() {
                               </span>
                             )}
                           </div>
-                          <p className="font-sans text-sm leading-relaxed" style={{ color: "hsl(14 40% 35%)" }}>
+                          <p className="font-sans text-sm leading-relaxed" style={{ color: "hsl(330 18% 34%)" }}>
                             {activity.description}
                           </p>
                           <p className="font-sans text-xs mt-2" style={{ color: "hsl(14 35% 55%)" }}>

@@ -5,7 +5,7 @@ const pillars = [
   {
     title: "Legacy",
     subtitle: "Srila Prabhupada",
-    accent: "hsl(26 68% 42%)",
+    accent: "hsl(27 84% 50%)",
     softAccent: "hsl(26 68% 42% / 0.12)",
     keywords: ["Vision", "Master plan", "Decision making"],
     icon: Compass,
@@ -54,12 +54,12 @@ export default function Why() {
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(14 72% 18%)" }}
+          style={{ color: "hsl(319 32% 19%)" }}
         >
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(14 72% 18%)" }}>
+        <h1 className="font-serif font-bold" style={{ fontSize: "2.2rem", color: "hsl(319 32% 19%)" }}>
           Why?
         </h1>
         <p className="font-sans mt-1 max-w-md" style={{ color: "hsl(14 55% 28%)", fontSize: "0.9rem" }}>
@@ -98,7 +98,7 @@ export default function Why() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <h2 className="font-serif font-bold leading-tight" style={{ fontSize: "1.45rem", color: "hsl(14 72% 18%)" }}>
+                    <h2 className="font-serif font-bold leading-tight" style={{ fontSize: "1.45rem", color: "hsl(319 32% 19%)" }}>
                       {pillar.title}
                     </h2>
                     <p className="font-sans mt-1" style={{ fontSize: "0.95rem", color: "hsl(14 42% 38%)" }}>
@@ -120,7 +120,7 @@ export default function Why() {
                 </div>
 
                 <div className="mt-4 pt-4" style={{ borderTop: "1px solid hsl(14 20% 82%)" }}>
-                  <p className="font-sans leading-relaxed" style={{ color: "hsl(14 40% 35%)", fontSize: "0.92rem" }}>
+                  <p className="font-sans leading-relaxed" style={{ color: "hsl(330 18% 34%)", fontSize: "0.92rem" }}>
                     {pillar.description}
                   </p>
                 </div>

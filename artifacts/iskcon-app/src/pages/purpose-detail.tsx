@@ -144,10 +144,10 @@ export default function PurposeDetail() {
   }
 
   const logo = logoByTitle[purpose.title];
-  const accent = accentByTitle[purpose.title] ?? "hsl(26 68% 42%)";
+  const accent = accentByTitle[purpose.title] ?? "hsl(27 84% 50%)";
 
   return (
-    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(38 52% 86%)" }}>
+    <div className="min-h-[100dvh] pb-20 overflow-x-hidden" style={{ background: "hsl(20 48% 95%)" }}>
 
       {/* Header — parchment gradient matching home */}
       <div
@@ -162,7 +162,7 @@ export default function PurposeDetail() {
           href="/"
           data-testid="back-button"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-6 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(14 72% 18%)" }}
+          style={{ color: "hsl(319 32% 19%)" }}
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
@@ -177,13 +177,13 @@ export default function PurposeDetail() {
             {/* Purpose number badge */}
             <div
               className="inline-block px-3 py-1 rounded-lg font-sans text-xs font-bold tracking-widest uppercase mb-2"
-              style={{ background: accent, color: "hsl(40 80% 96%)" }}
+              style={{ background: accent, color: "hsl(28 100% 98%)" }}
             >
               Purpose {numberByTitle[purpose.title] ?? purpose.number}
             </div>
             <h1
               className="font-serif font-bold leading-tight"
-              style={{ fontSize: "clamp(1.5rem, 6vw, 2.2rem)", color: "hsl(14 72% 16%)" }}
+              style={{ fontSize: "clamp(1.5rem, 6vw, 2.2rem)", color: "hsl(319 34% 18%)" }}
             >
               {purpose.title}
             </h1>
@@ -193,7 +193,7 @@ export default function PurposeDetail() {
         {/* Description */}
         <p
           className="font-sans leading-relaxed mt-4 max-w-lg mx-auto"
-          style={{ color: "hsl(14 50% 30%)", fontSize: "0.92rem" }}
+          style={{ color: "hsl(334 30% 30%)", fontSize: "0.92rem" }}
         >
           {purpose.fullDescription}
         </p>
@@ -215,7 +215,7 @@ export default function PurposeDetail() {
             <TabsTrigger
               value="activities"
               className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm"
-              style={{ color: "hsl(14 55% 30%)" }}
+              style={{ color: "hsl(340 44% 34%)" }}
             >
               <CalendarDays className="w-4 h-4 mr-1.5" />
               Activities
@@ -223,7 +223,7 @@ export default function PurposeDetail() {
             <TabsTrigger
               value="messages"
               className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm"
-              style={{ color: "hsl(14 55% 30%)" }}
+              style={{ color: "hsl(340 44% 34%)" }}
             >
               <MessageCircle className="w-4 h-4 mr-1.5" />
               Messages
@@ -234,7 +234,7 @@ export default function PurposeDetail() {
           <TabsContent value="activities" className="space-y-6">
 
             <div className="space-y-3">
-              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(14 72% 18%)" }}>Proposed Activities</h2>
+              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(319 32% 19%)" }}>Proposed Activities</h2>
               {isLoadingActivities ? (
                 <div className="flex justify-center p-8">
                   <Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} />
@@ -253,7 +253,7 @@ export default function PurposeDetail() {
                       className="rounded-2xl p-5 shadow-sm animate-in fade-in slide-in-from-bottom-2"
                       style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.2)", animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
                     >
-                      <h3 className="font-serif text-lg font-bold mb-1.5" style={{ color: "hsl(14 72% 18%)" }}>{activity.title}</h3>
+                      <h3 className="font-serif text-lg font-bold mb-1.5" style={{ color: "hsl(319 32% 19%)" }}>{activity.title}</h3>
                       <p className="font-sans text-sm leading-relaxed mb-4" style={{ color: "hsl(14 50% 35%)" }}>{activity.description}</p>
                       <div className="flex justify-between items-center text-xs pt-3" style={{ borderTop: "1px solid hsl(14 30% 60% / 0.2)", color: "hsl(14 40% 50%)" }}>
                         <span className="font-semibold" style={{ color: "hsl(14 60% 28%)" }}>By {activity.authorName}</span>
@@ -269,7 +269,7 @@ export default function PurposeDetail() {
             <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: `1px solid ${accent}40` }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
+                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(319 32% 19%)" }}>Propose an Activity</h3>
                 <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans" style={{ background: `${accent}22`, color: accent }}>Admin</span>
               </div>
               <Form {...activityForm}>
@@ -279,7 +279,7 @@ export default function PurposeDetail() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Activity Title</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Activity Title</FormLabel>
                         <FormControl>
                           <Input data-testid="input-activity-title" placeholder="E.g., Sunday Feast Program" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
@@ -292,7 +292,7 @@ export default function PurposeDetail() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Description</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Description</FormLabel>
                         <FormControl>
                           <Textarea data-testid="input-activity-description" placeholder="What will happen during this activity?" className="resize-none min-h-[90px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
@@ -305,7 +305,7 @@ export default function PurposeDetail() {
                     name="authorName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Name</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Your Name</FormLabel>
                         <FormControl>
                           <Input data-testid="input-activity-author" placeholder="Enter your name" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
@@ -313,7 +313,7 @@ export default function PurposeDetail() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" data-testid="button-submit-activity" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
+                  <Button type="submit" data-testid="button-submit-activity" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm" disabled={createActivity.isPending} style={{ background: accent, color: "hsl(28 100% 98%)" }}>
                     {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                     Propose Activity
                   </Button>
@@ -326,7 +326,7 @@ export default function PurposeDetail() {
           <TabsContent value="messages" className="space-y-6">
 
             <div className="space-y-3">
-              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(14 72% 18%)" }}>Community Messages</h2>
+              <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(319 32% 19%)" }}>Community Messages</h2>
               {isLoadingMessages ? (
                 <div className="flex justify-center p-8">
                   <Loader2 className="w-6 h-6 animate-spin" style={{ color: accent }} />
@@ -362,7 +362,7 @@ export default function PurposeDetail() {
             <div className="rounded-2xl p-5 shadow relative overflow-hidden" style={{ background: "hsl(40 50% 93%)", border: "1px solid hsl(14 30% 60% / 0.25)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: "hsl(14 45% 40%)" }} />
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
+                <h3 className="font-serif text-lg font-bold" style={{ color: "hsl(319 32% 19%)" }}>Share a Message</h3>
                 <span className="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest font-sans" style={{ background: "hsl(14 30% 60% / 0.15)", color: "hsl(14 55% 32%)" }}>Member</span>
               </div>
               <Form {...messageForm}>
@@ -372,7 +372,7 @@ export default function PurposeDetail() {
                     name="content"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Message</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Your Message</FormLabel>
                         <FormControl>
                           <Textarea data-testid="input-message-content" placeholder="Share your realizations or thoughts..." className="resize-none min-h-[110px] rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>
@@ -385,7 +385,7 @@ export default function PurposeDetail() {
                     name="authorName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Name</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Your Name</FormLabel>
                         <FormControl>
                           <Input data-testid="input-message-author" placeholder="Enter your name" className="h-11 rounded-xl font-sans" style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)" }} {...field} />
                         </FormControl>

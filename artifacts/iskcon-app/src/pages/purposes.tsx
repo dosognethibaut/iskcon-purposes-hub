@@ -30,17 +30,17 @@ export default function Purposes() {
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm font-sans mb-5 opacity-60 hover:opacity-100 transition-opacity"
-          style={{ color: "hsl(14 72% 18%)" }}
+          style={{ color: "hsl(319 32% 19%)" }}
         >
           <ArrowLeft className="w-4 h-4" />
           Back
         </Link>
-        <h1 className="font-serif font-bold" style={{ fontSize: "2rem", color: "hsl(14 72% 18%)" }}>
+        <h1 className="font-serif font-bold" style={{ fontSize: "2rem", color: "hsl(319 32% 19%)" }}>
           The 7 Purposes
         </h1>
         <div
           className="inline-block mt-2 px-4 py-1 rounded-full font-serif italic font-semibold"
-          style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)", fontSize: "0.9rem" }}
+          style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)", fontSize: "0.9rem" }}
         >
           &amp; Community Building
         </div>

@@ -226,7 +226,7 @@ function CommentSection({
             />
             <button onClick={submit} disabled={!input.trim() || submitting}
               className="shrink-0 rounded-full flex items-center justify-center transition-opacity"
-              style={{ width: 28, height: 28, background: "hsl(14 45% 38%)", opacity: !input.trim() ? 0.35 : 1 }}>
+              style={{ width: 28, height: 28, background: "hsl(337 26% 38%)", opacity: !input.trim() ? 0.35 : 1 }}>
               {submitting
                 ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
                 : <Send className="w-3.5 h-3.5 text-white" />}
@@ -245,7 +245,7 @@ function CommentSection({
 export default function PurposePanel({ purposeId, title, officialText, description, initialTab = "activities" }: PurposePanelProps) {
   const queryClient = useQueryClient();
   const { currentUser, token } = useAuth();
-  const accent = accentById[purposeId] ?? "hsl(26 68% 42%)";
+  const accent = accentById[purposeId] ?? "hsl(27 84% 50%)";
   const cardBg = "hsl(40 28% 97%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
@@ -622,7 +622,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
             style={{ background: "hsl(38 40% 80%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}>
-            <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(14 55% 30%)" }}>
+            <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(340 44% 34%)" }}>
               <CalendarDays className="w-4 h-4 mr-1.5" /> Activities
               {newActivitiesCount > 0 && (
                 <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
@@ -630,7 +630,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(14 55% 30%)" }}>
+            <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(340 44% 34%)" }}>
               <MessageCircle className="w-4 h-4 mr-1.5" /> Messages
               {newMessagesCount > 0 && (
                 <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
@@ -652,8 +652,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
                     <div style={{ height: 3, background: accent }} />
                     <div className="p-4">
-                      <p className="font-serif font-bold leading-snug mb-1" style={{ fontSize: "0.95rem", color: "hsl(14 72% 18%)" }}>{activity.title}</p>
-                      <p className="font-sans text-sm leading-relaxed mb-2" style={{ color: "hsl(14 50% 30%)" }}>{activity.description}</p>
+                      <p className="font-serif font-bold leading-snug mb-1" style={{ fontSize: "0.95rem", color: "hsl(319 32% 19%)" }}>{activity.title}</p>
+                      <p className="font-sans text-sm leading-relaxed mb-2" style={{ color: "hsl(334 30% 30%)" }}>{activity.description}</p>
                       {(activity.scheduledAt || activity.place) && (
                         <div className="flex flex-wrap gap-3 mb-3 text-xs font-sans" style={{ color: "hsl(14 40% 45%)" }}>
                           {activity.scheduledAt && <span className="flex items-center gap-1"><CalendarDays className="w-3 h-3" />{format(new Date(activity.scheduledAt), "EEE d MMM yyyy, HH:mm")}</span>}
@@ -663,7 +663,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       )}
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(14 45% 38%)" }}>By {activity.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(337 26% 38%)" }}>By {activity.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(activity.createdAt), "MMM d, yyyy")}</span>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
@@ -734,7 +734,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                           ? <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.85)" }} />
                           : <CalendarDays className="w-4 h-4 shrink-0" style={{ color: "hsl(14 40% 50%)" }} />}
                         <div className="flex-1 min-w-0">
-                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: isDone ? "rgba(255,255,255,0.97)" : "hsl(14 72% 18%)" }}>
+                          <span className="font-serif font-bold leading-snug block" style={{ fontSize: "0.95rem", color: isDone ? "rgba(255,255,255,0.97)" : "hsl(319 32% 19%)" }}>
                             {activity.title}
                           </span>
                           {/* Always-visible meta: date · place · participants */}
@@ -783,7 +783,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                                 onClick={() => leaveActivity(activity.id)}
                                 disabled={joiningActivityId === activity.id}
                                 className="font-sans text-xs font-semibold px-3 py-1 rounded-full border transition-colors"
-                                style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(14 45% 38%)", background: "hsl(14 20% 90%)" }}>
+                                style={{ borderColor: "hsl(14 30% 65% / 0.5)", color: "hsl(337 26% 38%)", background: "hsl(14 20% 90%)" }}>
                                 {joiningActivityId === activity.id ? <Loader2 className="w-3 h-3 animate-spin inline" /> : "Leave"}
                               </button>
                             ) : (
@@ -920,7 +920,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             <div className="rounded-2xl p-5 shadow relative overflow-hidden"
               style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
-              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Propose an Activity</h3>
+              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(319 32% 19%)" }}>Propose an Activity</h3>
               <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your proposal will appear once validated</p>
               {!currentUser ? (
                 <SignInPrompt action="propose an activity" />
@@ -929,11 +929,11 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                   <form onSubmit={activityForm.handleSubmit(onActivitySubmit)} className="space-y-4">
                     <FormField control={activityForm.control} name="title" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Activity Title</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Activity Title</FormLabel>
                         <FormControl>
                           <input placeholder="E.g., Sunday Feast Program"
                             className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
-                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(319 32% 19%)" }}
                             {...field} />
                         </FormControl>
                         <FormMessage />
@@ -941,7 +941,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     )} />
                     <FormField control={activityForm.control} name="description" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Description</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Description</FormLabel>
                         <FormControl>
                           <Textarea placeholder="What will happen during this activity?"
                             className="resize-none min-h-[90px] rounded-xl font-sans"
@@ -953,13 +953,13 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     )} />
                     <FormField control={activityForm.control} name="scheduledAt" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(14 55% 30%)" }}>
+                        <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(340 44% 34%)" }}>
                           <CalendarDays className="w-3.5 h-3.5" /> Date &amp; Time
                         </FormLabel>
                         <FormControl>
                           <input type="datetime-local"
                             className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
-                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(319 32% 19%)" }}
                             {...field} />
                         </FormControl>
                         <FormMessage />
@@ -967,13 +967,13 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     )} />
                     <FormField control={activityForm.control} name="place" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(14 55% 30%)" }}>
+                        <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(340 44% 34%)" }}>
                           <MapPin className="w-3.5 h-3.5" /> Place
                         </FormLabel>
                         <FormControl>
                           <input placeholder="E.g., Temple room, Radhadesh"
                             className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
-                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                            style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(319 32% 19%)" }}
                             {...field} />
                         </FormControl>
                         <FormMessage />
@@ -982,13 +982,13 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     <div className="grid grid-cols-2 gap-3">
                       <FormField control={activityForm.control} name="minParticipants" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(14 55% 30%)" }}>
+                          <FormLabel className="font-sans text-sm flex items-center gap-1" style={{ color: "hsl(340 44% 34%)" }}>
                             <Users className="w-3.5 h-3.5" /> Min participants
                           </FormLabel>
                           <FormControl>
                             <input type="number" min={3} placeholder="3"
                               className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
-                              style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                              style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(319 32% 19%)" }}
                               {...field} />
                           </FormControl>
                           <FormMessage />
@@ -996,11 +996,11 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       )} />
                       <FormField control={activityForm.control} name="maxParticipants" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Max participants</FormLabel>
+                          <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Max participants</FormLabel>
                           <FormControl>
                             <input type="number" min={3} placeholder="Optional"
                               className="w-full h-11 px-4 rounded-xl font-sans text-sm border focus:outline-none focus:ring-2 focus:ring-primary/30"
-                              style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(14 72% 18%)" }}
+                              style={{ background: "hsl(40 40% 96%)", borderColor: "hsl(14 30% 65% / 0.4)", color: "hsl(319 32% 19%)" }}
                               {...field} />
                           </FormControl>
                           <FormMessage />
@@ -1009,10 +1009,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     </div>
                     <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
-                      <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
+                      <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createActivity.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
+                      disabled={createActivity.isPending} style={{ background: accent, color: "hsl(28 100% 98%)" }}>
                       {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
@@ -1039,7 +1039,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       </p>
                       <div className="flex items-center justify-between gap-3 flex-wrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(14 45% 38%)" }}>— {message.authorName}</span>
+                          <span className="font-sans text-xs font-semibold" style={{ color: "hsl(337 26% 38%)" }}>— {message.authorName}</span>
                           <span className="font-sans text-xs" style={{ color: "hsl(14 30% 55%)" }}>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
@@ -1093,7 +1093,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         </p>
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <div className="flex items-center gap-3 text-xs" style={{ color: "hsl(14 40% 50%)" }}>
-                            <span className="font-bold" style={{ color: "hsl(14 45% 38%)" }}>— {message.authorName}</span>
+                            <span className="font-bold" style={{ color: "hsl(337 26% 38%)" }}>— {message.authorName}</span>
                             <span>{format(new Date(message.createdAt), "MMM d, yyyy")}</span>
                           </div>
                           <div className="flex items-center gap-2 flex-wrap">
@@ -1149,7 +1149,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             <div className="rounded-2xl p-5 shadow relative overflow-hidden"
               style={{ background: cardBg, border: "1px solid hsl(14 25% 72% / 0.35)" }}>
               <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style={{ background: accent }} />
-              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(14 72% 18%)" }}>Share a Message</h3>
+              <h3 className="font-serif text-lg font-bold mb-1" style={{ color: "hsl(319 32% 19%)" }}>Share a Message</h3>
               <p className="font-sans text-xs mb-4" style={{ color: "hsl(14 38% 50%)" }}>Your message will appear once validated</p>
               {!currentUser ? (
                 <SignInPrompt action="share a message" />
@@ -1158,7 +1158,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                   <form onSubmit={messageForm.handleSubmit(onMessageSubmit)} className="space-y-4">
                     <FormField control={messageForm.control} name="content" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(14 55% 30%)" }}>Your Message</FormLabel>
+                        <FormLabel className="font-sans text-sm" style={{ color: "hsl(340 44% 34%)" }}>Your Message</FormLabel>
                         <FormControl>
                           <Textarea placeholder="Share your realizations or thoughts…"
                             className="resize-none min-h-[110px] rounded-xl font-sans"
@@ -1170,10 +1170,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                     )} />
                     <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
-                      <span className="font-sans text-sm font-semibold" style={{ color: "hsl(14 72% 18%)" }}>{currentUser.fullName}</span>
+                      <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(40 80% 96%)" }}>
+                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(28 100% 98%)" }}>
                       {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
@@ -1200,11 +1200,11 @@ function SignInPrompt({ action }: { action: string }) {
   return (
     <div className="flex flex-col items-center gap-3 py-5 text-center">
       <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "hsl(26 68% 42% / 0.12)" }}>
-        <Lock className="w-5 h-5" style={{ color: "hsl(26 68% 42%)" }} />
+        <Lock className="w-5 h-5" style={{ color: "hsl(27 84% 50%)" }} />
       </div>
       <p className="font-sans text-sm" style={{ color: "hsl(14 40% 42%)" }}>Sign in to {action}</p>
       <Link href="/register" className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-sans font-semibold text-sm"
-        style={{ background: "hsl(26 68% 42%)", color: "hsl(40 80% 96%)" }}>
+        style={{ background: "hsl(27 84% 50%)", color: "hsl(28 100% 98%)" }}>
         Sign in / Register
       </Link>
     </div>
