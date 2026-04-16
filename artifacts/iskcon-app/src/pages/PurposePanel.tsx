@@ -613,7 +613,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
-            style={{ background: cardBg, border: `1px solid ${accent}33` }}>
+            style={{ background: brandTheme.creamSoft, border: `1px solid ${accent}33` }}>
             <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: activeTab === "activities" ? accentOn : panelText, background: activeTab === "activities" ? accent : "transparent" }}>
               <CalendarDays className="w-4 h-4 mr-1.5" /> Activities
               {newActivitiesCount > 0 && (
@@ -999,12 +999,12 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         </FormItem>
                       )} />
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: brandTheme.creamSoft }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createActivity.isPending} style={{ background: accent, color: "hsl(43 100% 86%)" }}>
+                      disabled={createActivity.isPending} style={{ background: accent, color: brandTheme.creamSoft, border: `1px solid ${accent}` }}>
                       {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
@@ -1160,12 +1160,12 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         <FormMessage />
                       </FormItem>
                     )} />
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "hsl(40 40% 88%)" }}>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: brandTheme.creamSoft }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(43 100% 86%)" }}>
+                      disabled={createMessage.isPending} style={{ background: accent, color: brandTheme.creamSoft, border: `1px solid ${accent}` }}>
                       {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
