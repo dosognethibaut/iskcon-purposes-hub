@@ -239,8 +239,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const cardBg = "hsl(0 0% 100%)";
   const panelText = purposeId === 3 ? "hsl(0 0% 4%)" : accent;
   const accentOn = purposeId === 3 ? "hsl(0 0% 100%)" : "hsl(43 100% 92%)";
-  const shellBg = "hsl(43 95% 87%)";
-  const shellBgAlt = "hsl(43 55% 83%)";
+  const shellBg = "hsl(43 100% 91%)";
+  const shellBgAlt = "hsl(43 55% 86%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {

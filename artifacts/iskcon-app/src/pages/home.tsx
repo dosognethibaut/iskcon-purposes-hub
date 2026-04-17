@@ -227,7 +227,11 @@ export default function Home() {
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "60% 8%" }}
         />
         <div
-          style={{ position: "absolute", inset: 0, background: "rgba(18, 9, 6, 0.28)" }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(180deg, rgba(0, 0, 0, 0.52) 0%, rgba(0, 0, 0, 0.34) 34%, rgba(0, 0, 0, 0.42) 100%)",
+          }}
         />
 
         {/* Content layer */}
@@ -352,7 +356,7 @@ export default function Home() {
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
       <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.burgundy }}>
-        <div className="pt-10" />
+        <div className="pt-16" />
 
         {/* Logo grid — airy, centered */}
         <div className="mx-auto flex max-w-[1540px] flex-wrap items-start justify-center gap-x-6 gap-y-4 px-4 md:flex-nowrap md:justify-between md:px-8">
