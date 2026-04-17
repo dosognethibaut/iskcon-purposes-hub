@@ -240,6 +240,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const panelText = purposeId === 3 ? "hsl(0 0% 4%)" : accent;
   const accentOn = purposeId === 3 ? "hsl(0 0% 100%)" : "hsl(43 100% 92%)";
   const shellBg = "hsl(43 95% 87%)";
+  const shellBgAlt = "hsl(43 55% 83%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {
@@ -576,10 +577,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       {/* Quote block */}
       <div className="px-6 py-6">
         <div className="text-center">
-          <p className="font-serif font-bold leading-relaxed" style={{ fontSize: "1.18rem", color: "hsl(0 0% 4%)" }}>{officialText}</p>
+          <p className="font-serif font-semibold leading-relaxed" style={{ fontSize: "0.98rem", color: "hsl(0 0% 4%)" }}>{officialText}</p>
         </div>
         <div className="my-5 mx-auto w-24 h-px" style={{ background: "hsl(43 100% 90% / 0.9)" }} />
-        <p className="font-sans leading-relaxed text-center" style={{ fontSize: "0.98rem", color: brandTheme.creamSoft }}>{description}</p>
+        <p className="font-sans leading-relaxed text-center" style={{ fontSize: "1.12rem", color: brandTheme.creamSoft }}>{description}</p>
       </div>
 
       {/* Community section */}
@@ -600,7 +601,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
             }}
           />
           {stats ? (
-            <span className="font-sans text-base font-semibold" style={{ color: panelText }}>
+            <span className="font-sans text-sm" style={{ color: "hsl(14 40% 48%)" }}>
               {stats.connected}/{stats.registered}
             </span>
           ) : null}
@@ -608,14 +609,14 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
 
         {/* Domaine de Radhadesh divider */}
         <div className="flex items-center gap-3 pb-4">
-          <div className="flex-1 h-px" style={{ background: `${panelText}33` }} />
-          <span className="font-sans text-sm uppercase tracking-[0.22em] whitespace-nowrap font-semibold" style={{ color: panelText }}>Domaine de Radhadesh</span>
-          <div className="flex-1 h-px" style={{ background: `${panelText}33` }} />
+          <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
+          <span className="font-sans text-xs uppercase tracking-widest whitespace-nowrap" style={{ color: "hsl(14 40% 50%)" }}>Domaine de Radhadesh</span>
+          <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
-            style={{ background: shellBg, border: `1px solid ${panelText}33`, boxShadow: "0 8px 20px rgba(94,53,37,0.10)" }}>
+            style={{ background: shellBgAlt, border: `1px solid ${panelText}22`, boxShadow: "0 8px 20px rgba(94,53,37,0.10)" }}>
             <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: activeTab === "activities" ? accentOn : panelText, background: activeTab === "activities" ? accent : "transparent" }}>
               <CalendarDays className="w-4 h-4 mr-1.5" /> Activities
               {newActivitiesCount > 0 && (
@@ -1001,7 +1002,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         </FormItem>
                       )} />
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: shellBg }}>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: shellBgAlt }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
@@ -1162,7 +1163,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                         <FormMessage />
                       </FormItem>
                     )} />
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: shellBg }}>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: shellBgAlt }}>
                       <span className="font-sans text-xs" style={{ color: "hsl(14 40% 48%)" }}>Posting as</span>
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>

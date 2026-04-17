@@ -226,6 +226,9 @@ export default function Home() {
           alt="Srila Prabhupada"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "60% 8%" }}
         />
+        <div
+          style={{ position: "absolute", inset: 0, background: "rgba(18, 9, 6, 0.28)" }}
+        />
 
         {/* Content layer */}
         <div className="relative z-10 flex flex-col h-full">
@@ -301,10 +304,10 @@ export default function Home() {
               className="block"
               style={{ opacity: fading ? 0 : 1, transform: fading ? "translateY(6px)" : "translateY(0)", transition: "opacity 0.3s ease, transform 0.3s ease", textDecoration: "none" }}
             >
-              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1.05rem, 4vw, 1.32rem)", color: "hsl(40 92% 92%)", textShadow: "0 2px 14px rgba(0,0,0,0.48)" }}>
+              <p className="font-serif italic leading-relaxed text-center" style={{ fontSize: "clamp(1.12rem, 4vw, 1.38rem)", color: "hsl(40 92% 94%)", textShadow: "0 3px 14px rgba(0,0,0,0.62)" }}>
                 <span style={{ color: brandTheme.gold }}>"</span>{quotes[current].text}<span style={{ color: brandTheme.gold }}>"</span>
               </p>
-              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.82rem", color: "hsl(43 100% 90% / 0.98)", letterSpacing: "0.04em", textShadow: "0 2px 10px rgba(0,0,0,0.38)" }}>
+              <p className="font-sans mt-2 text-center" style={{ fontSize: "0.82rem", color: "hsl(43 100% 92%)", letterSpacing: "0.04em", textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}>
                 {quotes[current].ref}
               </p>
             </a>
@@ -327,13 +330,13 @@ export default function Home() {
 
           {/* Buttons — Why / When / Vision centred row */}
           <div className="px-6 pt-4 pb-5 flex items-center justify-center gap-3">
-            <Link href="/why" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 92% / 0.62)", color: "hsl(40 92% 92%)", background: "hsl(0 0% 100% / 0.06)", fontSize: "0.85rem", textShadow: "0 1px 8px rgba(0,0,0,0.32)" }}>
+            <Link href="/why" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <HelpCircle className="w-4 h-4" /> Why?
             </Link>
-            <Link href="/when" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 92% / 0.62)", color: "hsl(40 92% 92%)", background: "hsl(0 0% 100% / 0.06)", fontSize: "0.85rem", textShadow: "0 1px 8px rgba(0,0,0,0.32)" }}>
+            <Link href="/when" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Clock className="w-4 h-4" /> When?
             </Link>
-            <Link href="/vision" className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-sans font-semibold border focus:outline-none backdrop-blur-sm" style={{ borderColor: "hsl(43 100% 92% / 0.62)", color: "hsl(40 92% 92%)", background: "hsl(0 0% 100% / 0.06)", fontSize: "0.85rem", textShadow: "0 1px 8px rgba(0,0,0,0.32)" }}>
+            <Link href="/vision" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none" style={{ borderColor: "hsl(40 70% 90% / 0.4)", color: "hsl(40 80% 96%)", background: "hsl(40 70% 94% / 0.12)", fontSize: "0.85rem" }}>
               <Eye className="w-4 h-4" /> Vision
             </Link>
           </div>
@@ -349,7 +352,7 @@ export default function Home() {
           WHAT — 7 Purposes logo row + expandable official text
       ═══════════════════════════════════════════════════════════ */}
       <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.burgundy }}>
-        <div className="pt-2" />
+        <div className="pt-10" />
 
         {/* Logo grid — airy, centered */}
         <div className="mx-auto flex max-w-[1540px] flex-wrap items-start justify-center gap-x-6 gap-y-4 px-4 md:flex-nowrap md:justify-between md:px-8">
