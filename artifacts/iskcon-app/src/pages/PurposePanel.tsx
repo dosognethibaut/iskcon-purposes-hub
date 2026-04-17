@@ -240,7 +240,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const panelText = purposeId === 3 ? "hsl(0 0% 4%)" : accent;
   const accentOn = purposeId === 3 ? "hsl(0 0% 100%)" : "hsl(43 100% 92%)";
   const shellBg = "hsl(43 86% 84%)";
-  const shellBgAlt = "hsl(43 52% 80%)";
+  const shellBgAlt = "hsl(43 40% 60%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {
@@ -617,7 +617,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
             style={{ background: shellBgAlt, border: `1px solid ${panelText}22`, boxShadow: "0 8px 20px rgba(94,53,37,0.10)" }}>
-            <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: activeTab === "activities" ? accentOn : panelText, background: activeTab === "activities" ? accent : "transparent" }}>
+            <TabsTrigger value="activities" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(0 0% 100%)", background: activeTab === "activities" ? accent : "transparent" }}>
               <CalendarDays className="w-4 h-4 mr-1.5" /> Activities
               {newActivitiesCount > 0 && (
                 <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
@@ -625,7 +625,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: activeTab === "messages" ? accentOn : panelText, background: activeTab === "messages" ? accent : "transparent" }}>
+            <TabsTrigger value="messages" className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm" style={{ color: "hsl(0 0% 100%)", background: activeTab === "messages" ? accent : "transparent" }}>
               <MessageCircle className="w-4 h-4 mr-1.5" /> Messages
               {newMessagesCount > 0 && (
                 <span className="ml-1.5 min-w-[18px] h-[18px] inline-flex items-center justify-center text-[10px] font-bold text-white rounded-full px-1" style={{ background: "hsl(0 80% 48%)" }}>
@@ -1007,7 +1007,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createActivity.isPending} style={{ background: accent, color: brandTheme.creamSoft, border: `1px solid ${accent}` }}>
+                      disabled={createActivity.isPending} style={{ background: accent, color: "hsl(0 0% 100%)", border: `1px solid ${accent}` }}>
                       {createActivity.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>
@@ -1168,7 +1168,7 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
                       <span className="font-sans text-sm font-semibold" style={{ color: "hsl(319 32% 19%)" }}>{currentUser.fullName}</span>
                     </div>
                     <Button type="submit" className="w-full h-11 rounded-xl font-bold font-sans tracking-wide shadow-sm"
-                      disabled={createMessage.isPending} style={{ background: accent, color: brandTheme.creamSoft, border: `1px solid ${accent}` }}>
+                      disabled={createMessage.isPending} style={{ background: accent, color: "hsl(0 0% 100%)", border: `1px solid ${accent}` }}>
                       {createMessage.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
                       Send for Validation
                     </Button>

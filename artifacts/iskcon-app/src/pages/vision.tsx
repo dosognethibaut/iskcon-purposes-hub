@@ -303,7 +303,7 @@ function StageSun({
     variant === "devotee"
       ? "hsl(0 0% 9%)"
       : variant === "human"
-        ? "hsl(39 98% 60%)"
+        ? brandTheme.goldDark
         : "hsl(0 0% 66%)";
 
   return <SimpleSun color={color} size={34} />;
