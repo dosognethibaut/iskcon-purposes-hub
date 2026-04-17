@@ -239,8 +239,8 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
   const cardBg = "hsl(0 0% 100%)";
   const panelText = purposeId === 3 ? "hsl(0 0% 4%)" : accent;
   const accentOn = purposeId === 3 ? "hsl(0 0% 100%)" : "hsl(43 100% 92%)";
-  const shellBg = "hsl(43 100% 91%)";
-  const shellBgAlt = "hsl(43 55% 86%)";
+  const shellBg = "hsl(43 86% 84%)";
+  const shellBgAlt = "hsl(43 52% 80%)";
 
   const [stats, setStats] = useState<{ connected: number; registered: number } | null>(null);
   useEffect(() => {
@@ -577,10 +577,10 @@ export default function PurposePanel({ purposeId, title, officialText, descripti
       {/* Quote block */}
       <div className="px-6 py-6">
         <div className="text-center">
-          <p className="font-serif font-semibold leading-relaxed" style={{ fontSize: "0.98rem", color: "hsl(0 0% 4%)" }}>{officialText}</p>
+          <p className="font-sans leading-relaxed text-center" style={{ fontSize: "1.12rem", color: brandTheme.creamSoft }}>{officialText}</p>
         </div>
         <div className="my-5 mx-auto w-24 h-px" style={{ background: "hsl(43 100% 90% / 0.9)" }} />
-        <p className="font-sans leading-relaxed text-center" style={{ fontSize: "1.12rem", color: brandTheme.creamSoft }}>{description}</p>
+        <p className="font-serif font-semibold leading-relaxed" style={{ fontSize: "0.98rem", color: "hsl(0 0% 4%)" }}>{description}</p>
       </div>
 
       {/* Community section */}
