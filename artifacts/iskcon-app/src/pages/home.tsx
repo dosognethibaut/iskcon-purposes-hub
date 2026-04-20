@@ -124,8 +124,6 @@ export default function Home() {
   const [showNotifs, setShowNotifs] = useState(false);
   const lastNotifData = useRef<any>(null);
   const purposeSectionRef = useRef<HTMLDivElement>(null);
-  const [initialPurposeTab, setInitialPurposeTab] = useState<"activities" | "messages">("activities");
-
   const isAdmin = !!currentUser?.isAdmin;
 
   const computeBadges = useCallback((data: Record<number, { activityIds: number[]; messageIds: number[] }> | null, admin: boolean) => {
@@ -196,15 +194,12 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const purposeId = Number(params.get("purpose"));
-    const tabParam = params.get("tab");
 
     if (!purposeId) return;
 
     const purposeIndex = purposes.findIndex((purpose) => purpose.id === purposeId);
     if (purposeIndex === -1) return;
 
-    const nextTab = tabParam === "messages" ? "messages" : "activities";
-    setInitialPurposeTab(nextTab);
     setActivePurpose(purposeIndex);
 
     window.setTimeout(() => {
@@ -353,8 +348,38 @@ export default function Home() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════
-          WHAT — 7 Purposes logo row + expandable official text
+          WHAT — definition panel + 7 Purposes logo row
       ═══════════════════════════════════════════════════════════ */}
+      <div className="mx-auto max-w-4xl px-4 pt-12 pb-10 md:pb-16" style={{ background: brandTheme.burgundy }}>
+        <div className="relative overflow-hidden rounded-[36px] bg-[rgba(0,0,0,0.28)] px-6 py-8 text-center shadow-lg shadow-black/30 backdrop-blur-sm">
+          <p className="font-sans text-2xl font-semibold leading-snug text-amber-100 md:text-3xl">
+            The 7 Purposes of ISKCON are the foundational expression of Śrīla Prabhupāda’s
+            purposes, objectives, and mission for the International Society for Krishna
+            Consciousness, formally summarized at the time of ISKCON’s incorporation in July 1966.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            {[
+              { href: "/why", label: "Why?", icon: HelpCircle },
+              { href: "/vision", label: "Vision", icon: Eye },
+            ].map(({ href, label, icon: Icon }) => (
+              <Link
+                key={label}
+                href={href}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-sans font-semibold border focus:outline-none"
+                style={{
+                  borderColor: "hsl(40 70% 90% / 0.4)",
+                  color: "hsl(40 80% 96%)",
+                  background: "hsl(40 70% 94% / 0.12)",
+                  fontSize: "0.85rem",
+                }}
+              >
+                <Icon className="w-4 h-4" /> {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="pt-12" />
+      </div>
       <div className="pb-20" ref={purposeSectionRef} style={{ background: brandTheme.burgundy }}>
         <div className="pt-16" />
 
@@ -406,7 +431,6 @@ export default function Home() {
             title={purposes[activePurpose].title}
             officialText={purposes[activePurpose].officialText}
             description={purposes[activePurpose].description}
-            initialTab={initialPurposeTab}
           />
         )}
 

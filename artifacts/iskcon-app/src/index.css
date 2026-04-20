@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -110,7 +110,7 @@
   --chart-4: 38 100% 39%;
   --chart-5: 332 15% 56%;
 
-  --app-font-sans: 'Manrope', sans-serif;
+  --app-font-sans: 'DM Sans', sans-serif;
   --app-font-serif: 'Cormorant Garamond', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 1rem;
