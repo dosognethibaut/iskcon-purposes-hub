@@ -9,7 +9,6 @@ import {
   getGetMessagesQueryKey,
 } from "@/lib/local-api";
 import { ArrowLeft, MessageCircle, CalendarDays, Loader2 } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -198,31 +197,8 @@ export default function PurposeDetail() {
           <div className="flex-1 h-px" style={{ background: "hsl(14 30% 60% / 0.25)" }} />
         </div>
 
-        <Tabs defaultValue="activities" className="w-full">
-          <TabsList
-            className="w-full grid grid-cols-2 h-12 rounded-2xl p-1 mb-6"
-            style={{ background: "hsl(38 40% 80%)", border: "1px solid hsl(14 30% 60% / 0.2)" }}
-          >
-            <TabsTrigger
-              value="activities"
-              className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm"
-              style={{ color: "hsl(340 44% 34%)" }}
-            >
-              <CalendarDays className="w-4 h-4 mr-1.5" />
-              Activities
-            </TabsTrigger>
-            <TabsTrigger
-              value="messages"
-              className="rounded-xl font-semibold font-sans text-sm transition-all data-[state=active]:shadow-sm"
-              style={{ color: "hsl(340 44% 34%)" }}
-            >
-              <MessageCircle className="w-4 h-4 mr-1.5" />
-              Messages
-            </TabsTrigger>
-          </TabsList>
-
-          {/* ACTIVITIES TAB */}
-          <TabsContent value="activities" className="space-y-6">
+                <div className="space-y-6">
+          <section className="space-y-4">
 
             <div className="space-y-3">
               <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(319 32% 19%)" }}>Proposed Activities</h2>
@@ -311,10 +287,9 @@ export default function PurposeDetail() {
                 </form>
               </Form>
             </div>
-          </TabsContent>
-
-          {/* MESSAGES TAB */}
-          <TabsContent value="messages" className="space-y-6">
+          
+          </section>
+          <section className="space-y-3">
 
             <div className="space-y-3">
               <h2 className="font-serif text-xl font-bold" style={{ color: "hsl(319 32% 19%)" }}>Community Messages</h2>
@@ -391,8 +366,10 @@ export default function PurposeDetail() {
                 </form>
               </Form>
             </div>
-          </TabsContent>
-        </Tabs>
+          
+          </section>
+        </div>
+
       </div>
     </div>
   );
