@@ -1,7 +1,6 @@
 {
   "name": "@workspace/iskcon-app",
   "version": "0.0.0",
-  "packageManager": "npm@11.12.1",
   "private": true,
   "type": "module",
   "scripts": {
